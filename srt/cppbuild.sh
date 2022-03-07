@@ -11,7 +11,8 @@ SRT_VERSION=1.4.4
 download https://github.com/Haivision/srt/archive/refs/tags/v${SRT_VERSION}.zip srt-v${SRT_VERSION}.zip
 mkdir -p $PLATFORM
 cd $PLATFORM
-tar -xzvf ../srt-v$SRT_VERSION.zip
+#tar -xzvf ../srt-v$SRT_VERSION.zip
+unzip ../srt-v$SRT_VERSION.zip 
 cd srt-$SRT_VERSION
 
 
@@ -43,7 +44,8 @@ case $PLATFORM in
         make install
         ;;
     linux-x86_64)
-        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
+#        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
+       ./configure --prefix=..
         make -j $MAKEJ
         make install
         ;;

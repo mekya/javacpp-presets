@@ -13,672 +13,538 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 public class srt extends org.bytedeco.srt.presets.srt {
     static { Loader.load(); }
 
-// Parsed from sys/_types/_iovec_t.h
+// Parsed from linux/uio.h
 
+/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
 /*
- * Copyright (c) 2003-2012 Apple Inc. All rights reserved.
+ *	Berkeley style UIO structures	-	Alan Cox 1994.
  *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. The rights granted to you under the License
- * may not be used to create, or enable the creation or redistribution of,
- * unlawful or unlicensed copies of an Apple operating system, or to
- * circumvent, violate, or enable the circumvention or violation of, any
- * terms of an Apple operating system software license agreement.
- *
- * Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this file.
- *
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
+ *		This program is free software; you can redistribute it and/or
+ *		modify it under the terms of the GNU General Public License
+ *		as published by the Free Software Foundation; either version
+ *		2 of the License, or (at your option) any later version.
  */
-// #ifndef _STRUCT_IOVEC
-// #define _STRUCT_IOVEC
-// #include <sys/_types/_size_t.h>
+// #ifndef __LINUX_UIO_H
+// #define __LINUX_UIO_H
+
+
+// #include <linux/types.h>
 // Targeting ../iovec.java
 
 
-// #endif /* _STRUCT_IOVEC */
-
-
-// Parsed from sys/socket.h
 
 /*
- * Copyright (c) 2000-2019 Apple Inc. All rights reserved.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. The rights granted to you under the License
- * may not be used to create, or enable the creation or redistribution of,
- * unlawful or unlicensed copies of an Apple operating system, or to
- * circumvent, violate, or enable the circumvention or violation of, any
- * terms of an Apple operating system software license agreement.
- *
- * Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this file.
- *
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
+ *	UIO_MAXIOV shall be at least 16 1003.1g (5.4.1.1)
  */
-/* Copyright (c) 1998, 1999 Apple Computer, Inc. All Rights Reserved */
-/* Copyright (c) 1995 NeXT Computer, Inc. All Rights Reserved */
+ 
+public static final int UIO_FASTIOV =	8;
+public static final int UIO_MAXIOV =	1024;
+
+
+// #endif /* __LINUX_UIO_H */
+
+
+// Parsed from sys/uio.h
+
+/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+// #ifndef _SYS_UIO_H
+public static final int _SYS_UIO_H =	1;
+
+// #include <features.h>
+// #include <sys/types.h>
+// #include <bits/types/struct_iovec.h>
+// #include <bits/uio_lim.h>
+// #ifdef __IOV_MAX
+// #else
+// # undef UIO_MAXIOV
+// #endif
+
+/* Read data from file descriptor FD, and put the result in the
+   buffers described by IOVEC, which is a vector of COUNT 'struct iovec's.
+   The buffers are filled in the order specified.
+   Operates just like 'read' (see <unistd.h>) except that data are
+   put in IOVEC instead of a contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+public static native @Cast("ssize_t") long readv(int __fd, @Const iovec __iovec, int __count);
+
+/* Write data pointed by the buffers described by IOVEC, which
+   is a vector of COUNT 'struct iovec's, to file descriptor FD.
+   The data is written in the order specified.
+   Operates just like 'write' (see <unistd.h>) except that the data
+   are taken from IOVEC instead of a contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+public static native @Cast("ssize_t") long writev(int __fd, @Const iovec __iovec, int __count);
+
+
+// #ifdef __USE_MISC
+// #endif	/* Use misc.  */
+
+
+// #ifdef __USE_GNU
+// # ifndef __USE_FILE_OFFSET64
+/* Same as preadv but with an additional flag argumenti defined at uio.h.  */
+public static native @Cast("ssize_t") long preadv2(int __fp, @Const iovec __iovec, int __count,
+			@Cast("__off_t") long __offset, int ___flags);
+
+/* Same as preadv but with an additional flag argument defined at uio.h.  */
+public static native @Cast("ssize_t") long pwritev2(int __fd, @Const iovec __iodev, int __count,
+			 @Cast("__off_t") long __offset, int __flags);
+
+// # else
+// # endif
+
+// # ifdef __USE_LARGEFILE64
+/* Same as preadv but with an additional flag argumenti defined at uio.h.  */
+public static native @Cast("ssize_t") long preadv64v2(int __fp, @Const iovec __iovec,
+			   int __count, @Cast("__off64_t") long __offset,
+			   int ___flags);
+
+/* Same as preadv but with an additional flag argument defined at uio.h.  */
+public static native @Cast("ssize_t") long pwritev64v2(int __fd, @Const iovec __iodev,
+			    int __count, @Cast("__off64_t") long __offset,
+			    int __flags);
+// # endif
+// #endif /* Use GNU.  */
+
+/* Some operating systems provide system-specific extensions to this
+   header.  */
+// #ifdef __USE_GNU
+// # include <bits/uio-ext.h>
+// #endif
+
+// #endif /* sys/uio.h */
+
+
+// Parsed from bits/sockaddr.h
+
+/* Definition of struct sockaddr_* common members and sizes, generic version.
+   Copyright (C) 1995-2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
- * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)socket.h	8.4 (Berkeley) 2/21/94
- * $FreeBSD: src/sys/sys/socket.h,v 1.39.2.7 2001/07/03 11:02:01 ume Exp $
- */
-/*
- * NOTICE: This file was modified by SPARTA, Inc. in 2005 to introduce
- * support for mandatory and extensible security protections.  This notice
- * is included in support of clause 2.2 (b) of the Apple Public License,
- * Version 2.0.
+ * Never include this file directly; use <sys/socket.h> instead.
  */
 
-// #ifndef _SYS_SOCKET_H_
-// #define _SYS_SOCKET_H_
+// #ifndef _BITS_SOCKADDR_H
+public static final int _BITS_SOCKADDR_H =	1;
+
+
+/* POSIX.1g specifies this type name for the `sa_family' member.  */
+
+/* This macro is used to declare the initial common members
+   of the data types used for socket addresses, `struct sockaddr',
+   `struct sockaddr_in', `struct sockaddr_un', etc.  */
+
+// #define	__SOCKADDR_COMMON(sa_prefix)
+//   sa_family_t sa_prefix##family
+
+public static native @MemberGetter int __SOCKADDR_COMMON_SIZE();
+public static final int __SOCKADDR_COMMON_SIZE = __SOCKADDR_COMMON_SIZE();
+
+/* Size of struct sockaddr_storage.  */
+public static final int _SS_SIZE = 128;
+
+// #endif	/* bits/sockaddr.h */
+
+
+// Parsed from bits/socket.h
+
+/* System-specific socket constants and types.  Linux version.
+   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+// #ifndef __BITS_SOCKET_H
+// #define __BITS_SOCKET_H
+
+// #ifndef _SYS_SOCKET_H
+// # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
+// #endif
+
+// #define __need_size_t
+// #include <stddef.h>
 
 // #include <sys/types.h>
-// #include <sys/cdefs.h>
-// #include <machine/_param.h>
-// #include <net/net_kev.h>
 
-
-// #include <Availability.h>
-
-/*
- * Definitions related to sockets: types, address families, options.
- */
-
-/*
- * Data types.
- */
-
-// #include <sys/_types/_gid_t.h>
-// #include <sys/_types/_off_t.h>
-// #include <sys/_types/_pid_t.h>
-// #include <sys/_types/_sa_family_t.h>
-// #include <sys/_types/_socklen_t.h>
-
-/* XXX Not explicitly defined by POSIX, but function return types are */
-// #include <sys/_types/_size_t.h>
-
-/* XXX Not explicitly defined by POSIX, but function return types are */
-// #include <sys/_types/_ssize_t.h>
-
-/*
- * [XSI] The iovec structure shall be defined as described in <sys/uio.h>.
- */
-// #include <sys/_types/_iovec_t.h>
-
-/*
- * Types
- */
-public static final int SOCK_STREAM =     1;               /* stream socket */
-public static final int SOCK_DGRAM =      2;               /* datagram socket */
-public static final int SOCK_RAW =        3;               /* raw-protocol interface */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SOCK_RDM =        4;               /* reliably-delivered message */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int SOCK_SEQPACKET =  5;               /* sequenced packet stream */
-
-/*
- * Option flags per-socket.
- */
-public static final int SO_DEBUG =        0x0001;          /* turn on debugging info recording */
-public static final int SO_ACCEPTCONN =   0x0002;          /* socket has had listen() */
-public static final int SO_REUSEADDR =    0x0004;          /* allow local address reuse */
-public static final int SO_KEEPALIVE =    0x0008;          /* keep connections alive */
-public static final int SO_DONTROUTE =    0x0010;          /* just use interface addresses */
-public static final int SO_BROADCAST =    0x0020;          /* permit sending of broadcast msgs */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SO_USELOOPBACK =  0x0040;          /* bypass hardware when possible */
-public static final int SO_LINGER =       0x0080;          /* linger on close if data present (in ticks) */
-// #else
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int SO_OOBINLINE =    0x0100;          /* leave received OOB data in line */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SO_REUSEPORT =    0x0200;          /* allow local address & port reuse */
-public static final int SO_TIMESTAMP =    0x0400;          /* timestamp received dgram traffic */
-public static final int SO_TIMESTAMP_MONOTONIC =  0x0800;  /* Monotonically increasing timestamp on rcvd dgram */
-// #ifndef __APPLE__
-// #else
-public static final int SO_DONTTRUNC =    0x2000;          /* APPLE: Retain unread data */
-                                        /*  (ATOMIC proto) */
-public static final int SO_WANTMORE =     0x4000;          /* APPLE: Give hint when more data ready */
-public static final int SO_WANTOOBFLAG =  0x8000;          /* APPLE: Want OOB in MSG_FLAG on receive */
-
-
-// #endif  /* (!__APPLE__) */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/*
- * Additional options, not kept in so_options.
- */
-public static final int SO_SNDBUF =       0x1001;          /* send buffer size */
-public static final int SO_RCVBUF =       0x1002;          /* receive buffer size */
-public static final int SO_SNDLOWAT =     0x1003;          /* send low-water mark */
-public static final int SO_RCVLOWAT =     0x1004;          /* receive low-water mark */
-public static final int SO_SNDTIMEO =     0x1005;          /* send timeout */
-public static final int SO_RCVTIMEO =     0x1006;          /* receive timeout */
-public static final int SO_ERROR =        0x1007;          /* get error status and clear */
-public static final int SO_TYPE =         0x1008;          /* get socket type */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SO_LABEL =        0x1010;          /* deprecated */
-public static final int SO_PEERLABEL =    0x1011;          /* deprecated */
-// #ifdef __APPLE__
-public static final int SO_NREAD =        0x1020;          /* APPLE: get 1st-packet byte count */
-public static final int SO_NKE =          0x1021;          /* APPLE: Install socket-level NKE */
-public static final int SO_NOSIGPIPE =    0x1022;          /* APPLE: No SIGPIPE on EPIPE */
-public static final int SO_NOADDRERR =    0x1023;          /* APPLE: Returns EADDRNOTAVAIL when src is not available anymore */
-public static final int SO_NWRITE =       0x1024;          /* APPLE: Get number of bytes currently in send socket buffer */
-public static final int SO_REUSESHAREUID =        0x1025;          /* APPLE: Allow reuse of port/socket by different userids */
-// #ifdef __APPLE_API_PRIVATE
-public static final int SO_NOTIFYCONFLICT =       0x1026;  /* APPLE: send notification if there is a bind on a port which is already in use */
-public static final int SO_UPCALLCLOSEWAIT =      0x1027;  /* APPLE: block on close until an upcall returns */
-// #endif
-public static final int SO_LINGER_SEC =   0x1080;          /* linger on close if data present (in seconds) */
-public static final int SO_RANDOMPORT =   0x1082;  /* APPLE: request local port randomization */
-public static final int SO_NP_EXTENSIONS =        0x1083;  /* To turn off some POSIX behavior */
+/* Type for length arguments in socket calls.  */
+// #ifndef __socklen_t_defined
+// # define __socklen_t_defined
 // #endif
 
-public static final int SO_NUMRCVPKT =            0x1112;  /* number of datagrams in receive socket buffer */
-public static final int SO_NET_SERVICE_TYPE =     0x1116;  /* Network service type */
+/* Get the architecture-dependent definition of enum __socket_type.  */
+// #include <bits/socket_type.h>
 
+/* Protocol families.  */
+public static final int PF_UNSPEC =	0;	/* Unspecified.  */
+public static final int PF_LOCAL =	1;	/* Local to host (pipes and file-domain).  */
+public static final int PF_UNIX =		PF_LOCAL; /* POSIX name for PF_LOCAL.  */
+public static final int PF_FILE =		PF_LOCAL; /* Another non-standard name for PF_LOCAL.  */
+public static final int PF_INET =		2;	/* IP protocol family.  */
+public static final int PF_AX25 =		3;	/* Amateur Radio AX.25.  */
+public static final int PF_IPX =		4;	/* Novell Internet Protocol.  */
+public static final int PF_APPLETALK =	5;	/* Appletalk DDP.  */
+public static final int PF_NETROM =	6;	/* Amateur radio NetROM.  */
+public static final int PF_BRIDGE =	7;	/* Multiprotocol bridge.  */
+public static final int PF_ATMPVC =	8;	/* ATM PVCs.  */
+public static final int PF_X25 =		9;	/* Reserved for X.25 project.  */
+public static final int PF_INET6 =	10;	/* IP version 6.  */
+public static final int PF_ROSE =		11;	/* Amateur Radio X.25 PLP.  */
+public static final int PF_DECnet =	12;	/* Reserved for DECnet project.  */
+public static final int PF_NETBEUI =	13;	/* Reserved for 802.2LLC project.  */
+public static final int PF_SECURITY =	14;	/* Security callback pseudo AF.  */
+public static final int PF_KEY =		15;	/* PF_KEY key management API.  */
+public static final int PF_NETLINK =	16;
+public static final int PF_ROUTE =	PF_NETLINK; /* Alias to emulate 4.4BSD.  */
+public static final int PF_PACKET =	17;	/* Packet family.  */
+public static final int PF_ASH =		18;	/* Ash.  */
+public static final int PF_ECONET =	19;	/* Acorn Econet.  */
+public static final int PF_ATMSVC =	20;	/* ATM SVCs.  */
+public static final int PF_RDS =		21;	/* RDS sockets.  */
+public static final int PF_SNA =		22;	/* Linux SNA Project */
+public static final int PF_IRDA =		23;	/* IRDA sockets.  */
+public static final int PF_PPPOX =	24;	/* PPPoX sockets.  */
+public static final int PF_WANPIPE =	25;	/* Wanpipe API sockets.  */
+public static final int PF_LLC =		26;	/* Linux LLC.  */
+public static final int PF_IB =		27;	/* Native InfiniBand address.  */
+public static final int PF_MPLS =		28;	/* MPLS.  */
+public static final int PF_CAN =		29;	/* Controller Area Network.  */
+public static final int PF_TIPC =		30;	/* TIPC sockets.  */
+public static final int PF_BLUETOOTH =	31;	/* Bluetooth sockets.  */
+public static final int PF_IUCV =		32;	/* IUCV sockets.  */
+public static final int PF_RXRPC =	33;	/* RxRPC sockets.  */
+public static final int PF_ISDN =		34;	/* mISDN sockets.  */
+public static final int PF_PHONET =	35;	/* Phonet sockets.  */
+public static final int PF_IEEE802154 =	36;	/* IEEE 802.15.4 sockets.  */
+public static final int PF_CAIF =		37;	/* CAIF sockets.  */
+public static final int PF_ALG =		38;	/* Algorithm sockets.  */
+public static final int PF_NFC =		39;	/* NFC sockets.  */
+public static final int PF_VSOCK =	40;	/* vSockets.  */
+public static final int PF_KCM =		41;	/* Kernel Connection Multiplexor.  */
+public static final int PF_QIPCRTR =	42;	/* Qualcomm IPC Router.  */
+public static final int PF_SMC =		43;	/* SMC sockets.  */
+public static final int PF_MAX =		44;	/* For now..  */
 
-public static final int SO_NETSVC_MARKING_LEVEL =    0x1119;  /* Get QoS marking in effect for socket */
+/* Address families.  */
+public static final int AF_UNSPEC =	PF_UNSPEC;
+public static final int AF_LOCAL =	PF_LOCAL;
+public static final int AF_UNIX =		PF_UNIX;
+public static final int AF_FILE =		PF_FILE;
+public static final int AF_INET =		PF_INET;
+public static final int AF_AX25 =		PF_AX25;
+public static final int AF_IPX =		PF_IPX;
+public static final int AF_APPLETALK =	PF_APPLETALK;
+public static final int AF_NETROM =	PF_NETROM;
+public static final int AF_BRIDGE =	PF_BRIDGE;
+public static final int AF_ATMPVC =	PF_ATMPVC;
+public static final int AF_X25 =		PF_X25;
+public static final int AF_INET6 =	PF_INET6;
+public static final int AF_ROSE =		PF_ROSE;
+public static final int AF_DECnet =	PF_DECnet;
+public static final int AF_NETBEUI =	PF_NETBEUI;
+public static final int AF_SECURITY =	PF_SECURITY;
+public static final int AF_KEY =		PF_KEY;
+public static final int AF_NETLINK =	PF_NETLINK;
+public static final int AF_ROUTE =	PF_ROUTE;
+public static final int AF_PACKET =	PF_PACKET;
+public static final int AF_ASH =		PF_ASH;
+public static final int AF_ECONET =	PF_ECONET;
+public static final int AF_ATMSVC =	PF_ATMSVC;
+public static final int AF_RDS =		PF_RDS;
+public static final int AF_SNA =		PF_SNA;
+public static final int AF_IRDA =		PF_IRDA;
+public static final int AF_PPPOX =	PF_PPPOX;
+public static final int AF_WANPIPE =	PF_WANPIPE;
+public static final int AF_LLC =		PF_LLC;
+public static final int AF_IB =		PF_IB;
+public static final int AF_MPLS =		PF_MPLS;
+public static final int AF_CAN =		PF_CAN;
+public static final int AF_TIPC =		PF_TIPC;
+public static final int AF_BLUETOOTH =	PF_BLUETOOTH;
+public static final int AF_IUCV =		PF_IUCV;
+public static final int AF_RXRPC =	PF_RXRPC;
+public static final int AF_ISDN =		PF_ISDN;
+public static final int AF_PHONET =	PF_PHONET;
+public static final int AF_IEEE802154 =	PF_IEEE802154;
+public static final int AF_CAIF =		PF_CAIF;
+public static final int AF_ALG =		PF_ALG;
+public static final int AF_NFC =		PF_NFC;
+public static final int AF_VSOCK =	PF_VSOCK;
+public static final int AF_KCM =		PF_KCM;
+public static final int AF_QIPCRTR =	PF_QIPCRTR;
+public static final int AF_SMC =		PF_SMC;
+public static final int AF_MAX =		PF_MAX;
 
+/* Socket level values.  Others are defined in the appropriate headers.
 
-/* When adding new socket-options, you need to make sure MPTCP supports these as well! */
+   XXX These definitions also should go into the appropriate headers as
+   far as they are available.  */
+public static final int SOL_RAW =		255;
+public static final int SOL_DECNET =      261;
+public static final int SOL_X25 =         262;
+public static final int SOL_PACKET =	263;
+public static final int SOL_ATM =		264;	/* ATM layer (cell level).  */
+public static final int SOL_AAL =		265;	/* ATM Adaption Layer (packet level).  */
+public static final int SOL_IRDA =	266;
+public static final int SOL_NETBEUI =	267;
+public static final int SOL_LLC =		268;
+public static final int SOL_DCCP =	269;
+public static final int SOL_NETLINK =	270;
+public static final int SOL_TIPC =	271;
+public static final int SOL_RXRPC =	272;
+public static final int SOL_PPPOL2TP =	273;
+public static final int SOL_BLUETOOTH =	274;
+public static final int SOL_PNPIPE =	275;
+public static final int SOL_RDS =		276;
+public static final int SOL_IUCV =	277;
+public static final int SOL_CAIF =	278;
+public static final int SOL_ALG =		279;
+public static final int SOL_NFC =		280;
+public static final int SOL_KCM =		281;
+public static final int SOL_TLS =		282;
 
-/*
- * Network Service Type for option SO_NET_SERVICE_TYPE
- *
- * The vast majority of sockets should use Best Effort that is the default
- * Network Service Type. Other Network Service Types have to be used only if
- * the traffic actually matches the description of the Network Service Type.
- *
- * Network Service Types do not represent priorities but rather describe
- * different categories of delay, jitter and loss parameters.
- * Those parameters may influence protocols from layer 4 protocols like TCP
- * to layer 2 protocols like Wi-Fi. The Network Service Type can determine
- * how the traffic is queued and scheduled by the host networking stack and
- * by other entities on the network like switches and routers. For example
- * for Wi-Fi, the Network Service Type can select the marking of the
- * layer 2 packet with the appropriate WMM Access Category.
- *
- * There is no point in attempting to game the system and use
- * a Network Service Type that does not correspond to the actual
- * traffic characteristic but one that seems to have a higher precedence.
- * The reason is that for service classes that have lower tolerance
- * for delay and jitter, the queues size is lower than for service
- * classes that are more tolerant to delay and jitter.
- *
- * For example using a voice service type for bulk data transfer will lead
- * to disastrous results as soon as congestion happens because the voice
- * queue overflows and packets get dropped. This is not only bad for the bulk
- * data transfer but it is also bad for VoIP apps that legitimately are using
- * the voice  service type.
- *
- * The characteristics of the Network Service Types are based on the service
- * classes defined in RFC 4594 "Configuration Guidelines for DiffServ Service
- * Classes"
- *
- * When system detects the outgoing interface belongs to a DiffServ domain
- * that follows the recommendation of the IETF draft "Guidelines for DiffServ to
- * IEEE 802.11 Mapping", the packet will marked at layer 3 with a DSCP value
- * that corresponds to Network Service Type.
- *
- * NET_SERVICE_TYPE_BE
- *	"Best Effort", unclassified/standard.  This is the default service
- *	class and cover the majority of the traffic.
- *
- * NET_SERVICE_TYPE_BK
- *	"Background", high delay tolerant, loss tolerant. elastic flow,
- *	variable size & long-lived. E.g: non-interactive network bulk transfer
- *	like synching or backup.
- *
- * NET_SERVICE_TYPE_RD
- *	"Responsive Data", a notch higher than "Best Effort", medium delay
- *	tolerant, elastic & inelastic flow, bursty, long-lived. E.g. email,
- *	instant messaging, for which there is a sense of interactivity and
- *	urgency (user waiting for output).
- *
- * NET_SERVICE_TYPE_OAM
- *	"Operations, Administration, and Management", medium delay tolerant,
- *	low-medium loss tolerant, elastic & inelastic flows, variable size.
- *	E.g. VPN tunnels.
- *
- * NET_SERVICE_TYPE_AV
- *	"Multimedia Audio/Video Streaming", medium delay tolerant, low-medium
- *	loss tolerant, elastic flow, constant packet interval, variable rate
- *	and size. E.g. video and audio playback with buffering.
- *
- * NET_SERVICE_TYPE_RV
- *	"Responsive Multimedia Audio/Video", low delay tolerant, low-medium
- *	loss tolerant, elastic flow, variable packet interval, rate and size.
- *	E.g. screen sharing.
- *
- * NET_SERVICE_TYPE_VI
- *	"Interactive Video", low delay tolerant, low-medium loss tolerant,
- *	elastic flow, constant packet interval, variable rate & size. E.g.
- *	video telephony.
- *
- * NET_SERVICE_TYPE_SIG
- *	"Signaling", low delay tolerant, low loss tolerant, inelastic flow,
- *	jitter tolerant, rate is bursty but short, variable size. E.g. SIP.
- *
- * NET_SERVICE_TYPE_VO
- *	"Interactive Voice", very low delay tolerant, very low loss tolerant,
- *	inelastic flow, constant packet rate, somewhat fixed size.
- *	E.g. VoIP.
- */
+/* Maximum queue length specifiable by listen.  */
+public static final int SOMAXCONN =	128;
 
-public static final int NET_SERVICE_TYPE_BE =     0; /* Best effort */
-public static final int NET_SERVICE_TYPE_BK =     1; /* Background system initiated */
-public static final int NET_SERVICE_TYPE_SIG =    2; /* Signaling */
-public static final int NET_SERVICE_TYPE_VI =     3; /* Interactive Video */
-public static final int NET_SERVICE_TYPE_VO =     4; /* Interactive Voice */
-public static final int NET_SERVICE_TYPE_RV =     5; /* Responsive Multimedia Audio/Video */
-public static final int NET_SERVICE_TYPE_AV =     6; /* Multimedia Audio/Video Streaming */
-public static final int NET_SERVICE_TYPE_OAM =    7; /* Operations, Administration, and Management */
-public static final int NET_SERVICE_TYPE_RD =     8; /* Responsive Data */
-
-
-/* These are supported values for SO_NETSVC_MARKING_LEVEL */
-public static final int NETSVC_MRKNG_UNKNOWN =            0;       /* The outgoing network interface is not known */
-public static final int NETSVC_MRKNG_LVL_L2 =             1;       /* Default marking at layer 2 (for example Wi-Fi WMM) */
-public static final int NETSVC_MRKNG_LVL_L3L2_ALL =       2;       /* Layer 3 DSCP marking and layer 2 marking for all Network Service Types */
-public static final int NETSVC_MRKNG_LVL_L3L2_BK =        3;       /* The system policy limits layer 3 DSCP marking and layer 2 marking
-	                                         * to background Network Service Types */
-public static final int SAE_ASSOCID_ANY = 0;
-// #define SAE_ASSOCID_ALL ((sae_associd_t)(-1L))
-public static final int SAE_CONNID_ANY =  0;
-// #define SAE_CONNID_ALL  ((sae_connid_t)(-1L))
-
-/* connectx() flag parameters */
-public static final int CONNECT_RESUME_ON_READ_WRITE =    0x1; /* resume connect() on read/write */
-public static final int CONNECT_DATA_IDEMPOTENT =         0x2; /* data is idempotent */
-public static final int CONNECT_DATA_AUTHENTICATED =      0x4;
-// Targeting ../sa_endpoints_t.java
-
-
-// Targeting ../linger.java
-
-
-// Targeting ../so_np_extensions.java
-
-
-
-public static final int SONPX_SETOPTSHUT =        0x000000001;     /* flag for allowing setsockopt after shutdown */
-
-
-
-// #endif
-// #endif
-
-/*
- * Level number for (get/set)sockopt() to apply to socket itself.
- */
-public static final int SOL_SOCKET =      0xffff;          /* options for socket level */
-
-
-/*
- * Address families.
- */
-public static final int AF_UNSPEC =       0;               /* unspecified */
-public static final int AF_UNIX =         1;               /* local to host (pipes) */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int AF_LOCAL =        AF_UNIX;         /* backward compatibility */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int AF_INET =         2;               /* internetwork: UDP, TCP, etc. */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int AF_IMPLINK =      3;               /* arpanet imp addresses */
-public static final int AF_PUP =          4;               /* pup protocols: e.g. BSP */
-public static final int AF_CHAOS =        5;               /* mit CHAOS protocols */
-public static final int AF_NS =           6;               /* XEROX NS protocols */
-public static final int AF_ISO =          7;               /* ISO protocols */
-public static final int AF_OSI =          AF_ISO;
-public static final int AF_ECMA =         8;               /* European computer manufacturers */
-public static final int AF_DATAKIT =      9;               /* datakit protocols */
-public static final int AF_CCITT =        10;              /* CCITT protocols, X.25 etc */
-public static final int AF_SNA =          11;              /* IBM SNA */
-public static final int AF_DECnet =       12;              /* DECnet */
-public static final int AF_DLI =          13;              /* DEC Direct data link interface */
-public static final int AF_LAT =          14;              /* LAT */
-public static final int AF_HYLINK =       15;              /* NSC Hyperchannel */
-public static final int AF_APPLETALK =    16;              /* Apple Talk */
-public static final int AF_ROUTE =        17;              /* Internal Routing Protocol */
-public static final int AF_LINK =         18;              /* Link layer interface */
-public static final int pseudo_AF_XTP =   19;              /* eXpress Transfer Protocol (no AF) */
-public static final int AF_COIP =         20;              /* connection-oriented IP, aka ST II */
-public static final int AF_CNT =          21;              /* Computer Network Technology */
-public static final int pseudo_AF_RTIP =  22;              /* Help Identify RTIP packets */
-public static final int AF_IPX =          23;              /* Novell Internet Protocol */
-public static final int AF_SIP =          24;              /* Simple Internet Protocol */
-public static final int pseudo_AF_PIP =   25;              /* Help Identify PIP packets */
-public static final int AF_NDRV =         27;              /* Network Driver 'raw' access */
-public static final int AF_ISDN =         28;              /* Integrated Services Digital Network */
-public static final int AF_E164 =         AF_ISDN;         /* CCITT E.164 recommendation */
-public static final int pseudo_AF_KEY =   29;              /* Internal key-management function */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int AF_INET6 =        30;              /* IPv6 */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int AF_NATM =         31;              /* native ATM access */
-public static final int AF_SYSTEM =       32;              /* Kernel event messages */
-public static final int AF_NETBIOS =      33;              /* NetBIOS */
-public static final int AF_PPP =          34;              /* PPP communication protocol */
-public static final int pseudo_AF_HDRCMPLT = 35;           /* Used by BPF to not rewrite headers
-	                                 *  in interface output routine */
-public static final int AF_RESERVED_36 =  36;              /* Reserved for internal usage */
-public static final int AF_IEEE80211 =    37;              /* IEEE 802.11 protocol */
-public static final int AF_UTUN =         38;
-public static final int AF_VSOCK =        40;              /* VM Sockets */
-public static final int AF_MAX =          41;
+/* Get the definition of the macro to define the common sockaddr members.  */
+// #include <bits/sockaddr.h>
 // Targeting ../sockaddr.java
 
 
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SOCK_MAXADDRLEN = 255;
-// Targeting ../sockproto.java
 
-
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/*
- * RFC 2553: protocol-independent placeholder for socket addresses
- */
-public static final int _SS_MAXSIZE =     128;
-public static native @MemberGetter int _SS_ALIGNSIZE();
-public static final int _SS_ALIGNSIZE = _SS_ALIGNSIZE();
-public static native @MemberGetter int _SS_PAD1SIZE();
-public static final int _SS_PAD1SIZE = _SS_PAD1SIZE();
-public static native @MemberGetter int _SS_PAD2SIZE();
-public static final int _SS_PAD2SIZE = _SS_PAD2SIZE();
+/* Structure large enough to hold any socket address (with the historical
+   exception of AF_UNIX).  */
+// #define __ss_aligntype	unsigned long int
+public static native @MemberGetter int _SS_PADSIZE();
+public static final int _SS_PADSIZE = _SS_PADSIZE();
 // Targeting ../sockaddr_storage.java
 
 
 
-/*
- * Protocol families, same as address families for now.
- */
-public static final int PF_UNSPEC =       AF_UNSPEC;
-public static final int PF_LOCAL =        AF_LOCAL;
-public static final int PF_UNIX =         PF_LOCAL;        /* backward compatibility */
-public static final int PF_INET =         AF_INET;
-public static final int PF_IMPLINK =      AF_IMPLINK;
-public static final int PF_PUP =          AF_PUP;
-public static final int PF_CHAOS =        AF_CHAOS;
-public static final int PF_NS =           AF_NS;
-public static final int PF_ISO =          AF_ISO;
-public static final int PF_OSI =          AF_ISO;
-public static final int PF_ECMA =         AF_ECMA;
-public static final int PF_DATAKIT =      AF_DATAKIT;
-public static final int PF_CCITT =        AF_CCITT;
-public static final int PF_SNA =          AF_SNA;
-public static final int PF_DECnet =       AF_DECnet;
-public static final int PF_DLI =          AF_DLI;
-public static final int PF_LAT =          AF_LAT;
-public static final int PF_HYLINK =       AF_HYLINK;
-public static final int PF_APPLETALK =    AF_APPLETALK;
-public static final int PF_ROUTE =        AF_ROUTE;
-public static final int PF_LINK =         AF_LINK;
-public static final int PF_XTP =          pseudo_AF_XTP;   /* really just proto family, no AF */
-public static final int PF_COIP =         AF_COIP;
-public static final int PF_CNT =          AF_CNT;
-public static final int PF_SIP =          AF_SIP;
-public static final int PF_IPX =          AF_IPX;          /* same format as AF_NS */
-public static final int PF_RTIP =         pseudo_AF_RTIP;  /* same format as AF_INET */
-public static final int PF_PIP =          pseudo_AF_PIP;
-public static final int PF_NDRV =         AF_NDRV;
-public static final int PF_ISDN =         AF_ISDN;
-public static final int PF_KEY =          pseudo_AF_KEY;
-public static final int PF_INET6 =        AF_INET6;
-public static final int PF_NATM =         AF_NATM;
-public static final int PF_SYSTEM =       AF_SYSTEM;
-public static final int PF_NETBIOS =      AF_NETBIOS;
-public static final int PF_PPP =          AF_PPP;
-public static final int PF_RESERVED_36 =  AF_RESERVED_36;
-public static final int PF_UTUN =         AF_UTUN;
-public static final int PF_VSOCK =        AF_VSOCK;
-public static final int PF_MAX =          AF_MAX;
 
-/*
- * These do not have socket-layer support:
- */
-public static final int PF_VLAN =         ((int)0x766c616e);  /* 'vlan' */
-public static final int PF_BOND =         ((int)0x626f6e64);  /* 'bond' */
+/* Bits in the FLAGS argument to `send', `recv', et al.  */
+/** enum  */
+public static final int
+    MSG_OOB		 = 0x01,	/* Process out-of-band data.  */
+// #define MSG_OOB		MSG_OOB
+    MSG_PEEK		 = 0x02,	/* Peek at incoming messages.  */
+// #define MSG_PEEK	MSG_PEEK
+    MSG_DONTROUTE	 = 0x04,	/* Don't use local routing.  */
+// #define MSG_DONTROUTE	MSG_DONTROUTE
+// #ifdef __USE_GNU
+    /* DECnet uses a different name.  */
+    MSG_TRYHARD		 = MSG_DONTROUTE,
+// # define MSG_TRYHARD	MSG_DONTROUTE
+// #endif
+    MSG_CTRUNC		 = 0x08,	/* Control data lost before delivery.  */
+// #define MSG_CTRUNC	MSG_CTRUNC
+    MSG_PROXY		 = 0x10,	/* Supply or ask second address.  */
+// #define MSG_PROXY	MSG_PROXY
+    MSG_TRUNC		 = 0x20,
+// #define MSG_TRUNC	MSG_TRUNC
+    MSG_DONTWAIT	 = 0x40, /* Nonblocking IO.  */
+// #define MSG_DONTWAIT	MSG_DONTWAIT
+    MSG_EOR		 = 0x80, /* End of record.  */
+// #define MSG_EOR		MSG_EOR
+    MSG_WAITALL		 = 0x100, /* Wait for a full request.  */
+// #define MSG_WAITALL	MSG_WAITALL
+    MSG_FIN		 = 0x200,
+// #define MSG_FIN		MSG_FIN
+    MSG_SYN		 = 0x400,
+// #define MSG_SYN		MSG_SYN
+    MSG_CONFIRM		 = 0x800, /* Confirm path validity.  */
+// #define MSG_CONFIRM	MSG_CONFIRM
+    MSG_RST		 = 0x1000,
+// #define MSG_RST		MSG_RST
+    MSG_ERRQUEUE	 = 0x2000, /* Fetch message from error queue.  */
+// #define MSG_ERRQUEUE	MSG_ERRQUEUE
+    MSG_NOSIGNAL	 = 0x4000, /* Do not generate SIGPIPE.  */
+// #define MSG_NOSIGNAL	MSG_NOSIGNAL
+    MSG_MORE		 = 0x8000,  /* Sender will send more.  */
+// #define MSG_MORE	MSG_MORE
+    MSG_WAITFORONE	 = 0x10000, /* Wait for at least one packet to return.*/
+// #define MSG_WAITFORONE	MSG_WAITFORONE
+    MSG_BATCH		 = 0x40000, /* sendmmsg: more messages coming.  */
+// #define MSG_BATCH	MSG_BATCH
+    MSG_ZEROCOPY	 = 0x4000000, /* Use user data in kernel path.  */
+// #define MSG_ZEROCOPY	MSG_ZEROCOPY
+    MSG_FASTOPEN	 = 0x20000000, /* Send data in TCP SYN.  */
+// #define MSG_FASTOPEN	MSG_FASTOPEN
 
-/*
- * Definitions for network related sysctl, CTL_NET.
- *
- * Second level is protocol family.
- * Third level is protocol number.
- *
- * Further levels are defined by the individual families below.
- */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int NET_MAXID =       AF_MAX;
-// #endif /* (_POSIX_C_SOURCE && !_DARWIN_C_SOURCE) */
-
-
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-/*
- * PF_ROUTE - Routing table
- *
- * Three additional levels are defined:
- *	Fourth: address family, 0 is wildcard
- *	Fifth: type of info, defined below
- *	Sixth: flag(s) to mask with for NET_RT_FLAGS
- */
-public static final int NET_RT_DUMP =             1;       /* dump; may limit to a.f. */
-public static final int NET_RT_FLAGS =            2;       /* by flags, e.g. RESOLVING */
-public static final int NET_RT_IFLIST =           3;       /* survey interface list */
-public static final int NET_RT_STAT =             4;       /* routing statistics */
-public static final int NET_RT_TRASH =            5;       /* routes not in table but not freed */
-public static final int NET_RT_IFLIST2 =          6;       /* interface list with addresses */
-public static final int NET_RT_DUMP2 =            7;       /* dump; may limit to a.f. */
-/*
- * Allows read access non-local host's MAC address
- * if the process has neighbor cache entitlement.
- */
-public static final int NET_RT_FLAGS_PRIV =       10;
-public static final int NET_RT_MAXID =            11;
-// #endif /* (_POSIX_C_SOURCE && !_DARWIN_C_SOURCE) */
-
-
-
-
-/*
- * Maximum queue length specifiable by listen.
- */
-public static final int SOMAXCONN =       128;
+    MSG_CMSG_CLOEXEC	 = 0x40000000;	/* Set close_on_exit for file
+					   descriptor received through
+					   SCM_RIGHTS.  */
+// #define MSG_CMSG_CLOEXEC MSG_CMSG_CLOEXEC
 // Targeting ../msghdr.java
 
 
-
-
-
-public static final int MSG_OOB =         0x1;             /* process out-of-band data */
-public static final int MSG_PEEK =        0x2;             /* peek at incoming message */
-public static final int MSG_DONTROUTE =   0x4;             /* send without using routing tables */
-public static final int MSG_EOR =         0x8;             /* data completes record */
-public static final int MSG_TRUNC =       0x10;            /* data discarded before delivery */
-public static final int MSG_CTRUNC =      0x20;            /* control data lost before delivery */
-public static final int MSG_WAITALL =     0x40;            /* wait for full request or error */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int MSG_DONTWAIT =    0x80;            /* this message should be nonblocking */
-public static final int MSG_EOF =         0x100;           /* data completes connection */
-// #ifdef __APPLE__
-// #ifdef __APPLE_API_OBSOLETE
-public static final int MSG_WAITSTREAM =  0x200;           /* wait up to full request.. may return partial */
-// #endif
-public static final int MSG_FLUSH =       0x400;           /* Start of 'hold' seq; dump so_temp, deprecated */
-public static final int MSG_HOLD =        0x800;           /* Hold frag in so_temp, deprecated */
-public static final int MSG_SEND =        0x1000;          /* Send the packet in so_temp, deprecated */
-public static final int MSG_HAVEMORE =    0x2000;          /* Data ready to be read */
-public static final int MSG_RCVMORE =     0x4000;          /* Data remains in current pkt */
-// #endif
-public static final int MSG_NEEDSA =      0x10000;         /* Fail receive if socket address cannot be allocated */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-// #if __DARWIN_C_LEVEL >= 200809L
-public static final int MSG_NOSIGNAL =    0x80000;
 // Targeting ../cmsghdr.java
 
 
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-// #ifndef __APPLE__
+/* Ancillary data object manipulation macros.  */
+// #if __glibc_c99_flexarr_available
+// # define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
+// #else
+// # define CMSG_DATA(cmsg) ((unsigned char *) ((struct cmsghdr *) (cmsg) + 1))
 // #endif
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/* given pointer to struct cmsghdr, return pointer to data */
-// #define CMSG_DATA(cmsg)         ((unsigned char *)(cmsg) +
-// 	__DARWIN_ALIGN32(sizeof(struct cmsghdr)))
-
-/*
- * RFC 2292 requires to check msg_controllen, in case that the kernel returns
- * an empty list for some reasons.
- */
+// #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
 // #define CMSG_FIRSTHDR(mhdr)
-// 	((mhdr)->msg_controllen >= sizeof(struct cmsghdr) ?
-// 	    (struct cmsghdr *)(mhdr)->msg_control :
-// 	    (struct cmsghdr *)0L)
+//   ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)
+//    ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) 0)
+// #define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1)
+// 			 & (size_t) ~(sizeof (size_t) - 1))
+// #define CMSG_SPACE(len) (CMSG_ALIGN (len)
+// 			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
+// #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
+
+public static native cmsghdr __cmsg_nxthdr(msghdr __mhdr,
+				      cmsghdr __cmsg);
+// #ifdef __USE_EXTERN_INLINES
+// #endif	/* Use `extern inline'.  */
+
+/* Socket level message types.  This must match the definitions in
+   <linux/socket.h>.  */
+/** enum  */
+public static final int
+    SCM_RIGHTS = 0x01,		/* Transfer file descriptors.  */
+// #define SCM_RIGHTS SCM_RIGHTS
+    SCM_CREDENTIALS = 0x02;	/* Credentials passing.  */
+// # define SCM_CREDENTIALS SCM_CREDENTIALS
+// #endif
+// Targeting ../ucred.java
 
 
-/*
- * Given pointer to struct cmsghdr, return pointer to next cmsghdr
- * RFC 2292 says that CMSG_NXTHDR(mhdr, NULL) is equivalent to CMSG_FIRSTHDR(mhdr)
- */
-// #define CMSG_NXTHDR(mhdr, cmsg)
-// 	((char *)(cmsg) == (char *)0L ? CMSG_FIRSTHDR(mhdr) :
-// 	    ((((unsigned char *)(cmsg) +
-// 	    __DARWIN_ALIGN32((__uint32_t)(cmsg)->cmsg_len) +
-// 	    __DARWIN_ALIGN32(sizeof(struct cmsghdr))) >
-// 	    ((unsigned char *)(mhdr)->msg_control +
-// 	    (mhdr)->msg_controllen)) ?
-// 	        (struct cmsghdr *)0L /* NULL */ :
-// 	        (struct cmsghdr *)(void *)((unsigned char *)(cmsg) +
-// 	            __DARWIN_ALIGN32((__uint32_t)(cmsg)->cmsg_len))))
+// #endif
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-/* RFC 2292 additions */
-// #define CMSG_SPACE(l)           (__DARWIN_ALIGN32(sizeof(struct cmsghdr)) + __DARWIN_ALIGN32(l))
-// #define CMSG_LEN(l)             (__DARWIN_ALIGN32(sizeof(struct cmsghdr)) + (l))
+/* Ugly workaround for unclean kernel headers.  */
+// #ifndef __USE_MISC
+// # ifndef FIOGETOWN
+// #  define __SYS_SOCKET_H_undef_FIOGETOWN
+// # endif
+// # ifndef FIOSETOWN
+// #  define __SYS_SOCKET_H_undef_FIOSETOWN
+// # endif
+// # ifndef SIOCATMARK
+// #  define __SYS_SOCKET_H_undef_SIOCATMARK
+// # endif
+// # ifndef SIOCGPGRP
+// #  define __SYS_SOCKET_H_undef_SIOCGPGRP
+// # endif
+// # ifndef SIOCGSTAMP
+// #  define __SYS_SOCKET_H_undef_SIOCGSTAMP
+// # endif
+// # ifndef SIOCGSTAMPNS
+// #  define __SYS_SOCKET_H_undef_SIOCGSTAMPNS
+// # endif
+// # ifndef SIOCSPGRP
+// #  define __SYS_SOCKET_H_undef_SIOCSPGRP
+// # endif
+// #endif
+// #ifndef IOCSIZE_MASK
+// # define __SYS_SOCKET_H_undef_IOCSIZE_MASK
+// #endif
+// #ifndef IOCSIZE_SHIFT
+// # define __SYS_SOCKET_H_undef_IOCSIZE_SHIFT
+// #endif
+// #ifndef IOC_IN
+// # define __SYS_SOCKET_H_undef_IOC_IN
+// #endif
+// #ifndef IOC_INOUT
+// # define __SYS_SOCKET_H_undef_IOC_INOUT
+// #endif
+// #ifndef IOC_OUT
+// # define __SYS_SOCKET_H_undef_IOC_OUT
+// #endif
 
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/* "Socket"-level control message types: */
-public static final int SCM_RIGHTS =                      0x01;    /* access rights (array of int) */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SCM_TIMESTAMP =                   0x02;    /* timestamp (struct timeval) */
-public static final int SCM_CREDS =                       0x03;    /* process creds (struct cmsgcred) */
-public static final int SCM_TIMESTAMP_MONOTONIC =         0x04;    /* timestamp (uint64_t) */
-
-
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/*
- * howto arguments for shutdown(2), specified by Posix.1g.
- */
-public static final int SHUT_RD =         0;               /* shut down the reading side */
-public static final int SHUT_WR =         1;               /* shut down the writing side */
-public static final int SHUT_RDWR =       2;
-// Targeting ../sf_hdtr.java
+/* Get socket manipulation related informations from kernel headers.  */
+// #include <asm/socket.h>
+// Targeting ../linger.java
 
 
 
-
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
+// #endif	/* bits/socket.h */
 
 
+// Parsed from sys/socket.h
 
-// #endif /* !_SYS_SOCKET_H_ */
+/* Declarations of socket constants, types, and functions.
+   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+// #ifndef	_SYS_SOCKET_H
+public static final int _SYS_SOCKET_H =	1;
+
+// #include <features.h>
+
+
+// #endif /* sys/socket.h */
 
 
 // Parsed from sys/syslog.h
 
 /*
- * Copyright (c) 2000-2005 Apple Computer, Inc. All rights reserved.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. The rights granted to you under the License
- * may not be used to create, or enable the creation or redistribution of,
- * unlawful or unlicensed copies of an Apple operating system, or to
- * circumvent, violate, or enable the circumvention or violation of, any
- * terms of an Apple operating system software license agreement.
- *
- * Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this file.
- *
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
- */
-/* Copyright (c) 1995 NeXT Computer, Inc. All Rights Reserved */
-/*-
  * Copyright (c) 1982, 1986, 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -707,16 +573,17 @@ public static final int SHUT_RDWR =       2;
  * SUCH DAMAGE.
  *
  *	@(#)syslog.h	8.1 (Berkeley) 6/2/93
- * $FreeBSD: src/sys/sys/syslog.h,v 1.27.2.1.4.1 2010/06/14 02:09:06 kensmith Exp $
  */
 
-// #ifndef _SYS_SYSLOG_H_
-// #define _SYS_SYSLOG_H_
+// #ifndef _SYS_SYSLOG_H
+public static final int _SYS_SYSLOG_H = 1;
 
-// #include <sys/appleapiopts.h>
-// #include <sys/cdefs.h>
+// #include <features.h>
+// #define __need___va_list
+// #include <stdarg.h>
 
-public static final String _PATH_LOG =       "/var/run/syslog";
+/* This file defines _PATH_LOG.  */
+// #include <bits/syslog-path.h>
 
 /*
  * priorities/facilities are encoded into a single 32-bit quantity, where the
@@ -727,73 +594,60 @@ public static final String _PATH_LOG =       "/var/run/syslog";
  *
  * priorities (these are ordered)
  */
-public static final int LOG_EMERG =       0;       /* system is unusable */
-public static final int LOG_ALERT =       1;       /* action must be taken immediately */
-public static final int LOG_CRIT =        2;       /* critical conditions */
-public static final int LOG_ERR =         3;       /* error conditions */
-public static final int LOG_WARNING =     4;       /* warning conditions */
-public static final int LOG_NOTICE =      5;       /* normal but significant condition */
-public static final int LOG_INFO =        6;       /* informational */
-public static final int LOG_DEBUG =       7;       /* debug-level messages */
+public static final int LOG_EMERG =	0;	/* system is unusable */
+public static final int LOG_ALERT =	1;	/* action must be taken immediately */
+public static final int LOG_CRIT =	2;	/* critical conditions */
+public static final int LOG_ERR =		3;	/* error conditions */
+public static final int LOG_WARNING =	4;	/* warning conditions */
+public static final int LOG_NOTICE =	5;	/* normal but significant condition */
+public static final int LOG_INFO =	6;	/* informational */
+public static final int LOG_DEBUG =	7;	/* debug-level messages */
 
-public static final int LOG_PRIMASK =     0x07;    /* mask to extract priority part (internal) */
-/* extract priority */
-// #define LOG_PRI(p)      ((p) & LOG_PRIMASK)
-// #define LOG_MAKEPRI(fac, pri)   ((fac) | (pri))
+public static final int LOG_PRIMASK =	0x07;	/* mask to extract priority part (internal) */
+				/* extract priority */
+// #define	LOG_PRI(p)	((p) & LOG_PRIMASK)
+// #define	LOG_MAKEPRI(fac, pri)	((fac) | (pri))
 
 // #ifdef SYSLOG_NAMES
 // #endif
 
 /* facility codes */
-public static final int LOG_KERN =        (0<<3);  /* kernel messages */
-public static final int LOG_USER =        (1<<3);  /* random user-level messages */
-public static final int LOG_MAIL =        (2<<3);  /* mail system */
-public static final int LOG_DAEMON =      (3<<3);  /* system daemons */
-public static final int LOG_AUTH =        (4<<3);  /* authorization messages */
-public static final int LOG_SYSLOG =      (5<<3);  /* messages generated internally by syslogd */
-public static final int LOG_LPR =         (6<<3);  /* line printer subsystem */
-public static final int LOG_NEWS =        (7<<3);  /* network news subsystem */
-public static final int LOG_UUCP =        (8<<3);  /* UUCP subsystem */
-public static final int LOG_CRON =        (9<<3);  /* clock daemon */
-public static final int LOG_AUTHPRIV =    (10<<3); /* authorization messages (private) */
-/* Facility #10 clashes in DEC UNIX, where */
-/* it's defined as LOG_MEGASAFE for AdvFS  */
-/* event logging.                          */
-public static final int LOG_FTP =         (11<<3); /* ftp daemon */
-//#define	LOG_NTP		(12<<3)	/* NTP subsystem */
-//#define	LOG_SECURITY	(13<<3) /* security subsystems (firewalling, etc.) */
-//#define	LOG_CONSOLE	(14<<3) /* /dev/console output */
-public static final int LOG_NETINFO =     (12<<3); /* NetInfo */
-public static final int LOG_REMOTEAUTH =  (13<<3); /* remote authentication/authorization */
-public static final int LOG_INSTALL =     (14<<3); /* installer subsystem */
-public static final int LOG_RAS =         (15<<3); /* Remote Access Service (VPN / PPP) */
+public static final int LOG_KERN =	(0<<3);	/* kernel messages */
+public static final int LOG_USER =	(1<<3);	/* random user-level messages */
+public static final int LOG_MAIL =	(2<<3);	/* mail system */
+public static final int LOG_DAEMON =	(3<<3);	/* system daemons */
+public static final int LOG_AUTH =	(4<<3);	/* security/authorization messages */
+public static final int LOG_SYSLOG =	(5<<3);	/* messages generated internally by syslogd */
+public static final int LOG_LPR =		(6<<3);	/* line printer subsystem */
+public static final int LOG_NEWS =	(7<<3);	/* network news subsystem */
+public static final int LOG_UUCP =	(8<<3);	/* UUCP subsystem */
+public static final int LOG_CRON =	(9<<3);	/* clock daemon */
+public static final int LOG_AUTHPRIV =	(10<<3);	/* security/authorization messages (private) */
+public static final int LOG_FTP =		(11<<3);	/* ftp daemon */
 
-/* other codes through 15 reserved for system use */
-public static final int LOG_LOCAL0 =      (16<<3); /* reserved for local use */
-public static final int LOG_LOCAL1 =      (17<<3); /* reserved for local use */
-public static final int LOG_LOCAL2 =      (18<<3); /* reserved for local use */
-public static final int LOG_LOCAL3 =      (19<<3); /* reserved for local use */
-public static final int LOG_LOCAL4 =      (20<<3); /* reserved for local use */
-public static final int LOG_LOCAL5 =      (21<<3); /* reserved for local use */
-public static final int LOG_LOCAL6 =      (22<<3); /* reserved for local use */
-public static final int LOG_LOCAL7 =      (23<<3); /* reserved for local use */
+	/* other codes through 15 reserved for system use */
+public static final int LOG_LOCAL0 =	(16<<3);	/* reserved for local use */
+public static final int LOG_LOCAL1 =	(17<<3);	/* reserved for local use */
+public static final int LOG_LOCAL2 =	(18<<3);	/* reserved for local use */
+public static final int LOG_LOCAL3 =	(19<<3);	/* reserved for local use */
+public static final int LOG_LOCAL4 =	(20<<3);	/* reserved for local use */
+public static final int LOG_LOCAL5 =	(21<<3);	/* reserved for local use */
+public static final int LOG_LOCAL6 =	(22<<3);	/* reserved for local use */
+public static final int LOG_LOCAL7 =	(23<<3);	/* reserved for local use */
 
-public static final int LOG_LAUNCHD =     (24<<3); /* launchd - general bootstrap daemon */
-
-public static final int LOG_NFACILITIES = 25;      /* current number of facilities */
-public static final int LOG_FACMASK =     0x03f8;  /* mask to extract facility part */
-/* facility of pri */
-// #define LOG_FAC(p)      (((p) & LOG_FACMASK) >> 3)
+public static final int LOG_NFACILITIES =	24;	/* current number of facilities */
+public static final int LOG_FACMASK =	0x03f8;	/* mask to extract facility part */
+				/* facility of pri */
+// #define	LOG_FAC(p)	(((p) & LOG_FACMASK) >> 3)
 
 // #ifdef SYSLOG_NAMES
 // #endif
 
-
 /*
  * arguments to setlogmask.
  */
-// #define LOG_MASK(pri)   (1 << (pri))            /* mask for one priority */
-// #define LOG_UPTO(pri)   ((1 << ((pri)+1)) - 1)  /* all priorities through pri */
+// #define	LOG_MASK(pri)	(1 << (pri))		/* mask for one priority */
+// #define	LOG_UPTO(pri)	((1 << ((pri)+1)) - 1)	/* all priorities through pri */
 
 /*
  * Option flags for openlog.
@@ -801,35 +655,49 @@ public static final int LOG_FACMASK =     0x03f8;  /* mask to extract facility p
  * LOG_ODELAY no longer does anything.
  * LOG_NDELAY is the inverse of what it used to be.
  */
-public static final int LOG_PID =         0x01;    /* log the pid with each message */
-public static final int LOG_CONS =        0x02;    /* log on the console if errors in sending */
-public static final int LOG_ODELAY =      0x04;    /* delay open until first syslog() (default) */
-public static final int LOG_NDELAY =      0x08;    /* don't delay open */
-public static final int LOG_NOWAIT =      0x10;    /* don't wait for console forks: DEPRECATED */
-public static final int LOG_PERROR =      0x20;    /* log to stderr as well */
+public static final int LOG_PID =		0x01;	/* log the pid with each message */
+public static final int LOG_CONS =	0x02;	/* log on the console if errors in sending */
+public static final int LOG_ODELAY =	0x04;	/* delay open until first syslog() (default) */
+public static final int LOG_NDELAY =	0x08;	/* don't delay open */
+public static final int LOG_NOWAIT =	0x10;	/* don't wait for console forks: DEPRECATED */
+public static final int LOG_PERROR =	0x20;	/* log to stderr as well */
 
+/* Close descriptor used to write to system logger.
 
-/*
- * Don't use va_list in the vsyslog() prototype.   Va_list is typedef'd in two
- * places (<machine/varargs.h> and <machine/stdarg.h>), so if we include one
- * of them here we may collide with the utility's includes.  It's unreasonable
- * for utilities to have to include one of them to include syslog.h, so we get
- * __va_list from <sys/_types.h> and use it.
- */
-// #include <sys/_types.h>
-
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
 public static native void closelog();
-public static native void openlog(@Cast("const char*") BytePointer arg0, int arg1, int arg2);
-public static native void openlog(String arg0, int arg1, int arg2);
-public static native int setlogmask(int arg0);
-// #if defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __DARWIN_C_LEVEL >= __DARWIN_C_FULL
-public static native void syslog(int arg0, @Cast("const char*") BytePointer arg1);
-public static native void syslog(int arg0, String arg1);
-// #else
+
+/* Open connection to system logger.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+public static native void openlog(@Cast("const char*") BytePointer __ident, int __option, int __facility);
+public static native void openlog(String __ident, int __option, int __facility);
+
+/* Set the log mask level.  */
+public static native int setlogmask(int __mask);
+
+/* Generate a log message using FMT string and option arguments.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+public static native void syslog(int __pri, @Cast("const char*") BytePointer __fmt);
+public static native void syslog(int __pri, String __fmt);
+
+// #ifdef __USE_MISC
 // #endif
-// #if __DARWIN_C_LEVEL >= __DARWIN_C_FULL
+
+
+/* Define some macros helping to catch buffer overflows.  */
+// #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
+// # include <bits/syslog.h>
 // #endif
-// #endif /* !_SYS_SYSLOG_H_ */
+// #ifdef __LDBL_COMPAT
+// # include <bits/syslog-db.h>
+// #endif
+
+// #endif /* sys/syslog.h */
 
 
 // Parsed from srt/logging_api.h

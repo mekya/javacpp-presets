@@ -10,11 +10,35 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.srt.global.srt.*;
 
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
 
-/*
- * Structure used for manipulating linger option.
- */
+// #ifndef __USE_MISC
+// # ifdef __SYS_SOCKET_H_undef_FIOGETOWN
+// # endif
+// # ifdef __SYS_SOCKET_H_undef_FIOSETOWN
+// # endif
+// # ifdef __SYS_SOCKET_H_undef_SIOCATMARK
+// # endif
+// # ifdef __SYS_SOCKET_H_undef_SIOCGPGRP
+// # endif
+// # ifdef __SYS_SOCKET_H_undef_SIOCGSTAMP
+// # endif
+// # ifdef __SYS_SOCKET_H_undef_SIOCGSTAMPNS
+// # endif
+// # ifdef __SYS_SOCKET_H_undef_SIOCSPGRP
+// # endif
+// #endif
+// #ifdef __SYS_SOCKET_H_undef_IOCSIZE_MASK
+// #endif
+// #ifdef __SYS_SOCKET_H_undef_IOCSIZE_SHIFT
+// #endif
+// #ifdef __SYS_SOCKET_H_undef_IOC_IN
+// #endif
+// #ifdef __SYS_SOCKET_H_undef_IOC_INOUT
+// #endif
+// #ifdef __SYS_SOCKET_H_undef_IOC_OUT
+// #endif
+
+/* Structure used to manipulate the SO_LINGER option.  */
 @Properties(inherit = org.bytedeco.srt.presets.srt.class)
 public class linger extends Pointer {
     static { Loader.load(); }
@@ -33,6 +57,6 @@ public class linger extends Pointer {
         return new linger((Pointer)this).position(position + i);
     }
 
-	public native int l_onoff(); public native linger l_onoff(int setter);                /* option on/off */
-	public native int l_linger(); public native linger l_linger(int setter);               /* linger time */
-}
+    public native int l_onoff(); public native linger l_onoff(int setter);		/* Nonzero to linger on close.  */
+    public native int l_linger(); public native linger l_linger(int setter);		/* Time to linger.  */
+  }

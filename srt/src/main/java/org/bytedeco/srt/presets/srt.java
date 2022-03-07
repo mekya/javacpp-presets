@@ -16,7 +16,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
 import org.bytedeco.javacpp.tools.Logger;
 
 @Properties(inherit = javacpp.class,
-    value = @Platform(
+    value = { @Platform( value="macosx-x86",
         includepath = {"/usr/include/", "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/",
                    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/"},
 
@@ -48,6 +48,21 @@ import org.bytedeco.javacpp.tools.Logger;
           , link = "srt@.1.4.4"
       
     ),
+    @Platform(value = "linux-x86", 
+              includepath = {"/usr/include", "/usr/include/x86_64-linux-gnu"},
+              exclude={"bits/socket.h", "linux/uio.h"},
+              include={ 
+                        "linux/uio.h",
+                        "sys/uio.h",
+                        "bits/sockaddr.h",
+                        "bits/socket.h", 
+                        "sys/socket.h",
+                        "sys/syslog.h",
+                        "srt/logging_api.h", 
+                        "srt/srt.h"},
+              link = "srt@.1.4.4"
+    )
+    },
     target = "org.bytedeco.srt",
     global = "org.bytedeco.srt.global.srt"
 )
@@ -64,6 +79,7 @@ public class srt implements InfoMapper
         .put(new Info("_WIN32").define(false))
         .put(new Info("__END_DECLS").cppText("#define __END_DECLS"))
         .put(new Info("__darwin_va_list").cppTypes("char*"))
+        .put(new Info("__gnuc_va_list").cppTypes("char*"))
         .put(new Info("sa_family_t", "__uint8_t")
                 .cast().valueTypes("byte").pointerTypes("BytePointer", "ByteBuffer", "byte[]"))
         .put(new Info(
@@ -83,7 +99,11 @@ public class srt implements InfoMapper
                 )
           .cast().valueTypes("int").pointerTypes("IntPointer", "IntBuffer", "int[]"))
           .put(new Info(
-        		  //"greg_t", "blkcnt_t", "blkcnt64_t", "off_t", "off64_t", "rlim64_t",
+        		  //"greg_t", "blkcnt_t", "blkcnt64_t",
+                "__off_t", 
+                "__off64_t", 
+                "__kernel_size_t",
+                //"rlim64_t",
                 //"__darwin_ino64_t", 
                 "__int64_t"
         		  //, "__uint64_t", "u_int64_t"
@@ -99,11 +119,13 @@ public class srt implements InfoMapper
           .put(new Info(
         		  //"__DARWIN_ALIAS", "__DARWIN_STRUCT_STAT64_TIMES", "__DARWIN_STRUCT_STAT64", "_NLS_PRIVATE",
                   //"_STRUCT_TIMESPEC", "_STRUCT_TIMEVAL", "_STRUCT_SIGALTSTACK", "_STRUCT_UCONTEXT",
-                  //"__extension__", "__header_always_inline", "__inline", "__mode__",
+                  "__extension__","__extern_inline" , "__ss_aligntype",
+                  //"__header_always_inline", "__inline", "__mode__",
                   //"__nonnull", "_Nullable", 
                   "__restrict"
         		  ,
         		  "SRT_API"
+                  ,"__REDIRECT"
                  // ,
                  // "__darwin_va_list"
                   //, "__CLOCK_AVAILABILITY", "__OS_AVAILABILITY_MSG",
@@ -115,17 +137,21 @@ public class srt implements InfoMapper
                   "__APPLE__", "__DARWIN_UNIX03").define(true))
           //.put(new Info("__BLOCKS__", "!__DARWIN_UNIX03",
             //      "__DARWIN_C_LEVEL < __DARWIN_C_FULL").define(false))
-          .put(new Info("SYSLOG_NAMES", " __DARWIN_C_LEVEL >= __DARWIN_C_FULL").define(false))
+          .put(new Info("SYSLOG_NAMES", " __DARWIN_C_LEVEL >= __DARWIN_C_FULL", "__USE_FILE_OFFSET64", "__USE_EXTERN_INLINES", "__USE_MISC").define(false))
           
 
           .put(new Info("SAE_ASSOCID_ALL").cppText("#define SAE_ASSOCID_ALL ((int)(-1ULL))"))
           .put(new Info("SAE_CONNID_ALL").cppText("#define SAE_CONNID_ALL ((int)(-1ULL))"))
 
 
-          .put(new Info("_SS_PAD2SIZE"
+          .put(new Info("_SS_PAD2SIZE","_SS_PADSIZE"
         		  //, "WCOREFLAG"
         		  ).cppTypes("int").translate(false))
            .put(new Info("socket.h").linePatterns("__BEGIN_DECLS", "__END_DECLS").skip())
+           .put(new Info("cmsghdr::__flexarr"//, "getwd", "getpw", "lchmod", "mktemp", "revoke", "setlogin",
+                           //  "sigblock", "siggetmask", "sigsetmask", "sigreturn", "sigstack(sigstack*, sigstack*)"
+                           ).skip())
+//           .put(new Info("cmsghdr").purify())
            //.put(new Info("in.h").linePatterns("#pragma pack()", "#define MCAST_UNDEFINED 0").skip())
            ;
            

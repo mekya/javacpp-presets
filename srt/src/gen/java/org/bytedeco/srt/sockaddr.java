@@ -10,11 +10,8 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.srt.global.srt.*;
 
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
 
-/*
- * [XSI] Structure used by kernel to store most addresses.
- */
+/* Structure describing a generic socket address.  */
 @Properties(inherit = org.bytedeco.srt.presets.srt.class)
 public class sockaddr extends Pointer {
     static { Loader.load(); }
@@ -33,8 +30,7 @@ public class sockaddr extends Pointer {
         return new sockaddr((Pointer)this).position(position + i);
     }
 
-	public native @Cast("__uint8_t") byte sa_len(); public native sockaddr sa_len(byte setter);         /* total length */
-	public native @Cast("sa_family_t") byte sa_family(); public native sockaddr sa_family(byte setter);      /* [XSI] address family */
-	public native @Cast("char") byte sa_data(int i); public native sockaddr sa_data(int i, byte setter);
-	@MemberGetter public native @Cast("char*") BytePointer sa_data();    /* [XSI] addr value (actually larger) */
-}
+    public native @Cast("sa_family_t") byte sa_family(); public native sockaddr sa_family(byte setter);	/* Common data: address family and length.  */
+    public native @Cast("char") byte sa_data(int i); public native sockaddr sa_data(int i, byte setter);
+    @MemberGetter public native @Cast("char*") BytePointer sa_data();		/* Address data.  */
+  }
