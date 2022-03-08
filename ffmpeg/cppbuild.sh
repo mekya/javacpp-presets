@@ -10,6 +10,7 @@ fi
 DISABLE="--disable-iconv --disable-opencl --disable-sdl2 --disable-bzlib --disable-lzma --disable-linux-perf"
 ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zlib --enable-libmp3lame --enable-libspeex --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-openssl --enable-libopenh264 --enable-libvpx --enable-libfreetype --enable-libopus --enable-libxml2 --enable-libsrt"
 
+
 if [[ "$EXTENSION" == *gpl ]]; then
     # Enable GPL and nonfree modules
     ENABLE="$ENABLE --enable-gpl --enable-nonfree --enable-libx264 --enable-libx265"
