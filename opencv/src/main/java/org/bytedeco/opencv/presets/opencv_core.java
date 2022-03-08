@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 Samuel Audet
+ * Copyright (C) 2013-2021 Samuel Audet
  *
  * Licensed either under the Apache License, Version 2.0, or (at your option)
  * under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ import org.bytedeco.openblas.presets.*;
         @Platform(value = "linux-x86",    preloadpath = {"/usr/lib32/", "/usr/lib/"}),
         @Platform(value = "linux-x86_64", preloadpath = {"/usr/lib64/", "/usr/lib/"}),
         @Platform(value = "linux-ppc64",  preloadpath = {"/usr/lib/powerpc64-linux-gnu/", "/usr/lib/powerpc64le-linux-gnu/"}),
-        @Platform(value = "windows", define = {"SHARED_PTR_NAMESPACE std", "_WIN32_WINNT 0x0502"}, link =  {"opencv_core451", "opencv_imgproc451"}, preload = {"opencv_cudev451"}),
+        @Platform(value = "windows", define = {"SHARED_PTR_NAMESPACE std", "_WIN32_WINNT 0x0502"}, link =  {"opencv_core453", "opencv_imgproc453"}, preload = {"opencv_cudev453"}),
         @Platform(value = {"linux-arm64", "linux-ppc64le", "linux-x86_64", "macosx-x86_64", "windows-x86_64"}, extension = "-gpu")},
     target = "org.bytedeco.opencv.opencv_core",
     global = "org.bytedeco.opencv.global.opencv_core",
@@ -234,6 +234,7 @@ public class opencv_core implements LoadEnabled, InfoMapper {
                .put(new Info("std::vector<cv::Scalar>").pointerTypes("ScalarVector").define())
                .put(new Info("std::vector<cv::KeyPoint>").pointerTypes("KeyPointVector").define())
                .put(new Info("std::vector<cv::DMatch>").pointerTypes("DMatchVector").define())
+               .put(new Info("std::vector<cv::Range>").pointerTypes("RangeVector").define())
                .put(new Info("std::vector<std::vector<cv::Point> >").pointerTypes("PointVectorVector").define())
                .put(new Info("std::vector<std::vector<cv::Point2f> >").pointerTypes("Point2fVectorVector").define())
                .put(new Info("std::vector<std::vector<cv::Point2d> >").pointerTypes("Point2dVectorVector").define())
@@ -272,7 +273,7 @@ public class opencv_core implements LoadEnabled, InfoMapper {
                              "cv::AlgorithmInfoData", "cv::AlgorithmInfo::addParam", "cv::CommandLineParser",
                              "cv::cvStartWriteRawData_Base64", "cv::cvWriteRawData_Base64", "cv::cvEndWriteRawData_Base64",
                              "cv::cvWriteMat_Base64", "cv::cvWriteMatND_Base64", "cv::FileStorage::Impl").skip())
-               .put(new Info("cv::AutoBuffer<double>", "std::shared_ptr<void>").cast().pointerTypes("Pointer"))
+               .put(new Info("cv::AutoBuffer<double>", "std::shared_ptr<void>", "std::type_index").cast().pointerTypes("Pointer"))
 
                .put(new Info("cv::Mat").base("AbstractMat"))
                .put(new Info("cv::noArray()").javaText("public static Mat noArray() { return null; }"))
@@ -290,8 +291,8 @@ public class opencv_core implements LoadEnabled, InfoMapper {
                      + "public Mat(int rows, int cols, int type, Pointer data, boolean copyData) { super((Pointer)null);\n"
                      + "    if (copyData) { allocate(rows, cols, type); data().put(data); } else { allocate(rows, cols, type, data, AUTO_STEP); this.pointer = data; }\n"
                      + "}\n"
-                     + "/** Calls {@link #Mat(int, int, int, Pointer, boolean) Mat(1, (int)Math.min(data.limit() - data.position(), Integer.MAX_VALUE), type, data, copyData)}. */\n"
-                     + "public Mat(int type, Pointer data, boolean copyData) { this(1, (int)Math.min(data.limit() - data.position(), Integer.MAX_VALUE), type, data, copyData); }\n"
+                     + "/** Calls {@link #Mat(int, int, int, Pointer, boolean) Mat((int)Math.min(data.limit() - data.position(), Integer.MAX_VALUE), 1, type, data, copyData)}. */\n"
+                     + "public Mat(int type, Pointer data, boolean copyData) { this((int)Math.min(data.limit() - data.position(), Integer.MAX_VALUE), 1, type, data, copyData); }\n"
 
                      + "/** Calls {@link #Mat(int, Pointer, boolean) Mat(CV_32SC2, points, copyData)}. */ public Mat(Point points, boolean copyData) { this(CV_32SC2, points, copyData); }\n"
                      + "/** Calls {@link #Mat(int, Pointer, boolean) Mat(CV_32FC2, points, copyData)}. */ public Mat(Point2f points, boolean copyData) { this(CV_32FC2, points, copyData); }\n"
@@ -312,11 +313,11 @@ public class opencv_core implements LoadEnabled, InfoMapper {
 
                      + "public Mat(byte ... b) { this(b, false); }\n"
                      + "public Mat(short ... s) { this(s, false); }\n"
-                     + "public Mat(byte[] b, boolean signed) { this(1, b.length, signed ? CV_8SC1 : CV_8UC1); data().put(b); }\n"
-                     + "public Mat(short[] s, boolean signed) { this(1, s.length, signed ? CV_16SC1 : CV_16UC1); new ShortPointer(data()).put(s); }\n"
-                     + "public Mat(int ... n) { this(1, n.length, CV_32SC1); new IntPointer(data()).put(n); }\n"
-                     + "public Mat(double ... d) { this(1, d.length, CV_64FC1); new DoublePointer(data()).put(d); }\n"
-                     + "public Mat(float ... f) { this(1, f.length, CV_32FC1); new FloatPointer(data()).put(f); }\n"
+                     + "public Mat(byte[] b, boolean signed) { this(b.length, 1, signed ? CV_8SC1 : CV_8UC1); data().put(b); }\n"
+                     + "public Mat(short[] s, boolean signed) { this(s.length, 1, signed ? CV_16SC1 : CV_16UC1); new ShortPointer(data()).put(s); }\n"
+                     + "public Mat(int ... n) { this(n.length, 1, CV_32SC1); new IntPointer(data()).put(n); }\n"
+                     + "public Mat(double ... d) { this(d.length, 1, CV_64FC1); new DoublePointer(data()).put(d); }\n"
+                     + "public Mat(float ... f) { this(f.length, 1, CV_32FC1); new FloatPointer(data()).put(f); }\n"
                      + "/** Calls {@link #Mat(BytePointer, boolean) Mat(p, false)}. */   public Mat(BytePointer p) { this(p, false); }\n"
                      + "/** Calls {@link #Mat(ShortPointer, boolean) Mat(p, false)}. */  public Mat(ShortPointer p) { this(p, false); }\n"
                      + "/** Calls {@link #Mat(BytePointer, boolean, boolean) Mat(p, signed, false)}. */  public Mat(BytePointer p, boolean signed) { this(p, signed, false); }\n"
@@ -343,6 +344,8 @@ public class opencv_core implements LoadEnabled, InfoMapper {
                        .skip()./*cast().*/pointerTypes("Mat", "Mat", "Mat", "UMat", "UMat", "UMat", "GpuMat", "GpuMat", "GpuMat"))
                .put(new Info("cv::InputArrayOfArrays", "cv::OutputArrayOfArrays", "cv::InputOutputArrayOfArrays")
                        .skip()./*cast().*/pointerTypes("MatVector", "UMatVector", "GpuMatVector"))
+               .put(new Info("cv::cuda::GpuMatND::SizeArray", "cv::cuda::GpuMatND::IndexArray").annotations("@StdVector").valueTypes("IntPointer", "IntBuffer", "int[]"))
+               .put(new Info("cv::cuda::GpuMatND::StepArray").annotations("@StdVector").valueTypes("SizeTPointer"))
 
                .put(new Info("cv::traits::Depth", "cv::traits::Type").skip())
                .put(new Info("cv::Complex<float>").pointerTypes("Complexf").base("FloatPointer"))

@@ -66,6 +66,9 @@ tar --totals -xzf ../apache-mxnet-src-$MXNET_VERSION-incubating.tar.gz || true
 
 cd apache-mxnet-src-$MXNET_VERSION-incubating
 
+# https://github.com/apache/incubator-mxnet/pull/20207
+patch -Np1 < ../../../mxnet.patch
+
 # upgrade MKL-DNN
 #sedinplace 's/0.18.1/0.19/g' 3rdparty/mkldnn/CMakeLists.txt
 #sedinplace 's/0.18/0.19/g' 3rdparty/mkldnn/scripts/prepare_mkl.bat 3rdparty/mkldnn/scripts/prepare_mkl.sh
@@ -84,6 +87,9 @@ sedinplace 's:../../src/operator/tensor/:./:g' src/operator/tensor/cast_storage-
 sedinplace 's/-Xcompiler "$(CFLAGS)/"-Xcompiler=$(CFLAGS)/g' Makefile
 sedinplace '/CHECK(mshadow::DataType<DType>::kFlag == type_flag_)/{N;N;N;d;}' include/mxnet/tensor_blob.h
 sedinplace 's/std::pow/powf/g' src/operator/contrib/multi_lamb.cu
+sedinplace 's/round(/roundf(/g' src/operator/*.cu src/operator/contrib/*.cu
+sedinplace 's/floor(/floorf(/g' src/operator/*.cu src/operator/contrib/*.cu
+sedinplace 's/ceil(/ceilf(/g' src/operator/*.cu src/operator/contrib/*.cu
 
 sedinplace '/#include <opencv2\/opencv.hpp>/a\
 #include <opencv2/imgproc/types_c.h>\

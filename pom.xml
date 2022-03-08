@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bytedeco</groupId>
   <artifactId>javacpp-presets</artifactId>
-  <version>1.5.5</version>
+  <version>1.5.6</version>
   <packaging>pom</packaging>
 
   <name>JavaCPP Presets</name>
@@ -61,7 +61,6 @@
     <javacpp.parser.skip>false</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
     <javacpp.compiler.skip>false</javacpp.compiler.skip> <!-- To skip native compilation phase: -Djavacpp.compiler.skip=true -->
     <javacpp.moduleId>${project.artifactId}</javacpp.moduleId>
-    <javacpp.nativeRequires/>
     <javacpp.packageName>${project.artifactId}</javacpp.packageName>
     <javacpp.platform.nativeOutputPath>org/bytedeco/${javacpp.packageName}/${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.nativeOutputPath>
     <javacpp.platform.root></javacpp.platform.root>
@@ -396,8 +395,6 @@
                   <moduleInfoSource>
                     open module org.bytedeco.${javacpp.packageName}.${javacpp.platform.module} {
                       requires transitive org.bytedeco.${javacpp.packageName};
-                      requires org.bytedeco.javacpp.${javacpp.platform.module};
-                      ${javacpp.nativeRequires}
                     }
                   </moduleInfoSource>
                 </module>
@@ -607,17 +604,22 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>caffe</module>
         <module>openpose</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>tensorrt</module>
         <module>ale</module>
+        <module>depthai</module>
         <module>onnx</module>
         <module>ngraph</module>
         <module>onnxruntime</module>
@@ -626,6 +628,7 @@
         <module>qt</module>
         <module>skia</module>
         <module>cpu_features</module>
+        <module>modsecurity</module>
         <module>systems</module>
         <module>srt</module>
       </modules>
@@ -763,6 +766,7 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
@@ -810,6 +814,7 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
@@ -857,6 +862,7 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
@@ -904,6 +910,7 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
@@ -1097,8 +1104,10 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
+        <module>depthai</module>
         <module>cpu_features</module>
         <module>systems</module>
       </modules>
@@ -1143,6 +1152,7 @@
         <module>flandmark</module>
         <module>arrow</module>
         <module>hdf5</module>
+        <module>dnnl</module>
         <module>openblas</module>
         <module>arpack-ng</module>
         <module>cminpack</module>
@@ -1153,9 +1163,16 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>cuda</module>
+        <module>nvcodec</module>
+        <module>opencl</module>
+        <module>tensorflow-lite</module>
+        <module>tensorrt</module>
+        <module>depthai</module>
+        <module>onnxruntime</module>
         <module>cpu_features</module>
         <module>systems</module>
       </modules>
@@ -1207,9 +1224,11 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>cpu_features</module>
         <module>systems</module>
       </modules>
@@ -1266,12 +1285,14 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>caffe</module>
         <module>mxnet</module>
         <module>tensorflow</module>
         <module>ale</module>
+        <module>depthai</module>
         <module>liquidfun</module>
         <module>skia</module>
         <module>cpu_features</module>
@@ -1334,17 +1355,22 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>caffe</module>
         <module>openpose</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>tensorrt</module>
         <module>ale</module>
+        <module>depthai</module>
         <module>onnx</module>
         <module>ngraph</module>
         <module>onnxruntime</module>
@@ -1353,6 +1379,7 @@
         <module>qt</module>
         <module>skia</module>
         <module>cpu_features</module>
+        <module>modsecurity</module>
         <module>systems</module>
       </modules>
       <properties>
@@ -1410,6 +1437,7 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
@@ -1418,8 +1446,11 @@
 <!--        <module>cuda</module>-->
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>ale</module>
+        <module>depthai</module>
         <module>onnx</module>
         <module>ngraph</module>
         <module>onnxruntime</module>
@@ -1428,6 +1459,7 @@
         <module>qt</module>
         <module>skia</module>
         <module>cpu_features</module>
+        <module>modsecurity</module>
         <module>systems</module>
         <module>srt</module>
       </modules>
@@ -1485,6 +1517,7 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>ale</module>
@@ -1550,15 +1583,20 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>tensorrt</module>
         <module>ale</module>
+        <module>onnx</module>
         <module>onnxruntime</module>
         <module>tvm</module>
         <module>liquidfun</module>

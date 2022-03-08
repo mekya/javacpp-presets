@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Samuel Audet
+ * Copyright (C) 2019-2021 Samuel Audet
  *
  * Licensed either under the Apache License, Version 2.0, or (at your option)
  * under the terms of the GNU General Public License as published by
@@ -61,14 +61,16 @@ import org.bytedeco.opencv.presets.*;
         opencv_intensity_transform.class,
         opencv_mcc.class,
         opencv_rapid.class,
+        opencv_barcode.class,
+        opencv_wechat_qrcode.class,
     },
     value = {
         @Platform(preload = {"opencv_cuda@.4.5", "opencv_cudaarithm@.4.5", "opencv_cudafilters@.4.5", "opencv_cudaimgproc@.4.5",
                              "opencv_cudacodec@.4.5", "opencv_cudaobjdetect@.4.5", "opencv_cudabgsegm@.4.5", "opencv_cudastereo@.4.5",
                              "opencv_cudaoptflow@.4.5", "opencv_cudawarping@.4.5", "opencv_cudalegacy@.4.5"}),
-        @Platform(value = "windows", preload = {"opencv_cuda451", "opencv_cudaarithm451", "opencv_cudafilters451", "opencv_cudaimgproc451",
-                             "opencv_cudacodec451", "opencv_cudaobjdetect451", "opencv_cudabgsegm451", "opencv_cudastereo451",
-                             "opencv_cudaoptflow451", "opencv_cudawarping451", "opencv_cudalegacy451"}),
+        @Platform(value = "windows", preload = {"opencv_cuda453", "opencv_cudaarithm453", "opencv_cudafilters453", "opencv_cudaimgproc453",
+                             "opencv_cudacodec453", "opencv_cudaobjdetect453", "opencv_cudabgsegm453", "opencv_cudastereo453",
+                             "opencv_cudaoptflow453", "opencv_cudawarping453", "opencv_cudalegacy453"}),
     }
 )
 public class opencv_python3 {
