@@ -8,7 +8,7 @@ if [[ -z "$PLATFORM" ]]; then
 fi
 
 DISABLE="--disable-iconv --disable-opencl --disable-sdl2 --disable-bzlib --disable-lzma --disable-linux-perf"
-ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zlib --enable-libmp3lame --enable-libspeex --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-openssl --enable-libopenh264 --enable-libvpx --enable-libfreetype --enable-libopus --enable-libxml2 "
+ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zlib --enable-libmp3lame --enable-libspeex --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-openssl --enable-libopenh264 --enable-libvpx --enable-libfreetype --enable-libopus --enable-libxml2  " #--enable-libsrt
 
 if [[ "$EXTENSION" == *gpl ]]; then
     # Enable GPL and nonfree modules
@@ -18,6 +18,7 @@ fi
 # minimal configuration to support MPEG-4 streams with H.264 and AAC as well as Motion JPEG
 # DISABLE="--disable-iconv --disable-libxcb --disable-opencl --disable-sdl2 --disable-bzlib --disable-lzma --disable-linux-perf --disable-everything"
 # ENABLE="--enable-shared --enable-runtime-cpudetect --enable-libopenh264 --enable-encoder=libopenh264 --enable-encoder=aac --enable-encoder=mjpeg --enable-decoder=h264 --enable-decoder=aac --enable-decoder=mjpeg --enable-parser=h264 --enable-parser=aac --enable-parser=mjpeg --enable-muxer=mp4 --enable-muxer=rtsp --enable-muxer=mjpeg --enable-demuxer=mov --enable-demuxer=rtsp --enable-demuxer=mjpeg --enable-protocol=file --enable-protocol=http --enable-protocol=rtp --enable-protocol=rtmp"
+SRT_CONFIG="-DENABLE_APPS:BOOL=OFF -DENABLE_ENCRYPTION:BOOL=ON -DENABLE_SHARED:BOOL=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
 
 NASM_VERSION=2.14
 ZLIB=zlib-1.2.11
@@ -35,6 +36,7 @@ ALSA_VERSION=1.2.4
 FREETYPE_VERSION=2.10.4
 MFX_VERSION=1.34
 NVCODEC_VERSION=11.0.10.0
+LIBSRT_VERSION=1.4.2
 FFMPEG_VERSION=4.3.2
 download https://download.videolan.org/contrib/nasm/nasm-$NASM_VERSION.tar.gz nasm-$NASM_VERSION.tar.gz
 download http://zlib.net/$ZLIB.tar.gz $ZLIB.tar.gz
@@ -51,6 +53,7 @@ download https://github.com/webmproject/libvpx/archive/v$VPX_VERSION.tar.gz libv
 download https://ftp.osuosl.org/pub/blfs/conglomeration/alsa-lib/alsa-lib-$ALSA_VERSION.tar.bz2 alsa-lib-$ALSA_VERSION.tar.bz2
 download https://ftp.osuosl.org/pub/blfs/conglomeration/freetype/freetype-$FREETYPE_VERSION.tar.xz freetype-$FREETYPE_VERSION.tar.xz
 download https://github.com/lu-zero/mfx_dispatch/archive/$MFX_VERSION.tar.gz mfx_dispatch-$MFX_VERSION.tar.gz
+download https://github.com/Haivision/srt/archive/refs/tags/v$LIBSRT_VERSION.tar.gz srt-$LIBSRT_VERSION.tar.gz
 download https://github.com/FFmpeg/nv-codec-headers/archive/n$NVCODEC_VERSION.tar.gz nv-codec-headers-$NVCODEC_VERSION.tar.gz
 download http://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2 ffmpeg-$FFMPEG_VERSION.tar.bz2
 
@@ -66,6 +69,7 @@ tar --totals -xzf ../$OPUS.tar.gz
 tar --totals -xzf ../$OPENCORE_AMR.tar.gz
 tar --totals -xzf ../$VO_AMRWBENC.tar.gz
 tar --totals -xzf ../$OPENSSL.tar.gz
+tar --totals -xzf ../srt-$LIBSRT_VERSION.tar.gz
 tar --totals -xzf ../openh264-$OPENH264_VERSION.tar.gz
 tar --totals -xzf ../$X264.tar.gz
 tar --totals -xzf ../x265-$X265.tar.gz
@@ -694,6 +698,10 @@ EOF
         ./Configure linux-x86_64 -fPIC no-shared --prefix=$INSTALL_PATH
         make -s -j $MAKEJ
         make install_sw
+        cd ../srt-$LIBSRT_VERSION
+        CC="gcc -m64" CXX="g++ -m64" CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $SRT_CONFIG .
+        make -j $MAKEJ V=0
+        make install
         cd ../openh264-$OPENH264_VERSION
         make -j $MAKEJ DESTDIR=./ PREFIX=.. AR=ar ARCH=x86_64 USE_ASM=No install-static
         cd ../$X264
@@ -1221,6 +1229,10 @@ EOF
         ./Configure darwin64-x86_64-cc -fPIC no-shared --prefix=$INSTALL_PATH
         make -s -j $MAKEJ
         make install_sw
+        cd ../srt-$LIBSRT_VERSION
+        CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $SRT_CONFIG .
+        make -j $MAKEJ V=0
+        make install
         cd ../openh264-$OPENH264_VERSION
         make -j $MAKEJ DESTDIR=./ PREFIX=.. AR=ar USE_ASM=No install-static
         cd ../$X264
