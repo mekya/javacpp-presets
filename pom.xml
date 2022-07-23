@@ -1158,6 +1158,7 @@
         <module>cuda</module>
         <module>cpu_features</module>
         <module>systems</module>
+        <module>srt</module>
       </modules>
       <properties>
         <javacpp.platform.android-arm></javacpp.platform.android-arm>
