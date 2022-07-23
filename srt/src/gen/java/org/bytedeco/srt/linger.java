@@ -10,32 +10,6 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.srt.global.srt.*;
 
-
-// #ifndef __USE_MISC
-// # ifdef __SYS_SOCKET_H_undef_FIOGETOWN
-// # endif
-// # ifdef __SYS_SOCKET_H_undef_FIOSETOWN
-// # endif
-// # ifdef __SYS_SOCKET_H_undef_SIOCATMARK
-// # endif
-// # ifdef __SYS_SOCKET_H_undef_SIOCGPGRP
-// # endif
-// # ifdef __SYS_SOCKET_H_undef_SIOCGSTAMP
-// # endif
-// # ifdef __SYS_SOCKET_H_undef_SIOCGSTAMPNS
-// # endif
-// # ifdef __SYS_SOCKET_H_undef_SIOCSPGRP
-// # endif
-// #endif
-// #ifdef __SYS_SOCKET_H_undef_IOCSIZE_MASK
-// #endif
-// #ifdef __SYS_SOCKET_H_undef_IOCSIZE_SHIFT
-// #endif
-// #ifdef __SYS_SOCKET_H_undef_IOC_IN
-// #endif
-// #ifdef __SYS_SOCKET_H_undef_IOC_INOUT
-// #endif
-// #ifdef __SYS_SOCKET_H_undef_IOC_OUT
 // #endif
 
 /* Structure used to manipulate the SO_LINGER option.  */

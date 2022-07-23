@@ -46,7 +46,7 @@ public static final int UIO_MAXIOV =	1024;
 
 // Parsed from sys/uio.h
 
-/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ public static final int UIO_MAXIOV =	1024;
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 // #ifndef _SYS_UIO_H
 public static final int _SYS_UIO_H =	1;
@@ -138,7 +138,7 @@ public static native @Cast("ssize_t") long pwritev64v2(int __fd, @Const iovec __
 // Parsed from bits/sockaddr.h
 
 /* Definition of struct sockaddr_* common members and sizes, generic version.
-   Copyright (C) 1995-2018 Free Software Foundation, Inc.
+   Copyright (C) 1995-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -153,7 +153,7 @@ public static native @Cast("ssize_t") long pwritev64v2(int __fd, @Const iovec __
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /*
  * Never include this file directly; use <sys/socket.h> instead.
@@ -184,7 +184,7 @@ public static final int _SS_SIZE = 128;
 // Parsed from bits/socket.h
 
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+   Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -199,7 +199,7 @@ public static final int _SS_SIZE = 128;
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 // #ifndef __BITS_SOCKET_H
 // #define __BITS_SOCKET_H
@@ -269,7 +269,8 @@ public static final int PF_VSOCK =	40;	/* vSockets.  */
 public static final int PF_KCM =		41;	/* Kernel Connection Multiplexor.  */
 public static final int PF_QIPCRTR =	42;	/* Qualcomm IPC Router.  */
 public static final int PF_SMC =		43;	/* SMC sockets.  */
-public static final int PF_MAX =		44;	/* For now..  */
+public static final int PF_XDP =		44;	/* XDP sockets.  */
+public static final int PF_MAX =		45;	/* For now..  */
 
 /* Address families.  */
 public static final int AF_UNSPEC =	PF_UNSPEC;
@@ -319,6 +320,7 @@ public static final int AF_VSOCK =	PF_VSOCK;
 public static final int AF_KCM =		PF_KCM;
 public static final int AF_QIPCRTR =	PF_QIPCRTR;
 public static final int AF_SMC =		PF_SMC;
+public static final int AF_XDP =		PF_XDP;
 public static final int AF_MAX =		PF_MAX;
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -348,9 +350,10 @@ public static final int SOL_ALG =		279;
 public static final int SOL_NFC =		280;
 public static final int SOL_KCM =		281;
 public static final int SOL_TLS =		282;
+public static final int SOL_XDP =		283;
 
 /* Maximum queue length specifiable by listen.  */
-public static final int SOMAXCONN =	128;
+public static final int SOMAXCONN =	4096;
 
 /* Get the definition of the macro to define the common sockaddr members.  */
 // #include <bits/sockaddr.h>
@@ -464,48 +467,10 @@ public static final int
 
 // #endif
 
-/* Ugly workaround for unclean kernel headers.  */
-// #ifndef __USE_MISC
-// # ifndef FIOGETOWN
-// #  define __SYS_SOCKET_H_undef_FIOGETOWN
-// # endif
-// # ifndef FIOSETOWN
-// #  define __SYS_SOCKET_H_undef_FIOSETOWN
-// # endif
-// # ifndef SIOCATMARK
-// #  define __SYS_SOCKET_H_undef_SIOCATMARK
-// # endif
-// # ifndef SIOCGPGRP
-// #  define __SYS_SOCKET_H_undef_SIOCGPGRP
-// # endif
-// # ifndef SIOCGSTAMP
-// #  define __SYS_SOCKET_H_undef_SIOCGSTAMP
-// # endif
-// # ifndef SIOCGSTAMPNS
-// #  define __SYS_SOCKET_H_undef_SIOCGSTAMPNS
-// # endif
-// # ifndef SIOCSPGRP
-// #  define __SYS_SOCKET_H_undef_SIOCSPGRP
-// # endif
-// #endif
-// #ifndef IOCSIZE_MASK
-// # define __SYS_SOCKET_H_undef_IOCSIZE_MASK
-// #endif
-// #ifndef IOCSIZE_SHIFT
-// # define __SYS_SOCKET_H_undef_IOCSIZE_SHIFT
-// #endif
-// #ifndef IOC_IN
-// # define __SYS_SOCKET_H_undef_IOC_IN
-// #endif
-// #ifndef IOC_INOUT
-// # define __SYS_SOCKET_H_undef_IOC_INOUT
-// #endif
-// #ifndef IOC_OUT
-// # define __SYS_SOCKET_H_undef_IOC_OUT
-// #endif
-
-/* Get socket manipulation related informations from kernel headers.  */
-// #include <asm/socket.h>
+// #ifdef __USE_MISC
+// #else
+public static final int SO_DEBUG = 1;
+// # include <bits/socket-constants.h>
 // Targeting ../linger.java
 
 
@@ -516,7 +481,7 @@ public static final int
 // Parsed from sys/socket.h
 
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+   Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -531,7 +496,7 @@ public static final int
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 // #ifndef	_SYS_SOCKET_H
 public static final int _SYS_SOCKET_H =	1;
