@@ -49,6 +49,12 @@ case $PLATFORM in
         make -j $MAKEJ
         make install
         ;;
+    linux-arm64)
+#        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
+       ./configure --prefix=..
+        make -j $MAKEJ
+        make install
+        ;;
     macosx-x86_64)
         ./configure --prefix=.. 
         make -j $MAKEJ

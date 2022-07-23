@@ -61,6 +61,20 @@ import org.bytedeco.javacpp.tools.Logger;
                         "srt/logging_api.h", 
                         "srt/srt.h"},
               link = "srt@.1.4.4"
+    ),
+    @Platform(value = "linux-arm64", 
+              includepath = {"/usr/include", "/usr/include/aarch64-linux-gnu"},
+              exclude={"bits/socket.h", "linux/uio.h"},
+              include={ 
+                        "linux/uio.h",
+                        "sys/uio.h",
+                        "bits/sockaddr.h",
+                        "bits/socket.h", 
+                        "sys/socket.h",
+                        "sys/syslog.h",
+                        "srt/logging_api.h", 
+                        "srt/srt.h"},
+              link = "srt@.1.4.4"
     )
     },
     target = "org.bytedeco.srt",
