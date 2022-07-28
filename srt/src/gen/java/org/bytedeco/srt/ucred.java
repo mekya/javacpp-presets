@@ -11,11 +11,27 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 import static org.bytedeco.srt.global.srt.*;
 
 
-// #ifdef __APPLE_API_UNSTABLE
-@Opaque @Properties(inherit = org.bytedeco.srt.presets.srt.class)
+// #ifdef __USE_GNU
+/* User visible structure for SCM_CREDENTIALS message */
+@Properties(inherit = org.bytedeco.srt.presets.srt.class)
 public class ucred extends Pointer {
-    /** Empty constructor. Calls {@code super((Pointer)null)}. */
-    public ucred() { super((Pointer)null); }
+    static { Loader.load(); }
+    /** Default native constructor. */
+    public ucred() { super((Pointer)null); allocate(); }
+    /** Native array allocator. Access with {@link Pointer#position(long)}. */
+    public ucred(long size) { super((Pointer)null); allocateArray(size); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
     public ucred(Pointer p) { super(p); }
+    private native void allocate();
+    private native void allocateArray(long size);
+    @Override public ucred position(long position) {
+        return (ucred)super.position(position);
+    }
+    @Override public ucred getPointer(long i) {
+        return new ucred((Pointer)this).position(position + i);
+    }
+
+  public native @Cast("pid_t") int pid(); public native ucred pid(int setter);			/* PID of sending process.  */
+  public native @Cast("uid_t") int uid(); public native ucred uid(int setter);			/* UID of sending process.  */
+  public native @Cast("gid_t") int gid(); public native ucred gid(int setter);			/* GID of sending process.  */
 }
