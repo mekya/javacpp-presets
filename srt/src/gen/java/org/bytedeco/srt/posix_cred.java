@@ -10,12 +10,10 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.srt.global.srt.*;
 
-
-// #ifdef __APPLE_API_UNSTABLE
 @Opaque @Properties(inherit = org.bytedeco.srt.presets.srt.class)
-public class ucred extends Pointer {
+public class posix_cred extends Pointer {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */
-    public ucred() { super((Pointer)null); }
+    public posix_cred() { super((Pointer)null); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
-    public ucred(Pointer p) { super(p); }
+    public posix_cred(Pointer p) { super(p); }
 }

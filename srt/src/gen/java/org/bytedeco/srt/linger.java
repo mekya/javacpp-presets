@@ -10,9 +10,11 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.srt.global.srt.*;
 
-// #endif
+// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
 
-/* Structure used to manipulate the SO_LINGER option.  */
+/*
+ * Structure used for manipulating linger option.
+ */
 @Properties(inherit = org.bytedeco.srt.presets.srt.class)
 public class linger extends Pointer {
     static { Loader.load(); }
@@ -31,6 +33,6 @@ public class linger extends Pointer {
         return new linger((Pointer)this).position(position + i);
     }
 
-    public native int l_onoff(); public native linger l_onoff(int setter);		/* Nonzero to linger on close.  */
-    public native int l_linger(); public native linger l_linger(int setter);		/* Time to linger.  */
-  }
+	public native int l_onoff(); public native linger l_onoff(int setter);                /* option on/off */
+	public native int l_linger(); public native linger l_linger(int setter);               /* linger time */
+}

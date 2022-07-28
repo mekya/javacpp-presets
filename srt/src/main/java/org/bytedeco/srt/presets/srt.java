@@ -20,12 +20,10 @@ import org.bytedeco.javacpp.tools.Logger;
         includepath = {"/usr/include/", "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/",
                    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/"},
 
-     //   preloadpath = {"/path/to/deps/"},
-     //   linkpath = {"/path/to/lib/"},
+
         include = {
-        	//	
-        		//,"sys/uio.h"
-        	//	,
+        		"sys/ucred.h"
+        		,
         		"sys/_types/_iovec_t.h"
         		
              //   ,"netinet/in.h"
@@ -91,6 +89,8 @@ public class srt implements InfoMapper
         
         infoMap.put(new Info("__BEGIN_DECLS").cppText("#define __BEGIN_DECLS"))
         .put(new Info("_WIN32").define(false))
+        .put(new Info("NOCRED","FSCRED", "cr_gid").cppTypes().annotations())
+        //.put(new Info("FSCRED").cppText("#define NOCRED -1"))
         .put(new Info("__END_DECLS").cppText("#define __END_DECLS"))
         .put(new Info("__darwin_va_list").cppTypes("char*"))
         .put(new Info("__gnuc_va_list").cppTypes("char*"))
@@ -110,6 +110,7 @@ public class srt implements InfoMapper
         		, "sae_associd_t"
         		, "sae_connid_t"
                 ,"in_addr_t"
+                ,"u_int"
                 )
           .cast().valueTypes("int").pointerTypes("IntPointer", "IntBuffer", "int[]"))
           .put(new Info(
