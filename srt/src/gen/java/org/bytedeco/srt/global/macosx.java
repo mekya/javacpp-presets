@@ -2,7 +2,7 @@
 
 package org.bytedeco.srt.global;
 
-import org.bytedeco.srt.*;
+import org.bytedeco.srt.macosx.*;
 
 import java.nio.*;
 import org.bytedeco.javacpp.*;
@@ -10,7 +10,7 @@ import org.bytedeco.javacpp.annotation.*;
 
 import static org.bytedeco.javacpp.presets.javacpp.*;
 
-public class srt extends org.bytedeco.srt.presets.srt {
+public class macosx extends org.bytedeco.srt.presets.macosx {
     static { Loader.load(); }
 
 // Parsed from sys/ucred.h
@@ -91,13 +91,13 @@ public class srt extends org.bytedeco.srt.presets.srt {
 // #include <sys/cdefs.h>
 // #include <sys/param.h>
 // #include <bsm/audit.h>
-// Targeting ../label.java
+// Targeting ../macosx/label.java
 
 
-// Targeting ../ucred.java
+// Targeting ../macosx/ucred.java
 
 
-// Targeting ../posix_cred.java
+// Targeting ../macosx/posix_cred.java
 
 
 
@@ -110,7 +110,7 @@ public class srt extends org.bytedeco.srt.presets.srt {
  */
 public static final int CRF_NOMEMBERD =   0x00000001;      /* memberd opt out by setgroups() */
 public static final int CRF_MAC_ENFORCE = 0x00000002;
-// Targeting ../xucred.java
+// Targeting ../macosx/xucred.java
 
 
 public static final int XUCRED_VERSION =  0;
@@ -158,7 +158,7 @@ public static final int XUCRED_VERSION =  0;
 // #ifndef _STRUCT_IOVEC
 // #define _STRUCT_IOVEC
 // #include <sys/_types/_size_t.h>
-// Targeting ../iovec.java
+// Targeting ../macosx/iovec.java
 
 
 // #endif /* _STRUCT_IOVEC */
@@ -462,13 +462,13 @@ public static final int SAE_CONNID_ANY =  0;
 public static final int CONNECT_RESUME_ON_READ_WRITE =    0x1; /* resume connect() on read/write */
 public static final int CONNECT_DATA_IDEMPOTENT =         0x2; /* data is idempotent */
 public static final int CONNECT_DATA_AUTHENTICATED =      0x4;
-// Targeting ../sa_endpoints_t.java
+// Targeting ../macosx/sa_endpoints_t.java
 
 
-// Targeting ../linger.java
+// Targeting ../macosx/linger.java
 
 
-// Targeting ../so_np_extensions.java
+// Targeting ../macosx/so_np_extensions.java
 
 
 
@@ -537,13 +537,13 @@ public static final int AF_IEEE80211 =    37;              /* IEEE 802.11 protoc
 public static final int AF_UTUN =         38;
 public static final int AF_VSOCK =        40;              /* VM Sockets */
 public static final int AF_MAX =          41;
-// Targeting ../sockaddr.java
+// Targeting ../macosx/sockaddr.java
 
 
 
 // #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
 public static final int SOCK_MAXADDRLEN = 255;
-// Targeting ../sockproto.java
+// Targeting ../macosx/sockproto.java
 
 
 // #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
@@ -558,7 +558,7 @@ public static native @MemberGetter int _SS_PAD1SIZE();
 public static final int _SS_PAD1SIZE = _SS_PAD1SIZE();
 public static native @MemberGetter int _SS_PAD2SIZE();
 public static final int _SS_PAD2SIZE = _SS_PAD2SIZE();
-// Targeting ../sockaddr_storage.java
+// Targeting ../macosx/sockaddr_storage.java
 
 
 
@@ -656,7 +656,7 @@ public static final int NET_RT_MAXID =            11;
  * Maximum queue length specifiable by listen.
  */
 public static final int SOMAXCONN =       128;
-// Targeting ../msghdr.java
+// Targeting ../macosx/msghdr.java
 
 
 
@@ -687,7 +687,7 @@ public static final int MSG_NEEDSA =      0x10000;         /* Fail receive if so
 
 // #if __DARWIN_C_LEVEL >= 200809L
 public static final int MSG_NOSIGNAL =    0x80000;
-// Targeting ../cmsghdr.java
+// Targeting ../macosx/cmsghdr.java
 
 
 
@@ -748,7 +748,7 @@ public static final int SCM_TIMESTAMP_MONOTONIC =         0x04;    /* timestamp 
 public static final int SHUT_RD =         0;               /* shut down the reading side */
 public static final int SHUT_WR =         1;               /* shut down the writing side */
 public static final int SHUT_RDWR =       2;
-// Targeting ../sf_hdtr.java
+// Targeting ../macosx/sf_hdtr.java
 
 
 
@@ -992,10 +992,10 @@ public static final int SRT_LOGF_DISABLE_TIME = 1;
 public static final int SRT_LOGF_DISABLE_THREADNAME = 2;
 public static final int SRT_LOGF_DISABLE_SEVERITY = 4;
 public static final int SRT_LOGF_DISABLE_EOL = 8;
-// Targeting ../SRT_LOG_HANDLER_FN.java
+// Targeting ../macosx/SRT_LOG_HANDLER_FN.java
 
 
-// Targeting ../LogFA.java
+// Targeting ../macosx/LogFA.java
 
 
 
@@ -1023,7 +1023,7 @@ public static final int SRT_LOGF_DISABLE_EOL = 8;
         // (Well, worth noting that Error and Warning potentially also can).
         debug = LOG_DEBUG;
 
-// Targeting ../Logger.java
+// Targeting ../macosx/Logger.java
 
 
 
@@ -1304,7 +1304,7 @@ public static final int SRT_LIVE_MAX_PLSIZE = SRT_LIVE_MAX_PLSIZE(); // MTU(1500
 // Latency for Live transmission: default is 120
 @MemberGetter public static native int SRT_LIVE_DEF_LATENCY_MS();
 public static final int SRT_LIVE_DEF_LATENCY_MS = SRT_LIVE_DEF_LATENCY_MS();
-// Targeting ../CBytePerfMon.java
+// Targeting ../macosx/CBytePerfMon.java
 
 
 
@@ -1631,7 +1631,7 @@ public static final int
 // In C++ these enums cannot be treated as int and glued by operator |.
 // Unless this operator is defined.
 public static native @Cast("SRT_EPOLL_OPT") @Name("operator |") int or(@Cast("SRT_EPOLL_OPT") int a1, @Cast("SRT_EPOLL_OPT") int a2);
-// Targeting ../SRT_TRACEBSTATS.java
+// Targeting ../macosx/SRT_TRACEBSTATS.java
 
 
 
@@ -1652,7 +1652,7 @@ public static native int srt_cleanup();
 // Planned deprecation removal: rel1.6.0
 public static native @Cast("SRTSOCKET") int srt_socket(int arg0, int arg1, int arg2);
 public static native @Cast("SRTSOCKET") int srt_create_socket();
-// Targeting ../SRT_SOCKGROUPDATA.java
+// Targeting ../macosx/SRT_SOCKGROUPDATA.java
 
 
 
@@ -1672,11 +1672,11 @@ public static native @Cast("SRTSOCKET") int srt_accept(@Cast("SRTSOCKET") int u,
 public static native @Cast("SRTSOCKET") int srt_accept_bond(@Cast("const SRTSOCKET*") IntPointer listeners, int lsize, @Cast("int64_t") long msTimeOut);
 public static native @Cast("SRTSOCKET") int srt_accept_bond(@Cast("const SRTSOCKET*") IntBuffer listeners, int lsize, @Cast("int64_t") long msTimeOut);
 public static native @Cast("SRTSOCKET") int srt_accept_bond(@Cast("const SRTSOCKET*") int[] listeners, int lsize, @Cast("int64_t") long msTimeOut);
-// Targeting ../srt_listen_callback_fn.java
+// Targeting ../macosx/srt_listen_callback_fn.java
 
 
 public static native int srt_listen_callback(@Cast("SRTSOCKET") int lsn, srt_listen_callback_fn hook_fn, Pointer hook_opaque);
-// Targeting ../srt_connect_callback_fn.java
+// Targeting ../macosx/srt_connect_callback_fn.java
 
 
 public static native int srt_connect_callback(@Cast("SRTSOCKET") int clr, srt_connect_callback_fn hook_fn, Pointer hook_opaque);
@@ -1702,7 +1702,7 @@ public static native int srt_getsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SO
 public static native int srt_getsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SOCKOPT") int opt, Pointer optval, IntBuffer optlen);
 public static native int srt_getsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SOCKOPT") int opt, Pointer optval, int[] optlen);
 public static native int srt_setsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SOCKOPT") int opt, @Const Pointer optval, int optlen);
-// Targeting ../SRT_MSGCTRL.java
+// Targeting ../macosx/SRT_MSGCTRL.java
 
 
 
@@ -1825,7 +1825,7 @@ public static native int srt_epoll_wait(int eid, @Cast("SRTSOCKET*") IntBuffer r
                            @Cast("SYSSOCKET*") IntBuffer lrfds, IntBuffer lrnum, @Cast("SYSSOCKET*") IntBuffer lwfds, IntBuffer lwnum);
 public static native int srt_epoll_wait(int eid, @Cast("SRTSOCKET*") int[] readfds, int[] rnum, @Cast("SRTSOCKET*") int[] writefds, int[] wnum, @Cast("int64_t") long msTimeOut,
                            @Cast("SYSSOCKET*") int[] lrfds, int[] lrnum, @Cast("SYSSOCKET*") int[] lwfds, int[] lwnum);
-// Targeting ../SRT_EPOLL_EVENT.java
+// Targeting ../macosx/SRT_EPOLL_EVENT.java
 
 
 public static native int srt_epoll_uwait(int eid, SRT_EPOLL_EVENT fdsSet, int fdsSize, @Cast("int64_t") long msTimeOut);
