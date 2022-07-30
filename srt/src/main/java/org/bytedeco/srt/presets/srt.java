@@ -16,41 +16,53 @@ import org.bytedeco.javacpp.tools.InfoMapper;
 import org.bytedeco.javacpp.tools.Logger;
 
 @Properties(inherit = javacpp.class,
-    value = { @Platform( value="macosx-x86_64",
+    value = { 
+        @Platform( value="macosx-x86_64",
         includepath = {"/usr/include/", "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/",
                    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/"},
-
-
-        include = {
-        		"sys/ucred.h"
-        		,
-        		"sys/_types/_iovec_t.h"
-        		
-             //   ,"netinet/in.h"
-        		,"sys/socket.h"
-            //    ,"/Users/mekya/softwares/custom_socket.h"
-        	//	,"string.h"
-        	//	,"stdlib.h"
-        		//,"srt/version.h"
-        		//,"srt/access_control.h"
-        		//,"srt/platform_sys.h"
-        		,
-                "sys/syslog.h" 
-                ,
-                "srt/logging_api.h"
-        		,
+        include = {	
+        		"sys/_types/_iovec_t.h",
+                "sys/socket.h"
+                "sys/syslog.h",
+                "srt/logging_api.h",
         		"srt/srt.h"
         		}
-    //    ,
-    //    preload = {"DependentLib"},
           , link = "srt@.1.4.4"
       
+    ),
+    @Platform(value = "linux-x86_64", 
+              includepath = {"/usr/include", "/usr/include/x86_64-linux-gnu"},
+              exclude={"bits/socket.h", "linux/uio.h"},
+              include={ 
+                        "linux/uio.h",
+                        "sys/uio.h",
+                        "bits/sockaddr.h",
+                        "bits/socket.h", 
+                        "sys/socket.h",
+                        "sys/syslog.h",
+                        "srt/logging_api.h", 
+                        "srt/srt.h"},
+              link = "srt@.1.4.4"
+    ),
+    @Platform(value = "linux-arm64", 
+              includepath = {"/usr/include", "/usr/include/aarch64-linux-gnu"},
+              exclude={"bits/socket.h", "linux/uio.h"},
+              include={ 
+                        "linux/uio.h",
+                        "sys/uio.h",
+                        "bits/sockaddr.h",
+                        "bits/socket.h", 
+                        "sys/socket.h",
+                        "sys/syslog.h",
+                        "srt/logging_api.h", 
+                        "srt/srt.h"},
+              link = "srt@.1.4.4"
     )
     },
-    target = "org.bytedeco.srt.macosx",
-    global = "org.bytedeco.srt.global.macosx"
-    )
-public class macosx implements InfoMapper 
+    target = "org.bytedeco.srt",
+    global = "org.bytedeco.srt.global.srt"
+)
+public class srt implements InfoMapper 
 {
     
     public void map(InfoMap infoMap) 
@@ -61,8 +73,6 @@ public class macosx implements InfoMapper
         
         infoMap.put(new Info("__BEGIN_DECLS").cppText("#define __BEGIN_DECLS"))
         .put(new Info("_WIN32").define(false))
-        .put(new Info("NOCRED","FSCRED", "cr_gid").cppTypes().annotations())
-        .put(new Info("sys/ucred.h").skip())
         .put(new Info("__END_DECLS").cppText("#define __END_DECLS"))
         .put(new Info("__darwin_va_list").cppTypes("char*"))
         .put(new Info("__gnuc_va_list").cppTypes("char*"))
@@ -82,7 +92,6 @@ public class macosx implements InfoMapper
         		, "sae_associd_t"
         		, "sae_connid_t"
                 ,"in_addr_t"
-                ,"u_int"
                 )
           .cast().valueTypes("int").pointerTypes("IntPointer", "IntBuffer", "int[]"))
           .put(new Info(

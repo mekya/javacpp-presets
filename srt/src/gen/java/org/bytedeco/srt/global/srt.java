@@ -2,7 +2,7 @@
 
 package org.bytedeco.srt.global;
 
-import org.bytedeco.srt.macosx.*;
+import org.bytedeco.srt.*;
 
 import java.nio.*;
 import org.bytedeco.javacpp.*;
@@ -10,121 +10,8 @@ import org.bytedeco.javacpp.annotation.*;
 
 import static org.bytedeco.javacpp.presets.javacpp.*;
 
-public class macosx extends org.bytedeco.srt.presets.macosx {
+public class srt extends org.bytedeco.srt.presets.srt {
     static { Loader.load(); }
-
-// Parsed from sys/ucred.h
-
-/*
- * Copyright (c) 2000-2004 Apple Computer, Inc. All rights reserved.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. The rights granted to you under the License
- * may not be used to create, or enable the creation or redistribution of,
- * unlawful or unlicensed copies of an Apple operating system, or to
- * circumvent, violate, or enable the circumvention or violation of, any
- * terms of an Apple operating system software license agreement.
- *
- * Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this file.
- *
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
- */
-/* Copyright (c) 1995, 1997 Apple Computer, Inc. All Rights Reserved */
-/*
- * Copyright (c) 1989, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)ucred.h	8.4 (Berkeley) 1/9/95
- */
-/*
- * NOTICE: This file was modified by SPARTA, Inc. in 2005 to introduce
- * support for mandatory and extensible security protections.  This notice
- * is included in support of clause 2.2 (b) of the Apple Public License,
- * Version 2.0.
- */
-
-// #ifndef _SYS_UCRED_H_
-// #define _SYS_UCRED_H_
-
-// #include <sys/appleapiopts.h>
-// #include <sys/cdefs.h>
-// #include <sys/param.h>
-// #include <bsm/audit.h>
-// Targeting ../macosx/label.java
-
-
-// Targeting ../macosx/ucred.java
-
-
-// Targeting ../macosx/posix_cred.java
-
-
-
-// #ifndef _KAUTH_CRED_T
-// #define _KAUTH_CRED_T
-// #endif  /* !_KAUTH_CRED_T */
-
-/*
- * Credential flags that can be set on a credential
- */
-public static final int CRF_NOMEMBERD =   0x00000001;      /* memberd opt out by setgroups() */
-public static final int CRF_MAC_ENFORCE = 0x00000002;
-// Targeting ../macosx/xucred.java
-
-
-public static final int XUCRED_VERSION =  0;
-
-// #define cr_gid cr_groups[0]
-// #define NOCRED ((kauth_cred_t )0)       /* no credential available */
-// #define FSCRED ((kauth_cred_t )-1)      /* filesystem credential */
-
-// #define IS_VALID_CRED(_cr)      ((_cr) != NOCRED && (_cr) != FSCRED)
-
-// #endif /* __APPLE_API_UNSTABLE */
-
-// #endif /* !_SYS_UCRED_H_ */
-
 
 // Parsed from sys/_types/_iovec_t.h
 
@@ -158,7 +45,7 @@ public static final int XUCRED_VERSION =  0;
 // #ifndef _STRUCT_IOVEC
 // #define _STRUCT_IOVEC
 // #include <sys/_types/_size_t.h>
-// Targeting ../macosx/iovec.java
+// Targeting ../iovec.java
 
 
 // #endif /* _STRUCT_IOVEC */
@@ -462,13 +349,13 @@ public static final int SAE_CONNID_ANY =  0;
 public static final int CONNECT_RESUME_ON_READ_WRITE =    0x1; /* resume connect() on read/write */
 public static final int CONNECT_DATA_IDEMPOTENT =         0x2; /* data is idempotent */
 public static final int CONNECT_DATA_AUTHENTICATED =      0x4;
-// Targeting ../macosx/sa_endpoints_t.java
+// Targeting ../sa_endpoints_t.java
 
 
-// Targeting ../macosx/linger.java
+// Targeting ../linger.java
 
 
-// Targeting ../macosx/so_np_extensions.java
+// Targeting ../so_np_extensions.java
 
 
 
@@ -537,13 +424,13 @@ public static final int AF_IEEE80211 =    37;              /* IEEE 802.11 protoc
 public static final int AF_UTUN =         38;
 public static final int AF_VSOCK =        40;              /* VM Sockets */
 public static final int AF_MAX =          41;
-// Targeting ../macosx/sockaddr.java
+// Targeting ../sockaddr.java
 
 
 
 // #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
 public static final int SOCK_MAXADDRLEN = 255;
-// Targeting ../macosx/sockproto.java
+// Targeting ../sockproto.java
 
 
 // #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
@@ -558,7 +445,7 @@ public static native @MemberGetter int _SS_PAD1SIZE();
 public static final int _SS_PAD1SIZE = _SS_PAD1SIZE();
 public static native @MemberGetter int _SS_PAD2SIZE();
 public static final int _SS_PAD2SIZE = _SS_PAD2SIZE();
-// Targeting ../macosx/sockaddr_storage.java
+// Targeting ../sockaddr_storage.java
 
 
 
@@ -656,7 +543,7 @@ public static final int NET_RT_MAXID =            11;
  * Maximum queue length specifiable by listen.
  */
 public static final int SOMAXCONN =       128;
-// Targeting ../macosx/msghdr.java
+// Targeting ../msghdr.java
 
 
 
@@ -687,7 +574,7 @@ public static final int MSG_NEEDSA =      0x10000;         /* Fail receive if so
 
 // #if __DARWIN_C_LEVEL >= 200809L
 public static final int MSG_NOSIGNAL =    0x80000;
-// Targeting ../macosx/cmsghdr.java
+// Targeting ../cmsghdr.java
 
 
 
@@ -748,7 +635,7 @@ public static final int SCM_TIMESTAMP_MONOTONIC =         0x04;    /* timestamp 
 public static final int SHUT_RD =         0;               /* shut down the reading side */
 public static final int SHUT_WR =         1;               /* shut down the writing side */
 public static final int SHUT_RDWR =       2;
-// Targeting ../macosx/sf_hdtr.java
+// Targeting ../sf_hdtr.java
 
 
 
@@ -992,10 +879,10 @@ public static final int SRT_LOGF_DISABLE_TIME = 1;
 public static final int SRT_LOGF_DISABLE_THREADNAME = 2;
 public static final int SRT_LOGF_DISABLE_SEVERITY = 4;
 public static final int SRT_LOGF_DISABLE_EOL = 8;
-// Targeting ../macosx/SRT_LOG_HANDLER_FN.java
+// Targeting ../SRT_LOG_HANDLER_FN.java
 
 
-// Targeting ../macosx/LogFA.java
+// Targeting ../LogFA.java
 
 
 
@@ -1023,7 +910,7 @@ public static final int SRT_LOGF_DISABLE_EOL = 8;
         // (Well, worth noting that Error and Warning potentially also can).
         debug = LOG_DEBUG;
 
-// Targeting ../macosx/Logger.java
+// Targeting ../Logger.java
 
 
 
@@ -1304,7 +1191,7 @@ public static final int SRT_LIVE_MAX_PLSIZE = SRT_LIVE_MAX_PLSIZE(); // MTU(1500
 // Latency for Live transmission: default is 120
 @MemberGetter public static native int SRT_LIVE_DEF_LATENCY_MS();
 public static final int SRT_LIVE_DEF_LATENCY_MS = SRT_LIVE_DEF_LATENCY_MS();
-// Targeting ../macosx/CBytePerfMon.java
+// Targeting ../CBytePerfMon.java
 
 
 
@@ -1631,7 +1518,7 @@ public static final int
 // In C++ these enums cannot be treated as int and glued by operator |.
 // Unless this operator is defined.
 public static native @Cast("SRT_EPOLL_OPT") @Name("operator |") int or(@Cast("SRT_EPOLL_OPT") int a1, @Cast("SRT_EPOLL_OPT") int a2);
-// Targeting ../macosx/SRT_TRACEBSTATS.java
+// Targeting ../SRT_TRACEBSTATS.java
 
 
 
@@ -1652,7 +1539,7 @@ public static native int srt_cleanup();
 // Planned deprecation removal: rel1.6.0
 public static native @Cast("SRTSOCKET") int srt_socket(int arg0, int arg1, int arg2);
 public static native @Cast("SRTSOCKET") int srt_create_socket();
-// Targeting ../macosx/SRT_SOCKGROUPDATA.java
+// Targeting ../SRT_SOCKGROUPDATA.java
 
 
 
@@ -1672,11 +1559,11 @@ public static native @Cast("SRTSOCKET") int srt_accept(@Cast("SRTSOCKET") int u,
 public static native @Cast("SRTSOCKET") int srt_accept_bond(@Cast("const SRTSOCKET*") IntPointer listeners, int lsize, @Cast("int64_t") long msTimeOut);
 public static native @Cast("SRTSOCKET") int srt_accept_bond(@Cast("const SRTSOCKET*") IntBuffer listeners, int lsize, @Cast("int64_t") long msTimeOut);
 public static native @Cast("SRTSOCKET") int srt_accept_bond(@Cast("const SRTSOCKET*") int[] listeners, int lsize, @Cast("int64_t") long msTimeOut);
-// Targeting ../macosx/srt_listen_callback_fn.java
+// Targeting ../srt_listen_callback_fn.java
 
 
 public static native int srt_listen_callback(@Cast("SRTSOCKET") int lsn, srt_listen_callback_fn hook_fn, Pointer hook_opaque);
-// Targeting ../macosx/srt_connect_callback_fn.java
+// Targeting ../srt_connect_callback_fn.java
 
 
 public static native int srt_connect_callback(@Cast("SRTSOCKET") int clr, srt_connect_callback_fn hook_fn, Pointer hook_opaque);
@@ -1702,7 +1589,7 @@ public static native int srt_getsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SO
 public static native int srt_getsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SOCKOPT") int opt, Pointer optval, IntBuffer optlen);
 public static native int srt_getsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SOCKOPT") int opt, Pointer optval, int[] optlen);
 public static native int srt_setsockflag(@Cast("SRTSOCKET") int u, @Cast("SRT_SOCKOPT") int opt, @Const Pointer optval, int optlen);
-// Targeting ../macosx/SRT_MSGCTRL.java
+// Targeting ../SRT_MSGCTRL.java
 
 
 
@@ -1825,7 +1712,7 @@ public static native int srt_epoll_wait(int eid, @Cast("SRTSOCKET*") IntBuffer r
                            @Cast("SYSSOCKET*") IntBuffer lrfds, IntBuffer lrnum, @Cast("SYSSOCKET*") IntBuffer lwfds, IntBuffer lwnum);
 public static native int srt_epoll_wait(int eid, @Cast("SRTSOCKET*") int[] readfds, int[] rnum, @Cast("SRTSOCKET*") int[] writefds, int[] wnum, @Cast("int64_t") long msTimeOut,
                            @Cast("SYSSOCKET*") int[] lrfds, int[] lrnum, @Cast("SYSSOCKET*") int[] lwfds, int[] lwnum);
-// Targeting ../macosx/SRT_EPOLL_EVENT.java
+// Targeting ../SRT_EPOLL_EVENT.java
 
 
 public static native int srt_epoll_uwait(int eid, SRT_EPOLL_EVENT fdsSet, int fdsSize, @Cast("int64_t") long msTimeOut);
