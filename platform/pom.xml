@@ -65,6 +65,7 @@
     <module>../cpu_features/platform</module>
     <module>../systems/platform</module>
     <module>../srt/platform</module>
+    <module>../zixi/platform</module>
   </modules>
 
   <dependencies>
