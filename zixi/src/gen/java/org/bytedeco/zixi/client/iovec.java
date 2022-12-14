@@ -9,7 +9,9 @@ import org.bytedeco.javacpp.annotation.*;
 import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.zixi.global.client.*;
- /* size_t */
+
+
+
 @Properties(inherit = org.bytedeco.zixi.presets.zixiClient.class)
 public class iovec extends Pointer {
     static { Loader.load(); }
@@ -28,6 +30,6 @@ public class iovec extends Pointer {
         return new iovec((Pointer)this).position(position + i);
     }
 
-	public native Pointer iov_base(); public native iovec iov_base(Pointer setter);      /* [XSI] Base address of I/O memory region */
-	public native @Cast("size_t") long iov_len(); public native iovec iov_len(long setter);       /* [XSI] Size of region iov_base points to */
+	public native Pointer iov_base(); public native iovec iov_base(Pointer setter);	/* BSD uses caddr_t (1003.1g requires void *) */
+	public native @Cast("__kernel_size_t") long iov_len(); public native iovec iov_len(long setter); /* Must be size_t (1003.1g) */
 }

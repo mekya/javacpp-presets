@@ -10,11 +10,6 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.zixi.global.client.*;
 
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/*
- * Internet address (a structure for historical reasons)
- */
 @Properties(inherit = org.bytedeco.zixi.presets.zixiClient.class)
 public class in_addr extends Pointer {
     static { Loader.load(); }
@@ -33,5 +28,5 @@ public class in_addr extends Pointer {
         return new in_addr((Pointer)this).position(position + i);
     }
 
-	public native @Cast("in_addr_t") int s_addr(); public native in_addr s_addr(int setter);
-}
+    public native @Cast("in_addr_t") int s_addr(); public native in_addr s_addr(int setter);
+  }

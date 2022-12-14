@@ -11,9 +11,6 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 import static org.bytedeco.zixi.global.feeder.*;
 
 
-/*
- * [XSI] sockaddr_storage
- */
 @Properties(inherit = org.bytedeco.zixi.presets.zixiFeeder.class)
 public class sockaddr_storage extends Pointer {
     static { Loader.load(); }
@@ -32,11 +29,8 @@ public class sockaddr_storage extends Pointer {
         return new sockaddr_storage((Pointer)this).position(position + i);
     }
 
-	public native @Cast("__uint8_t") byte ss_len(); public native sockaddr_storage ss_len(byte setter);         /* address length */
-	public native @Cast("sa_family_t") byte ss_family(); public native sockaddr_storage ss_family(byte setter);      /* [XSI] address family */
-	public native @Cast("char") byte __ss_pad1(int i); public native sockaddr_storage __ss_pad1(int i, byte setter);
-	@MemberGetter public native @Cast("char*") BytePointer __ss_pad1();
-	public native @Cast("__int64_t") long __ss_align(); public native sockaddr_storage __ss_align(long setter);     /* force structure storage alignment */
-	public native @Cast("char") byte __ss_pad2(int i); public native sockaddr_storage __ss_pad2(int i, byte setter);
-	@MemberGetter public native @Cast("char*") BytePointer __ss_pad2();
-}
+    public native @Cast("sa_family_t") byte ss_family(); public native sockaddr_storage ss_family(byte setter);	/* Address family, etc.  */
+    public native @Cast("char") byte __ss_padding(int i); public native sockaddr_storage __ss_padding(int i, byte setter);
+    @MemberGetter public native @Cast("char*") BytePointer __ss_padding();
+    public native @Cast("unsigned long int") long __ss_align(); public native sockaddr_storage __ss_align(long setter);	/* Force desired alignment.  */
+  }

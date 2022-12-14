@@ -13,1236 +13,1022 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 public class feeder extends org.bytedeco.zixi.presets.zixiFeeder {
     static { Loader.load(); }
 
-// Parsed from sys/_types/_iovec_t.h
+// Parsed from linux/uio.h
 
+/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
 /*
- * Copyright (c) 2003-2012 Apple Inc. All rights reserved.
+ *	Berkeley style UIO structures	-	Alan Cox 1994.
  *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. The rights granted to you under the License
- * may not be used to create, or enable the creation or redistribution of,
- * unlawful or unlicensed copies of an Apple operating system, or to
- * circumvent, violate, or enable the circumvention or violation of, any
- * terms of an Apple operating system software license agreement.
- *
- * Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this file.
- *
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
+ *		This program is free software; you can redistribute it and/or
+ *		modify it under the terms of the GNU General Public License
+ *		as published by the Free Software Foundation; either version
+ *		2 of the License, or (at your option) any later version.
  */
-// #ifndef _STRUCT_IOVEC
-// #define _STRUCT_IOVEC
-// #include <sys/_types/_size_t.h>
+// #ifndef __LINUX_UIO_H
+// #define __LINUX_UIO_H
+
+
+// #include <linux/types.h>
 // Targeting ../feeder/iovec.java
 
 
-// #endif /* _STRUCT_IOVEC */
-
-
-// Parsed from sys/socket.h
 
 /*
- * Copyright (c) 2000-2019 Apple Inc. All rights reserved.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. The rights granted to you under the License
- * may not be used to create, or enable the creation or redistribution of,
- * unlawful or unlicensed copies of an Apple operating system, or to
- * circumvent, violate, or enable the circumvention or violation of, any
- * terms of an Apple operating system software license agreement.
- *
- * Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this file.
- *
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
+ *	UIO_MAXIOV shall be at least 16 1003.1g (5.4.1.1)
  */
-/* Copyright (c) 1998, 1999 Apple Computer, Inc. All Rights Reserved */
-/* Copyright (c) 1995 NeXT Computer, Inc. All Rights Reserved */
+ 
+public static final int UIO_FASTIOV =	8;
+public static final int UIO_MAXIOV =	1024;
+
+
+// #endif /* __LINUX_UIO_H */
+
+
+// Parsed from sys/uio.h
+
+/* Copyright (C) 1991-2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+// #ifndef _SYS_UIO_H
+public static final int _SYS_UIO_H =	1;
+
+// #include <features.h>
+// #include <sys/types.h>
+// #include <bits/types/struct_iovec.h>
+// #include <bits/uio_lim.h>
+// #ifdef __IOV_MAX
+// #else
+// # undef UIO_MAXIOV
+// #endif
+
+/* Read data from file descriptor FD, and put the result in the
+   buffers described by IOVEC, which is a vector of COUNT 'struct iovec's.
+   The buffers are filled in the order specified.
+   Operates just like 'read' (see <unistd.h>) except that data are
+   put in IOVEC instead of a contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+public static native @Cast("ssize_t") long readv(int __fd, @Const iovec __iovec, int __count);
+
+/* Write data pointed by the buffers described by IOVEC, which
+   is a vector of COUNT 'struct iovec's, to file descriptor FD.
+   The data is written in the order specified.
+   Operates just like 'write' (see <unistd.h>) except that the data
+   are taken from IOVEC instead of a contiguous buffer.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+public static native @Cast("ssize_t") long writev(int __fd, @Const iovec __iovec, int __count);
+
+
+// #ifdef __USE_MISC
+// #endif	/* Use misc.  */
+
+
+// #ifdef __USE_GNU
+// # ifndef __USE_FILE_OFFSET64
+/* Same as preadv but with an additional flag argumenti defined at uio.h.  */
+public static native @Cast("ssize_t") long preadv2(int __fp, @Const iovec __iovec, int __count,
+			@Cast("__off_t") long __offset, int ___flags);
+
+/* Same as preadv but with an additional flag argument defined at uio.h.  */
+public static native @Cast("ssize_t") long pwritev2(int __fd, @Const iovec __iodev, int __count,
+			 @Cast("__off_t") long __offset, int __flags);
+
+// # else
+// # endif
+
+// # ifdef __USE_LARGEFILE64
+/* Same as preadv but with an additional flag argumenti defined at uio.h.  */
+public static native @Cast("ssize_t") long preadv64v2(int __fp, @Const iovec __iovec,
+			   int __count, @Cast("__off64_t") long __offset,
+			   int ___flags);
+
+/* Same as preadv but with an additional flag argument defined at uio.h.  */
+public static native @Cast("ssize_t") long pwritev64v2(int __fd, @Const iovec __iodev,
+			    int __count, @Cast("__off64_t") long __offset,
+			    int __flags);
+// # endif
+// #endif /* Use GNU.  */
+
+/* Some operating systems provide system-specific extensions to this
+   header.  */
+// #ifdef __USE_GNU
+// # include <bits/uio-ext.h>
+// #endif
+
+// #endif /* sys/uio.h */
+
+
+// Parsed from bits/sockaddr.h
+
+/* Definition of struct sockaddr_* common members and sizes, generic version.
+   Copyright (C) 1995-2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
 /*
- * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)socket.h	8.4 (Berkeley) 2/21/94
- * $FreeBSD: src/sys/sys/socket.h,v 1.39.2.7 2001/07/03 11:02:01 ume Exp $
- */
-/*
- * NOTICE: This file was modified by SPARTA, Inc. in 2005 to introduce
- * support for mandatory and extensible security protections.  This notice
- * is included in support of clause 2.2 (b) of the Apple Public License,
- * Version 2.0.
+ * Never include this file directly; use <sys/socket.h> instead.
  */
 
-// #ifndef _SYS_SOCKET_H_
-// #define _SYS_SOCKET_H_
+// #ifndef _BITS_SOCKADDR_H
+public static final int _BITS_SOCKADDR_H =	1;
+
+
+/* POSIX.1g specifies this type name for the `sa_family' member.  */
+
+/* This macro is used to declare the initial common members
+   of the data types used for socket addresses, `struct sockaddr',
+   `struct sockaddr_in', `struct sockaddr_un', etc.  */
+
+// #define	__SOCKADDR_COMMON(sa_prefix)
+//   sa_family_t sa_prefix##family
+
+public static native @MemberGetter int __SOCKADDR_COMMON_SIZE();
+public static final int __SOCKADDR_COMMON_SIZE = __SOCKADDR_COMMON_SIZE();
+
+/* Size of struct sockaddr_storage.  */
+public static final int _SS_SIZE = 128;
+
+// #endif	/* bits/sockaddr.h */
+
+
+// Parsed from bits/socket.h
+
+/* System-specific socket constants and types.  Linux version.
+   Copyright (C) 1991-2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+// #ifndef __BITS_SOCKET_H
+// #define __BITS_SOCKET_H
+
+// #ifndef _SYS_SOCKET_H
+// # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
+// #endif
+
+// #define __need_size_t
+// #include <stddef.h>
 
 // #include <sys/types.h>
-// #include <sys/cdefs.h>
-// #include <machine/_param.h>
-// #include <net/net_kev.h>
 
-
-
-// #include <Availability.h>
-
-/*
- * Definitions related to sockets: types, address families, options.
- */
-
-/*
- * Data types.
- */
-
-// #include <sys/_types/_gid_t.h>
-// #include <sys/_types/_off_t.h>
-// #include <sys/_types/_pid_t.h>
-// #include <sys/_types/_sa_family_t.h>
-// #include <sys/_types/_socklen_t.h>
-
-/* XXX Not explicitly defined by POSIX, but function return types are */
-// #include <sys/_types/_size_t.h>
-
-/* XXX Not explicitly defined by POSIX, but function return types are */
-// #include <sys/_types/_ssize_t.h>
-
-/*
- * [XSI] The iovec structure shall be defined as described in <sys/uio.h>.
- */
-// #include <sys/_types/_iovec_t.h>
-
-/*
- * Types
- */
-public static final int SOCK_STREAM =     1;               /* stream socket */
-public static final int SOCK_DGRAM =      2;               /* datagram socket */
-public static final int SOCK_RAW =        3;               /* raw-protocol interface */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SOCK_RDM =        4;               /* reliably-delivered message */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int SOCK_SEQPACKET =  5;               /* sequenced packet stream */
-
-/*
- * Option flags per-socket.
- */
-public static final int SO_DEBUG =        0x0001;          /* turn on debugging info recording */
-public static final int SO_ACCEPTCONN =   0x0002;          /* socket has had listen() */
-public static final int SO_REUSEADDR =    0x0004;          /* allow local address reuse */
-public static final int SO_KEEPALIVE =    0x0008;          /* keep connections alive */
-public static final int SO_DONTROUTE =    0x0010;          /* just use interface addresses */
-public static final int SO_BROADCAST =    0x0020;          /* permit sending of broadcast msgs */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SO_USELOOPBACK =  0x0040;          /* bypass hardware when possible */
-public static final int SO_LINGER =       0x0080;          /* linger on close if data present (in ticks) */
-// #else
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int SO_OOBINLINE =    0x0100;          /* leave received OOB data in line */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SO_REUSEPORT =    0x0200;          /* allow local address & port reuse */
-public static final int SO_TIMESTAMP =    0x0400;          /* timestamp received dgram traffic */
-public static final int SO_TIMESTAMP_MONOTONIC =  0x0800;  /* Monotonically increasing timestamp on rcvd dgram */
-// #ifndef __APPLE__
-// #else
-public static final int SO_DONTTRUNC =    0x2000;          /* APPLE: Retain unread data */
-                                        /*  (ATOMIC proto) */
-public static final int SO_WANTMORE =     0x4000;          /* APPLE: Give hint when more data ready */
-public static final int SO_WANTOOBFLAG =  0x8000;          /* APPLE: Want OOB in MSG_FLAG on receive */
-
-
-// #endif  /* (!__APPLE__) */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/*
- * Additional options, not kept in so_options.
- */
-public static final int SO_SNDBUF =       0x1001;          /* send buffer size */
-public static final int SO_RCVBUF =       0x1002;          /* receive buffer size */
-public static final int SO_SNDLOWAT =     0x1003;          /* send low-water mark */
-public static final int SO_RCVLOWAT =     0x1004;          /* receive low-water mark */
-public static final int SO_SNDTIMEO =     0x1005;          /* send timeout */
-public static final int SO_RCVTIMEO =     0x1006;          /* receive timeout */
-public static final int SO_ERROR =        0x1007;          /* get error status and clear */
-public static final int SO_TYPE =         0x1008;          /* get socket type */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SO_LABEL =        0x1010;          /* deprecated */
-public static final int SO_PEERLABEL =    0x1011;          /* deprecated */
-// #ifdef __APPLE__
-public static final int SO_NREAD =        0x1020;          /* APPLE: get 1st-packet byte count */
-public static final int SO_NKE =          0x1021;          /* APPLE: Install socket-level NKE */
-public static final int SO_NOSIGPIPE =    0x1022;          /* APPLE: No SIGPIPE on EPIPE */
-public static final int SO_NOADDRERR =    0x1023;          /* APPLE: Returns EADDRNOTAVAIL when src is not available anymore */
-public static final int SO_NWRITE =       0x1024;          /* APPLE: Get number of bytes currently in send socket buffer */
-public static final int SO_REUSESHAREUID =        0x1025;          /* APPLE: Allow reuse of port/socket by different userids */
-// #ifdef __APPLE_API_PRIVATE
-public static final int SO_NOTIFYCONFLICT =       0x1026;  /* APPLE: send notification if there is a bind on a port which is already in use */
-public static final int SO_UPCALLCLOSEWAIT =      0x1027;  /* APPLE: block on close until an upcall returns */
-// #endif
-public static final int SO_LINGER_SEC =   0x1080;          /* linger on close if data present (in seconds) */
-public static final int SO_RANDOMPORT =   0x1082;  /* APPLE: request local port randomization */
-public static final int SO_NP_EXTENSIONS =        0x1083;  /* To turn off some POSIX behavior */
+/* Type for length arguments in socket calls.  */
+// #ifndef __socklen_t_defined
+// # define __socklen_t_defined
 // #endif
 
-public static final int SO_NUMRCVPKT =            0x1112;  /* number of datagrams in receive socket buffer */
-public static final int SO_NET_SERVICE_TYPE =     0x1116;  /* Network service type */
+/* Get the architecture-dependent definition of enum __socket_type.  */
+// #include <bits/socket_type.h>
 
+/* Protocol families.  */
+public static final int PF_UNSPEC =	0;	/* Unspecified.  */
+public static final int PF_LOCAL =	1;	/* Local to host (pipes and file-domain).  */
+public static final int PF_UNIX =		PF_LOCAL; /* POSIX name for PF_LOCAL.  */
+public static final int PF_FILE =		PF_LOCAL; /* Another non-standard name for PF_LOCAL.  */
+public static final int PF_INET =		2;	/* IP protocol family.  */
+public static final int PF_AX25 =		3;	/* Amateur Radio AX.25.  */
+public static final int PF_IPX =		4;	/* Novell Internet Protocol.  */
+public static final int PF_APPLETALK =	5;	/* Appletalk DDP.  */
+public static final int PF_NETROM =	6;	/* Amateur radio NetROM.  */
+public static final int PF_BRIDGE =	7;	/* Multiprotocol bridge.  */
+public static final int PF_ATMPVC =	8;	/* ATM PVCs.  */
+public static final int PF_X25 =		9;	/* Reserved for X.25 project.  */
+public static final int PF_INET6 =	10;	/* IP version 6.  */
+public static final int PF_ROSE =		11;	/* Amateur Radio X.25 PLP.  */
+public static final int PF_DECnet =	12;	/* Reserved for DECnet project.  */
+public static final int PF_NETBEUI =	13;	/* Reserved for 802.2LLC project.  */
+public static final int PF_SECURITY =	14;	/* Security callback pseudo AF.  */
+public static final int PF_KEY =		15;	/* PF_KEY key management API.  */
+public static final int PF_NETLINK =	16;
+public static final int PF_ROUTE =	PF_NETLINK; /* Alias to emulate 4.4BSD.  */
+public static final int PF_PACKET =	17;	/* Packet family.  */
+public static final int PF_ASH =		18;	/* Ash.  */
+public static final int PF_ECONET =	19;	/* Acorn Econet.  */
+public static final int PF_ATMSVC =	20;	/* ATM SVCs.  */
+public static final int PF_RDS =		21;	/* RDS sockets.  */
+public static final int PF_SNA =		22;	/* Linux SNA Project */
+public static final int PF_IRDA =		23;	/* IRDA sockets.  */
+public static final int PF_PPPOX =	24;	/* PPPoX sockets.  */
+public static final int PF_WANPIPE =	25;	/* Wanpipe API sockets.  */
+public static final int PF_LLC =		26;	/* Linux LLC.  */
+public static final int PF_IB =		27;	/* Native InfiniBand address.  */
+public static final int PF_MPLS =		28;	/* MPLS.  */
+public static final int PF_CAN =		29;	/* Controller Area Network.  */
+public static final int PF_TIPC =		30;	/* TIPC sockets.  */
+public static final int PF_BLUETOOTH =	31;	/* Bluetooth sockets.  */
+public static final int PF_IUCV =		32;	/* IUCV sockets.  */
+public static final int PF_RXRPC =	33;	/* RxRPC sockets.  */
+public static final int PF_ISDN =		34;	/* mISDN sockets.  */
+public static final int PF_PHONET =	35;	/* Phonet sockets.  */
+public static final int PF_IEEE802154 =	36;	/* IEEE 802.15.4 sockets.  */
+public static final int PF_CAIF =		37;	/* CAIF sockets.  */
+public static final int PF_ALG =		38;	/* Algorithm sockets.  */
+public static final int PF_NFC =		39;	/* NFC sockets.  */
+public static final int PF_VSOCK =	40;	/* vSockets.  */
+public static final int PF_KCM =		41;	/* Kernel Connection Multiplexor.  */
+public static final int PF_QIPCRTR =	42;	/* Qualcomm IPC Router.  */
+public static final int PF_SMC =		43;	/* SMC sockets.  */
+public static final int PF_XDP =		44;	/* XDP sockets.  */
+public static final int PF_MAX =		45;	/* For now..  */
 
-public static final int SO_NETSVC_MARKING_LEVEL =    0x1119;  /* Get QoS marking in effect for socket */
+/* Address families.  */
+public static final int AF_UNSPEC =	PF_UNSPEC;
+public static final int AF_LOCAL =	PF_LOCAL;
+public static final int AF_UNIX =		PF_UNIX;
+public static final int AF_FILE =		PF_FILE;
+public static final int AF_INET =		PF_INET;
+public static final int AF_AX25 =		PF_AX25;
+public static final int AF_IPX =		PF_IPX;
+public static final int AF_APPLETALK =	PF_APPLETALK;
+public static final int AF_NETROM =	PF_NETROM;
+public static final int AF_BRIDGE =	PF_BRIDGE;
+public static final int AF_ATMPVC =	PF_ATMPVC;
+public static final int AF_X25 =		PF_X25;
+public static final int AF_INET6 =	PF_INET6;
+public static final int AF_ROSE =		PF_ROSE;
+public static final int AF_DECnet =	PF_DECnet;
+public static final int AF_NETBEUI =	PF_NETBEUI;
+public static final int AF_SECURITY =	PF_SECURITY;
+public static final int AF_KEY =		PF_KEY;
+public static final int AF_NETLINK =	PF_NETLINK;
+public static final int AF_ROUTE =	PF_ROUTE;
+public static final int AF_PACKET =	PF_PACKET;
+public static final int AF_ASH =		PF_ASH;
+public static final int AF_ECONET =	PF_ECONET;
+public static final int AF_ATMSVC =	PF_ATMSVC;
+public static final int AF_RDS =		PF_RDS;
+public static final int AF_SNA =		PF_SNA;
+public static final int AF_IRDA =		PF_IRDA;
+public static final int AF_PPPOX =	PF_PPPOX;
+public static final int AF_WANPIPE =	PF_WANPIPE;
+public static final int AF_LLC =		PF_LLC;
+public static final int AF_IB =		PF_IB;
+public static final int AF_MPLS =		PF_MPLS;
+public static final int AF_CAN =		PF_CAN;
+public static final int AF_TIPC =		PF_TIPC;
+public static final int AF_BLUETOOTH =	PF_BLUETOOTH;
+public static final int AF_IUCV =		PF_IUCV;
+public static final int AF_RXRPC =	PF_RXRPC;
+public static final int AF_ISDN =		PF_ISDN;
+public static final int AF_PHONET =	PF_PHONET;
+public static final int AF_IEEE802154 =	PF_IEEE802154;
+public static final int AF_CAIF =		PF_CAIF;
+public static final int AF_ALG =		PF_ALG;
+public static final int AF_NFC =		PF_NFC;
+public static final int AF_VSOCK =	PF_VSOCK;
+public static final int AF_KCM =		PF_KCM;
+public static final int AF_QIPCRTR =	PF_QIPCRTR;
+public static final int AF_SMC =		PF_SMC;
+public static final int AF_XDP =		PF_XDP;
+public static final int AF_MAX =		PF_MAX;
 
+/* Socket level values.  Others are defined in the appropriate headers.
 
-/* When adding new socket-options, you need to make sure MPTCP supports these as well! */
+   XXX These definitions also should go into the appropriate headers as
+   far as they are available.  */
+public static final int SOL_RAW =		255;
+public static final int SOL_DECNET =      261;
+public static final int SOL_X25 =         262;
+public static final int SOL_PACKET =	263;
+public static final int SOL_ATM =		264;	/* ATM layer (cell level).  */
+public static final int SOL_AAL =		265;	/* ATM Adaption Layer (packet level).  */
+public static final int SOL_IRDA =	266;
+public static final int SOL_NETBEUI =	267;
+public static final int SOL_LLC =		268;
+public static final int SOL_DCCP =	269;
+public static final int SOL_NETLINK =	270;
+public static final int SOL_TIPC =	271;
+public static final int SOL_RXRPC =	272;
+public static final int SOL_PPPOL2TP =	273;
+public static final int SOL_BLUETOOTH =	274;
+public static final int SOL_PNPIPE =	275;
+public static final int SOL_RDS =		276;
+public static final int SOL_IUCV =	277;
+public static final int SOL_CAIF =	278;
+public static final int SOL_ALG =		279;
+public static final int SOL_NFC =		280;
+public static final int SOL_KCM =		281;
+public static final int SOL_TLS =		282;
+public static final int SOL_XDP =		283;
 
-/*
- * Network Service Type for option SO_NET_SERVICE_TYPE
- *
- * The vast majority of sockets should use Best Effort that is the default
- * Network Service Type. Other Network Service Types have to be used only if
- * the traffic actually matches the description of the Network Service Type.
- *
- * Network Service Types do not represent priorities but rather describe
- * different categories of delay, jitter and loss parameters.
- * Those parameters may influence protocols from layer 4 protocols like TCP
- * to layer 2 protocols like Wi-Fi. The Network Service Type can determine
- * how the traffic is queued and scheduled by the host networking stack and
- * by other entities on the network like switches and routers. For example
- * for Wi-Fi, the Network Service Type can select the marking of the
- * layer 2 packet with the appropriate WMM Access Category.
- *
- * There is no point in attempting to game the system and use
- * a Network Service Type that does not correspond to the actual
- * traffic characteristic but one that seems to have a higher precedence.
- * The reason is that for service classes that have lower tolerance
- * for delay and jitter, the queues size is lower than for service
- * classes that are more tolerant to delay and jitter.
- *
- * For example using a voice service type for bulk data transfer will lead
- * to disastrous results as soon as congestion happens because the voice
- * queue overflows and packets get dropped. This is not only bad for the bulk
- * data transfer but it is also bad for VoIP apps that legitimately are using
- * the voice  service type.
- *
- * The characteristics of the Network Service Types are based on the service
- * classes defined in RFC 4594 "Configuration Guidelines for DiffServ Service
- * Classes"
- *
- * When system detects the outgoing interface belongs to a DiffServ domain
- * that follows the recommendation of the IETF draft "Guidelines for DiffServ to
- * IEEE 802.11 Mapping", the packet will marked at layer 3 with a DSCP value
- * that corresponds to Network Service Type.
- *
- * NET_SERVICE_TYPE_BE
- *	"Best Effort", unclassified/standard.  This is the default service
- *	class and cover the majority of the traffic.
- *
- * NET_SERVICE_TYPE_BK
- *	"Background", high delay tolerant, loss tolerant. elastic flow,
- *	variable size & long-lived. E.g: non-interactive network bulk transfer
- *	like synching or backup.
- *
- * NET_SERVICE_TYPE_RD
- *	"Responsive Data", a notch higher than "Best Effort", medium delay
- *	tolerant, elastic & inelastic flow, bursty, long-lived. E.g. email,
- *	instant messaging, for which there is a sense of interactivity and
- *	urgency (user waiting for output).
- *
- * NET_SERVICE_TYPE_OAM
- *	"Operations, Administration, and Management", medium delay tolerant,
- *	low-medium loss tolerant, elastic & inelastic flows, variable size.
- *	E.g. VPN tunnels.
- *
- * NET_SERVICE_TYPE_AV
- *	"Multimedia Audio/Video Streaming", medium delay tolerant, low-medium
- *	loss tolerant, elastic flow, constant packet interval, variable rate
- *	and size. E.g. video and audio playback with buffering.
- *
- * NET_SERVICE_TYPE_RV
- *	"Responsive Multimedia Audio/Video", low delay tolerant, low-medium
- *	loss tolerant, elastic flow, variable packet interval, rate and size.
- *	E.g. screen sharing.
- *
- * NET_SERVICE_TYPE_VI
- *	"Interactive Video", low delay tolerant, low-medium loss tolerant,
- *	elastic flow, constant packet interval, variable rate & size. E.g.
- *	video telephony.
- *
- * NET_SERVICE_TYPE_SIG
- *	"Signaling", low delay tolerant, low loss tolerant, inelastic flow,
- *	jitter tolerant, rate is bursty but short, variable size. E.g. SIP.
- *
- * NET_SERVICE_TYPE_VO
- *	"Interactive Voice", very low delay tolerant, very low loss tolerant,
- *	inelastic flow, constant packet rate, somewhat fixed size.
- *	E.g. VoIP.
- */
+/* Maximum queue length specifiable by listen.  */
+public static final int SOMAXCONN =	4096;
 
-public static final int NET_SERVICE_TYPE_BE =     0; /* Best effort */
-public static final int NET_SERVICE_TYPE_BK =     1; /* Background system initiated */
-public static final int NET_SERVICE_TYPE_SIG =    2; /* Signaling */
-public static final int NET_SERVICE_TYPE_VI =     3; /* Interactive Video */
-public static final int NET_SERVICE_TYPE_VO =     4; /* Interactive Voice */
-public static final int NET_SERVICE_TYPE_RV =     5; /* Responsive Multimedia Audio/Video */
-public static final int NET_SERVICE_TYPE_AV =     6; /* Multimedia Audio/Video Streaming */
-public static final int NET_SERVICE_TYPE_OAM =    7; /* Operations, Administration, and Management */
-public static final int NET_SERVICE_TYPE_RD =     8; /* Responsive Data */
-
-
-/* These are supported values for SO_NETSVC_MARKING_LEVEL */
-public static final int NETSVC_MRKNG_UNKNOWN =            0;       /* The outgoing network interface is not known */
-public static final int NETSVC_MRKNG_LVL_L2 =             1;       /* Default marking at layer 2 (for example Wi-Fi WMM) */
-public static final int NETSVC_MRKNG_LVL_L3L2_ALL =       2;       /* Layer 3 DSCP marking and layer 2 marking for all Network Service Types */
-public static final int NETSVC_MRKNG_LVL_L3L2_BK =        3;       /* The system policy limits layer 3 DSCP marking and layer 2 marking
-	                                         * to background Network Service Types */
-public static final int SAE_ASSOCID_ANY = 0;
-// #define SAE_ASSOCID_ALL ((sae_associd_t)(-1L))
-public static final int SAE_CONNID_ANY =  0;
-// #define SAE_CONNID_ALL  ((sae_connid_t)(-1L))
-
-/* connectx() flag parameters */
-public static final int CONNECT_RESUME_ON_READ_WRITE =    0x1; /* resume connect() on read/write */
-public static final int CONNECT_DATA_IDEMPOTENT =         0x2; /* data is idempotent */
-public static final int CONNECT_DATA_AUTHENTICATED =      0x4;
-// Targeting ../feeder/sa_endpoints_t.java
-
-
-// Targeting ../feeder/linger.java
-
-
-// Targeting ../feeder/so_np_extensions.java
-
-
-
-public static final int SONPX_SETOPTSHUT =        0x000000001;     /* flag for allowing setsockopt after shutdown */
-
-
-
-// #endif
-// #endif
-
-/*
- * Level number for (get/set)sockopt() to apply to socket itself.
- */
-public static final int SOL_SOCKET =      0xffff;          /* options for socket level */
-
-
-/*
- * Address families.
- */
-public static final int AF_UNSPEC =       0;               /* unspecified */
-public static final int AF_UNIX =         1;               /* local to host (pipes) */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int AF_LOCAL =        AF_UNIX;         /* backward compatibility */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int AF_INET =         2;               /* internetwork: UDP, TCP, etc. */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int AF_IMPLINK =      3;               /* arpanet imp addresses */
-public static final int AF_PUP =          4;               /* pup protocols: e.g. BSP */
-public static final int AF_CHAOS =        5;               /* mit CHAOS protocols */
-public static final int AF_NS =           6;               /* XEROX NS protocols */
-public static final int AF_ISO =          7;               /* ISO protocols */
-public static final int AF_OSI =          AF_ISO;
-public static final int AF_ECMA =         8;               /* European computer manufacturers */
-public static final int AF_DATAKIT =      9;               /* datakit protocols */
-public static final int AF_CCITT =        10;              /* CCITT protocols, X.25 etc */
-public static final int AF_SNA =          11;              /* IBM SNA */
-public static final int AF_DECnet =       12;              /* DECnet */
-public static final int AF_DLI =          13;              /* DEC Direct data link interface */
-public static final int AF_LAT =          14;              /* LAT */
-public static final int AF_HYLINK =       15;              /* NSC Hyperchannel */
-public static final int AF_APPLETALK =    16;              /* Apple Talk */
-public static final int AF_ROUTE =        17;              /* Internal Routing Protocol */
-public static final int AF_LINK =         18;              /* Link layer interface */
-public static final int pseudo_AF_XTP =   19;              /* eXpress Transfer Protocol (no AF) */
-public static final int AF_COIP =         20;              /* connection-oriented IP, aka ST II */
-public static final int AF_CNT =          21;              /* Computer Network Technology */
-public static final int pseudo_AF_RTIP =  22;              /* Help Identify RTIP packets */
-public static final int AF_IPX =          23;              /* Novell Internet Protocol */
-public static final int AF_SIP =          24;              /* Simple Internet Protocol */
-public static final int pseudo_AF_PIP =   25;              /* Help Identify PIP packets */
-public static final int AF_NDRV =         27;              /* Network Driver 'raw' access */
-public static final int AF_ISDN =         28;              /* Integrated Services Digital Network */
-public static final int AF_E164 =         AF_ISDN;         /* CCITT E.164 recommendation */
-public static final int pseudo_AF_KEY =   29;              /* Internal key-management function */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int AF_INET6 =        30;              /* IPv6 */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int AF_NATM =         31;              /* native ATM access */
-public static final int AF_SYSTEM =       32;              /* Kernel event messages */
-public static final int AF_NETBIOS =      33;              /* NetBIOS */
-public static final int AF_PPP =          34;              /* PPP communication protocol */
-public static final int pseudo_AF_HDRCMPLT = 35;           /* Used by BPF to not rewrite headers
-	                                 *  in interface output routine */
-public static final int AF_RESERVED_36 =  36;              /* Reserved for internal usage */
-public static final int AF_IEEE80211 =    37;              /* IEEE 802.11 protocol */
-public static final int AF_UTUN =         38;
-public static final int AF_VSOCK =        40;              /* VM Sockets */
-public static final int AF_MAX =          41;
+/* Get the definition of the macro to define the common sockaddr members.  */
+// #include <bits/sockaddr.h>
 // Targeting ../feeder/sockaddr.java
 
 
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SOCK_MAXADDRLEN = 255;
-// Targeting ../feeder/sockproto.java
 
-
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/*
- * RFC 2553: protocol-independent placeholder for socket addresses
- */
-public static final int _SS_MAXSIZE =     128;
-public static native @MemberGetter int _SS_ALIGNSIZE();
-public static final int _SS_ALIGNSIZE = _SS_ALIGNSIZE();
-public static native @MemberGetter int _SS_PAD1SIZE();
-public static final int _SS_PAD1SIZE = _SS_PAD1SIZE();
-public static native @MemberGetter int _SS_PAD2SIZE();
-public static final int _SS_PAD2SIZE = _SS_PAD2SIZE();
+/* Structure large enough to hold any socket address (with the historical
+   exception of AF_UNIX).  */
+// #define __ss_aligntype	unsigned long int
+public static native @MemberGetter int _SS_PADSIZE();
+public static final int _SS_PADSIZE = _SS_PADSIZE();
 // Targeting ../feeder/sockaddr_storage.java
 
 
 
-/*
- * Protocol families, same as address families for now.
- */
-public static final int PF_UNSPEC =       AF_UNSPEC;
-public static final int PF_LOCAL =        AF_LOCAL;
-public static final int PF_UNIX =         PF_LOCAL;        /* backward compatibility */
-public static final int PF_INET =         AF_INET;
-public static final int PF_IMPLINK =      AF_IMPLINK;
-public static final int PF_PUP =          AF_PUP;
-public static final int PF_CHAOS =        AF_CHAOS;
-public static final int PF_NS =           AF_NS;
-public static final int PF_ISO =          AF_ISO;
-public static final int PF_OSI =          AF_ISO;
-public static final int PF_ECMA =         AF_ECMA;
-public static final int PF_DATAKIT =      AF_DATAKIT;
-public static final int PF_CCITT =        AF_CCITT;
-public static final int PF_SNA =          AF_SNA;
-public static final int PF_DECnet =       AF_DECnet;
-public static final int PF_DLI =          AF_DLI;
-public static final int PF_LAT =          AF_LAT;
-public static final int PF_HYLINK =       AF_HYLINK;
-public static final int PF_APPLETALK =    AF_APPLETALK;
-public static final int PF_ROUTE =        AF_ROUTE;
-public static final int PF_LINK =         AF_LINK;
-public static final int PF_XTP =          pseudo_AF_XTP;   /* really just proto family, no AF */
-public static final int PF_COIP =         AF_COIP;
-public static final int PF_CNT =          AF_CNT;
-public static final int PF_SIP =          AF_SIP;
-public static final int PF_IPX =          AF_IPX;          /* same format as AF_NS */
-public static final int PF_RTIP =         pseudo_AF_RTIP;  /* same format as AF_INET */
-public static final int PF_PIP =          pseudo_AF_PIP;
-public static final int PF_NDRV =         AF_NDRV;
-public static final int PF_ISDN =         AF_ISDN;
-public static final int PF_KEY =          pseudo_AF_KEY;
-public static final int PF_INET6 =        AF_INET6;
-public static final int PF_NATM =         AF_NATM;
-public static final int PF_SYSTEM =       AF_SYSTEM;
-public static final int PF_NETBIOS =      AF_NETBIOS;
-public static final int PF_PPP =          AF_PPP;
-public static final int PF_RESERVED_36 =  AF_RESERVED_36;
-public static final int PF_UTUN =         AF_UTUN;
-public static final int PF_VSOCK =        AF_VSOCK;
-public static final int PF_MAX =          AF_MAX;
 
-/*
- * These do not have socket-layer support:
- */
-public static final int PF_VLAN =         ((int)0x766c616e);  /* 'vlan' */
-public static final int PF_BOND =         ((int)0x626f6e64);  /* 'bond' */
+/* Bits in the FLAGS argument to `send', `recv', et al.  */
+/** enum  */
+public static final int
+    MSG_OOB		 = 0x01,	/* Process out-of-band data.  */
+// #define MSG_OOB		MSG_OOB
+    MSG_PEEK		 = 0x02,	/* Peek at incoming messages.  */
+// #define MSG_PEEK	MSG_PEEK
+    MSG_DONTROUTE	 = 0x04,	/* Don't use local routing.  */
+// #define MSG_DONTROUTE	MSG_DONTROUTE
+// #ifdef __USE_GNU
+    /* DECnet uses a different name.  */
+    MSG_TRYHARD		 = MSG_DONTROUTE,
+// # define MSG_TRYHARD	MSG_DONTROUTE
+// #endif
+    MSG_CTRUNC		 = 0x08,	/* Control data lost before delivery.  */
+// #define MSG_CTRUNC	MSG_CTRUNC
+    MSG_PROXY		 = 0x10,	/* Supply or ask second address.  */
+// #define MSG_PROXY	MSG_PROXY
+    MSG_TRUNC		 = 0x20,
+// #define MSG_TRUNC	MSG_TRUNC
+    MSG_DONTWAIT	 = 0x40, /* Nonblocking IO.  */
+// #define MSG_DONTWAIT	MSG_DONTWAIT
+    MSG_EOR		 = 0x80, /* End of record.  */
+// #define MSG_EOR		MSG_EOR
+    MSG_WAITALL		 = 0x100, /* Wait for a full request.  */
+// #define MSG_WAITALL	MSG_WAITALL
+    MSG_FIN		 = 0x200,
+// #define MSG_FIN		MSG_FIN
+    MSG_SYN		 = 0x400,
+// #define MSG_SYN		MSG_SYN
+    MSG_CONFIRM		 = 0x800, /* Confirm path validity.  */
+// #define MSG_CONFIRM	MSG_CONFIRM
+    MSG_RST		 = 0x1000,
+// #define MSG_RST		MSG_RST
+    MSG_ERRQUEUE	 = 0x2000, /* Fetch message from error queue.  */
+// #define MSG_ERRQUEUE	MSG_ERRQUEUE
+    MSG_NOSIGNAL	 = 0x4000, /* Do not generate SIGPIPE.  */
+// #define MSG_NOSIGNAL	MSG_NOSIGNAL
+    MSG_MORE		 = 0x8000,  /* Sender will send more.  */
+// #define MSG_MORE	MSG_MORE
+    MSG_WAITFORONE	 = 0x10000, /* Wait for at least one packet to return.*/
+// #define MSG_WAITFORONE	MSG_WAITFORONE
+    MSG_BATCH		 = 0x40000, /* sendmmsg: more messages coming.  */
+// #define MSG_BATCH	MSG_BATCH
+    MSG_ZEROCOPY	 = 0x4000000, /* Use user data in kernel path.  */
+// #define MSG_ZEROCOPY	MSG_ZEROCOPY
+    MSG_FASTOPEN	 = 0x20000000, /* Send data in TCP SYN.  */
+// #define MSG_FASTOPEN	MSG_FASTOPEN
 
-/*
- * Definitions for network related sysctl, CTL_NET.
- *
- * Second level is protocol family.
- * Third level is protocol number.
- *
- * Further levels are defined by the individual families below.
- */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int NET_MAXID =       AF_MAX;
-// #endif /* (_POSIX_C_SOURCE && !_DARWIN_C_SOURCE) */
-
-
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-/*
- * PF_ROUTE - Routing table
- *
- * Three additional levels are defined:
- *	Fourth: address family, 0 is wildcard
- *	Fifth: type of info, defined below
- *	Sixth: flag(s) to mask with for NET_RT_FLAGS
- */
-public static final int NET_RT_DUMP =             1;       /* dump; may limit to a.f. */
-public static final int NET_RT_FLAGS =            2;       /* by flags, e.g. RESOLVING */
-public static final int NET_RT_IFLIST =           3;       /* survey interface list */
-public static final int NET_RT_STAT =             4;       /* routing statistics */
-public static final int NET_RT_TRASH =            5;       /* routes not in table but not freed */
-public static final int NET_RT_IFLIST2 =          6;       /* interface list with addresses */
-public static final int NET_RT_DUMP2 =            7;       /* dump; may limit to a.f. */
-/*
- * Allows read access non-local host's MAC address
- * if the process has neighbor cache entitlement.
- */
-public static final int NET_RT_FLAGS_PRIV =       10;
-public static final int NET_RT_MAXID =            11;
-// #endif /* (_POSIX_C_SOURCE && !_DARWIN_C_SOURCE) */
-
-
-
-
-/*
- * Maximum queue length specifiable by listen.
- */
-public static final int SOMAXCONN =       128;
+    MSG_CMSG_CLOEXEC	 = 0x40000000;	/* Set close_on_exit for file
+					   descriptor received through
+					   SCM_RIGHTS.  */
+// #define MSG_CMSG_CLOEXEC MSG_CMSG_CLOEXEC
 // Targeting ../feeder/msghdr.java
 
 
-
-
-
-public static final int MSG_OOB =         0x1;             /* process out-of-band data */
-public static final int MSG_PEEK =        0x2;             /* peek at incoming message */
-public static final int MSG_DONTROUTE =   0x4;             /* send without using routing tables */
-public static final int MSG_EOR =         0x8;             /* data completes record */
-public static final int MSG_TRUNC =       0x10;            /* data discarded before delivery */
-public static final int MSG_CTRUNC =      0x20;            /* control data lost before delivery */
-public static final int MSG_WAITALL =     0x40;            /* wait for full request or error */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int MSG_DONTWAIT =    0x80;            /* this message should be nonblocking */
-public static final int MSG_EOF =         0x100;           /* data completes connection */
-// #ifdef __APPLE__
-// #ifdef __APPLE_API_OBSOLETE
-public static final int MSG_WAITSTREAM =  0x200;           /* wait up to full request.. may return partial */
-// #endif
-public static final int MSG_FLUSH =       0x400;           /* Start of 'hold' seq; dump so_temp, deprecated */
-public static final int MSG_HOLD =        0x800;           /* Hold frag in so_temp, deprecated */
-public static final int MSG_SEND =        0x1000;          /* Send the packet in so_temp, deprecated */
-public static final int MSG_HAVEMORE =    0x2000;          /* Data ready to be read */
-public static final int MSG_RCVMORE =     0x4000;          /* Data remains in current pkt */
-// #endif
-public static final int MSG_NEEDSA =      0x10000;         /* Fail receive if socket address cannot be allocated */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-// #if __DARWIN_C_LEVEL >= 200809L
-public static final int MSG_NOSIGNAL =    0x80000;
 // Targeting ../feeder/cmsghdr.java
 
 
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-// #ifndef __APPLE__
+/* Ancillary data object manipulation macros.  */
+// #if __glibc_c99_flexarr_available
+// # define CMSG_DATA(cmsg) ((cmsg)->__cmsg_data)
+// #else
+// # define CMSG_DATA(cmsg) ((unsigned char *) ((struct cmsghdr *) (cmsg) + 1))
 // #endif
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/* given pointer to struct cmsghdr, return pointer to data */
-// #define CMSG_DATA(cmsg)         ((unsigned char *)(cmsg) +
-// 	__DARWIN_ALIGN32(sizeof(struct cmsghdr)))
-
-/*
- * RFC 2292 requires to check msg_controllen, in case that the kernel returns
- * an empty list for some reasons.
- */
+// #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr (mhdr, cmsg)
 // #define CMSG_FIRSTHDR(mhdr)
-// 	((mhdr)->msg_controllen >= sizeof(struct cmsghdr) ?
-// 	    (struct cmsghdr *)(mhdr)->msg_control :
-// 	    (struct cmsghdr *)0L)
+//   ((size_t) (mhdr)->msg_controllen >= sizeof (struct cmsghdr)
+//    ? (struct cmsghdr *) (mhdr)->msg_control : (struct cmsghdr *) 0)
+// #define CMSG_ALIGN(len) (((len) + sizeof (size_t) - 1)
+// 			 & (size_t) ~(sizeof (size_t) - 1))
+// #define CMSG_SPACE(len) (CMSG_ALIGN (len)
+// 			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
+// #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
+
+public static native cmsghdr __cmsg_nxthdr(msghdr __mhdr,
+				      cmsghdr __cmsg);
+// #ifdef __USE_EXTERN_INLINES
+// #endif	/* Use `extern inline'.  */
+
+/* Socket level message types.  This must match the definitions in
+   <linux/socket.h>.  */
+/** enum  */
+public static final int
+    SCM_RIGHTS = 0x01,		/* Transfer file descriptors.  */
+// #define SCM_RIGHTS SCM_RIGHTS
+    SCM_CREDENTIALS = 0x02;	/* Credentials passing.  */
+// # define SCM_CREDENTIALS SCM_CREDENTIALS
+// #endif
+// Targeting ../feeder/ucred.java
 
 
-/*
- * Given pointer to struct cmsghdr, return pointer to next cmsghdr
- * RFC 2292 says that CMSG_NXTHDR(mhdr, NULL) is equivalent to CMSG_FIRSTHDR(mhdr)
- */
-// #define CMSG_NXTHDR(mhdr, cmsg)
-// 	((char *)(cmsg) == (char *)0L ? CMSG_FIRSTHDR(mhdr) :
-// 	    ((((unsigned char *)(cmsg) +
-// 	    __DARWIN_ALIGN32((__uint32_t)(cmsg)->cmsg_len) +
-// 	    __DARWIN_ALIGN32(sizeof(struct cmsghdr))) >
-// 	    ((unsigned char *)(mhdr)->msg_control +
-// 	    (mhdr)->msg_controllen)) ?
-// 	        (struct cmsghdr *)0L /* NULL */ :
-// 	        (struct cmsghdr *)(void *)((unsigned char *)(cmsg) +
-// 	            __DARWIN_ALIGN32((__uint32_t)(cmsg)->cmsg_len))))
+// #endif
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-/* RFC 2292 additions */
-// #define CMSG_SPACE(l)           (__DARWIN_ALIGN32(sizeof(struct cmsghdr)) + __DARWIN_ALIGN32(l))
-// #define CMSG_LEN(l)             (__DARWIN_ALIGN32(sizeof(struct cmsghdr)) + (l))
-
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/* "Socket"-level control message types: */
-public static final int SCM_RIGHTS =                      0x01;    /* access rights (array of int) */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int SCM_TIMESTAMP =                   0x02;    /* timestamp (struct timeval) */
-public static final int SCM_CREDS =                       0x03;    /* process creds (struct cmsgcred) */
-public static final int SCM_TIMESTAMP_MONOTONIC =         0x04;    /* timestamp (uint64_t) */
-
-
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
-/*
- * howto arguments for shutdown(2), specified by Posix.1g.
- */
-public static final int SHUT_RD =         0;               /* shut down the reading side */
-public static final int SHUT_WR =         1;               /* shut down the writing side */
-public static final int SHUT_RDWR =       2;
-// Targeting ../feeder/sf_hdtr.java
+// #ifdef __USE_MISC
+// #else
+public static final int SO_DEBUG = 1;
+// # include <bits/socket-constants.h>
+// Targeting ../feeder/linger.java
 
 
 
-
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-
+// #endif	/* bits/socket.h */
 
 
+// Parsed from sys/socket.h
 
-// #endif /* !_SYS_SOCKET_H_ */
+/* Declarations of socket constants, types, and functions.
+   Copyright (C) 1991-2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+// #ifndef	_SYS_SOCKET_H
+public static final int _SYS_SOCKET_H =	1;
+
+// #include <features.h>
+
+
+// #endif /* sys/socket.h */
 
 
 // Parsed from netinet/in.h
 
-/*
- * Copyright (c) 2000-2018 Apple Inc. All rights reserved.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. The rights granted to you under the License
- * may not be used to create, or enable the creation or redistribution of,
- * unlawful or unlicensed copies of an Apple operating system, or to
- * circumvent, violate, or enable the circumvention or violation of, any
- * terms of an Apple operating system software license agreement.
- *
- * Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this file.
- *
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- *
- * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
- */
-/*
- * Copyright (c) 1982, 1986, 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)in.h	8.3 (Berkeley) 1/3/94
- * $FreeBSD: src/sys/netinet/in.h,v 1.48.2.2 2001/04/21 14:53:06 ume Exp $
- */
+/* Copyright (C) 1991-2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-// #ifndef _NETINET_IN_H_
-// #define _NETINET_IN_H_
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-// #include <sys/appleapiopts.h>
-// #include <stdint.h>             /* uint(8|16|32)_t */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-// #include <Availability.h>
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
 
+// #ifndef	_NETINET_IN_H
+public static final int _NETINET_IN_H =	1;
 
-// #include <sys/_types/_in_addr_t.h>
-// #include <sys/_types/_in_port_t.h>
-
-/*
- * POSIX 1003.1-2003
- * "Inclusion of the <netinet/in.h> header may also make visible all
- *  symbols from <inttypes.h> and <sys/socket.h>".
- */
+// #include <features.h>
+// #include <bits/stdint-iLntn.h>
 // #include <sys/socket.h>
+// #include <bits/types.h>
 
-/*
- * The following two #includes insure htonl and family are defined
- */
-// #include <machine/endian.h>
-// #include <sys/_endian.h>
 
-/*
- * Constants and structures defined by the internet system,
- * Per RFC 790, September 1981, and numerous additions.
- */
-
-/*
- * Protocols (RFC 1700)
- */
-public static final int IPPROTO_IP =              0;               /* dummy for IP */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int IPPROTO_HOPOPTS = 0;               /* IP6 hop-by-hop options */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int IPPROTO_ICMP =            1;               /* control message protocol */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int IPPROTO_IGMP =            2;               /* group mgmt protocol */
-public static final int IPPROTO_GGP =             3;               /* gateway^2 (deprecated) */
-public static final int IPPROTO_IPV4 =            4;               /* IPv4 encapsulation */
-public static final int IPPROTO_IPIP =            IPPROTO_IPV4;    /* for compatibility */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int IPPROTO_TCP =             6;               /* tcp */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int IPPROTO_ST =              7;               /* Stream protocol II */
-public static final int IPPROTO_EGP =             8;               /* exterior gateway protocol */
-public static final int IPPROTO_PIGP =            9;               /* private interior gateway */
-public static final int IPPROTO_RCCMON =          10;              /* BBN RCC Monitoring */
-public static final int IPPROTO_NVPII =           11;              /* network voice protocol*/
-public static final int IPPROTO_PUP =             12;              /* pup */
-public static final int IPPROTO_ARGUS =           13;              /* Argus */
-public static final int IPPROTO_EMCON =           14;              /* EMCON */
-public static final int IPPROTO_XNET =            15;              /* Cross Net Debugger */
-public static final int IPPROTO_CHAOS =           16;              /* Chaos*/
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int IPPROTO_UDP =             17;              /* user datagram protocol */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int IPPROTO_MUX =             18;              /* Multiplexing */
-public static final int IPPROTO_MEAS =            19;              /* DCN Measurement Subsystems */
-public static final int IPPROTO_HMP =             20;              /* Host Monitoring */
-public static final int IPPROTO_PRM =             21;              /* Packet Radio Measurement */
-public static final int IPPROTO_IDP =             22;              /* xns idp */
-public static final int IPPROTO_TRUNK1 =          23;              /* Trunk-1 */
-public static final int IPPROTO_TRUNK2 =          24;              /* Trunk-2 */
-public static final int IPPROTO_LEAF1 =           25;              /* Leaf-1 */
-public static final int IPPROTO_LEAF2 =           26;              /* Leaf-2 */
-public static final int IPPROTO_RDP =             27;              /* Reliable Data */
-public static final int IPPROTO_IRTP =            28;              /* Reliable Transaction */
-public static final int IPPROTO_TP =              29;              /* tp-4 w/ class negotiation */
-public static final int IPPROTO_BLT =             30;              /* Bulk Data Transfer */
-public static final int IPPROTO_NSP =             31;              /* Network Services */
-public static final int IPPROTO_INP =             32;              /* Merit Internodal */
-public static final int IPPROTO_SEP =             33;              /* Sequential Exchange */
-public static final int IPPROTO_3PC =             34;              /* Third Party Connect */
-public static final int IPPROTO_IDPR =            35;              /* InterDomain Policy Routing */
-public static final int IPPROTO_XTP =             36;              /* XTP */
-public static final int IPPROTO_DDP =             37;              /* Datagram Delivery */
-public static final int IPPROTO_CMTP =            38;              /* Control Message Transport */
-public static final int IPPROTO_TPXX =            39;              /* TP++ Transport */
-public static final int IPPROTO_IL =              40;              /* IL transport protocol */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int IPPROTO_IPV6 =            41;              /* IP6 header */
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int IPPROTO_SDRP =            42;              /* Source Demand Routing */
-public static final int IPPROTO_ROUTING = 43;              /* IP6 routing header */
-public static final int IPPROTO_FRAGMENT =        44;              /* IP6 fragmentation header */
-public static final int IPPROTO_IDRP =            45;              /* InterDomain Routing*/
-public static final int IPPROTO_RSVP =            46;              /* resource reservation */
-public static final int IPPROTO_GRE =             47;              /* General Routing Encap. */
-public static final int IPPROTO_MHRP =            48;              /* Mobile Host Routing */
-public static final int IPPROTO_BHA =             49;              /* BHA */
-public static final int IPPROTO_ESP =             50;              /* IP6 Encap Sec. Payload */
-public static final int IPPROTO_AH =              51;              /* IP6 Auth Header */
-public static final int IPPROTO_INLSP =           52;              /* Integ. Net Layer Security */
-public static final int IPPROTO_SWIPE =           53;              /* IP with encryption */
-public static final int IPPROTO_NHRP =            54;              /* Next Hop Resolution */
-/* 55-57: Unassigned */
-public static final int IPPROTO_ICMPV6 =          58;              /* ICMP6 */
-public static final int IPPROTO_NONE =            59;              /* IP6 no next header */
-public static final int IPPROTO_DSTOPTS =         60;              /* IP6 destination option */
-public static final int IPPROTO_AHIP =            61;              /* any host internal protocol */
-public static final int IPPROTO_CFTP =            62;              /* CFTP */
-public static final int IPPROTO_HELLO =           63;              /* "hello" routing protocol */
-public static final int IPPROTO_SATEXPAK =        64;              /* SATNET/Backroom EXPAK */
-public static final int IPPROTO_KRYPTOLAN =       65;              /* Kryptolan */
-public static final int IPPROTO_RVD =             66;              /* Remote Virtual Disk */
-public static final int IPPROTO_IPPC =            67;              /* Pluribus Packet Core */
-public static final int IPPROTO_ADFS =            68;              /* Any distributed FS */
-public static final int IPPROTO_SATMON =          69;              /* Satnet Monitoring */
-public static final int IPPROTO_VISA =            70;              /* VISA Protocol */
-public static final int IPPROTO_IPCV =            71;              /* Packet Core Utility */
-public static final int IPPROTO_CPNX =            72;              /* Comp. Prot. Net. Executive */
-public static final int IPPROTO_CPHB =            73;              /* Comp. Prot. HeartBeat */
-public static final int IPPROTO_WSN =             74;              /* Wang Span Network */
-public static final int IPPROTO_PVP =             75;              /* Packet Video Protocol */
-public static final int IPPROTO_BRSATMON =        76;              /* BackRoom SATNET Monitoring */
-public static final int IPPROTO_ND =              77;              /* Sun net disk proto (temp.) */
-public static final int IPPROTO_WBMON =           78;              /* WIDEBAND Monitoring */
-public static final int IPPROTO_WBEXPAK =         79;              /* WIDEBAND EXPAK */
-public static final int IPPROTO_EON =             80;              /* ISO cnlp */
-public static final int IPPROTO_VMTP =            81;              /* VMTP */
-public static final int IPPROTO_SVMTP =           82;              /* Secure VMTP */
-public static final int IPPROTO_VINES =           83;              /* Banyon VINES */
-public static final int IPPROTO_TTP =             84;              /* TTP */
-public static final int IPPROTO_IGP =             85;              /* NSFNET-IGP */
-public static final int IPPROTO_DGP =             86;              /* dissimilar gateway prot. */
-public static final int IPPROTO_TCF =             87;              /* TCF */
-public static final int IPPROTO_IGRP =            88;              /* Cisco/GXS IGRP */
-public static final int IPPROTO_OSPFIGP =         89;              /* OSPFIGP */
-public static final int IPPROTO_SRPC =            90;              /* Strite RPC protocol */
-public static final int IPPROTO_LARP =            91;              /* Locus Address Resoloution */
-public static final int IPPROTO_MTP =             92;              /* Multicast Transport */
-public static final int IPPROTO_AX25 =            93;              /* AX.25 Frames */
-public static final int IPPROTO_IPEIP =           94;              /* IP encapsulated in IP */
-public static final int IPPROTO_MICP =            95;              /* Mobile Int.ing control */
-public static final int IPPROTO_SCCSP =           96;              /* Semaphore Comm. security */
-public static final int IPPROTO_ETHERIP =         97;              /* Ethernet IP encapsulation */
-public static final int IPPROTO_ENCAP =           98;              /* encapsulation header */
-public static final int IPPROTO_APES =            99;              /* any private encr. scheme */
-public static final int IPPROTO_GMTP =            100;             /* GMTP*/
-/* 101-252: Partly Unassigned */
-public static final int IPPROTO_PIM =             103;             /* Protocol Independent Mcast */
-public static final int IPPROTO_IPCOMP =          108;             /* payload compression (IPComp) */
-public static final int IPPROTO_PGM =             113;             /* PGM */
-public static final int IPPROTO_SCTP =            132;             /* SCTP */
-/* 253-254: Experimentation and testing; 255: Reserved (RFC3692) */
-/* BSD Private, local use, namespace incursion */
-public static final int IPPROTO_DIVERT =          254;             /* divert pseudo-protocol */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-public static final int IPPROTO_RAW =             255;             /* raw IP packet */
-
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static final int IPPROTO_MAX =             256;
-
-/* last return value of *_input(), meaning "all job for this pkt is done".  */
-public static final int IPPROTO_DONE =            257;
-// #endif /* (_POSIX_C_SOURCE && !_DARWIN_C_SOURCE) */
-
-/*
- * Local port number conventions:
- *
- * When a user does a bind(2) or connect(2) with a port number of zero,
- * a non-conflicting local port address is chosen.
- * The default range is IPPORT_RESERVED through
- * IPPORT_USERRESERVED, although that is settable by sysctl.
- *
- * A user may set the IPPROTO_IP option IP_PORTRANGE to change this
- * default assignment range.
- *
- * The value IP_PORTRANGE_DEFAULT causes the default behavior.
- *
- * The value IP_PORTRANGE_HIGH changes the range of candidate port numbers
- * into the "high" range.  These are reserved for client outbound connections
- * which do not want to be filtered by any firewalls.
- *
- * The value IP_PORTRANGE_LOW changes the range to the "low" are
- * that is (by convention) restricted to privileged processes.  This
- * convention is based on "vouchsafe" principles only.  It is only secure
- * if you trust the remote host to restrict these ports.
- *
- * The default range of ports and the high range can be changed by
- * sysctl(3).  (net.inet.ip.port{hi,low}{first,last}_auto)
- *
- * Changing those values has bad security implications if you are
- * using a a stateless firewall that is allowing packets outside of that
- * range in order to allow transparent outgoing connections.
- *
- * Such a firewall configuration will generally depend on the use of these
- * default values.  If you change them, you may find your Security
- * Administrator looking for you with a heavy object.
- *
- * For a slightly more orthodox text view on this:
- *
- *            ftp://ftp.isi.edu/in-notes/iana/assignments/port-numbers
- *
- *    port numbers are divided into three ranges:
- *
- *                0 -  1023 Well Known Ports
- *             1024 - 49151 Registered Ports
- *            49152 - 65535 Dynamic and/or Private Ports
- *
- */
-
-public static final int __DARWIN_IPPORT_RESERVED =        1024;
-
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-/*
- * Ports < IPPORT_RESERVED are reserved for
- * privileged processes (e.g. root).         (IP_PORTRANGE_LOW)
- * Ports > IPPORT_USERRESERVED are reserved
- * for servers, not necessarily privileged.  (IP_PORTRANGE_DEFAULT)
- */
-// #ifndef IPPORT_RESERVED
-public static final int IPPORT_RESERVED =         __DARWIN_IPPORT_RESERVED;
-// #endif
-public static final int IPPORT_USERRESERVED =     5000;
-
-/*
- * Default local port range to use by setting IP_PORTRANGE_HIGH
- */
-public static final int IPPORT_HIFIRSTAUTO =      49152;
-public static final int IPPORT_HILASTAUTO =       65535;
-
-/*
- * Scanning for a free reserved port return a value below IPPORT_RESERVED,
- * but higher than IPPORT_RESERVEDSTART.  Traditionally the start value was
- * 512, but that conflicts with some well-known-services that firewalls may
- * have a fit if we use.
- */
-public static final int IPPORT_RESERVEDSTART =    600;
+/* Internet address.  */
 // Targeting ../feeder/in_addr.java
 
 
 
-/*
- * Definitions of bits in internet address integers.
- * On subnets, the decomposition of addresses to host and net parts
- * is done according to subnet mask, not the masks here.
- */
-public static final int INADDR_ANY =              (int)0x00000000;
-public static final int INADDR_BROADCAST =        (int)0xffffffff;   /* must be masked */
+/* Get system-specific definitions.  */
+// #include <bits/in.h>
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-// #define IN_CLASSA(i)            (((u_int32_t)(i) & 0x80000000) == 0)
-public static final int IN_CLASSA_NET =           0xff000000;
-public static final int IN_CLASSA_NSHIFT =        24;
-public static final int IN_CLASSA_HOST =          0x00ffffff;
-public static final int IN_CLASSA_MAX =           128;
+/* Standard well-defined IP protocols.  */
+/** enum  */
+public static final int
+    IPPROTO_IP = 0,	   /* Dummy protocol for TCP.  */
+// #define IPPROTO_IP		IPPROTO_IP
+    IPPROTO_ICMP = 1,	   /* Internet Control Message Protocol.  */
+// #define IPPROTO_ICMP		IPPROTO_ICMP
+    IPPROTO_IGMP = 2,	   /* Internet Group Management Protocol. */
+// #define IPPROTO_IGMP		IPPROTO_IGMP
+    IPPROTO_IPIP = 4,	   /* IPIP tunnels (older KA9Q tunnels use 94).  */
+// #define IPPROTO_IPIP		IPPROTO_IPIP
+    IPPROTO_TCP = 6,	   /* Transmission Control Protocol.  */
+// #define IPPROTO_TCP		IPPROTO_TCP
+    IPPROTO_EGP = 8,	   /* Exterior Gateway Protocol.  */
+// #define IPPROTO_EGP		IPPROTO_EGP
+    IPPROTO_PUP = 12,	   /* PUP protocol.  */
+// #define IPPROTO_PUP		IPPROTO_PUP
+    IPPROTO_UDP = 17,	   /* User Datagram Protocol.  */
+// #define IPPROTO_UDP		IPPROTO_UDP
+    IPPROTO_IDP = 22,	   /* XNS IDP protocol.  */
+// #define IPPROTO_IDP		IPPROTO_IDP
+    IPPROTO_TP = 29,	   /* SO Transport Protocol Class 4.  */
+// #define IPPROTO_TP		IPPROTO_TP
+    IPPROTO_DCCP = 33,	   /* Datagram Congestion Control Protocol.  */
+// #define IPPROTO_DCCP		IPPROTO_DCCP
+    IPPROTO_IPV6 = 41,     /* IPv6 header.  */
+// #define IPPROTO_IPV6		IPPROTO_IPV6
+    IPPROTO_RSVP = 46,	   /* Reservation Protocol.  */
+// #define IPPROTO_RSVP		IPPROTO_RSVP
+    IPPROTO_GRE = 47,	   /* General Routing Encapsulation.  */
+// #define IPPROTO_GRE		IPPROTO_GRE
+    IPPROTO_ESP = 50,      /* encapsulating security payload.  */
+// #define IPPROTO_ESP		IPPROTO_ESP
+    IPPROTO_AH = 51,       /* authentication header.  */
+// #define IPPROTO_AH		IPPROTO_AH
+    IPPROTO_MTP = 92,	   /* Multicast Transport Protocol.  */
+// #define IPPROTO_MTP		IPPROTO_MTP
+    IPPROTO_BEETPH = 94,   /* IP option pseudo header for BEET.  */
+// #define IPPROTO_BEETPH		IPPROTO_BEETPH
+    IPPROTO_ENCAP = 98,	   /* Encapsulation Header.  */
+// #define IPPROTO_ENCAP		IPPROTO_ENCAP
+    IPPROTO_PIM = 103,	   /* Protocol Independent Multicast.  */
+// #define IPPROTO_PIM		IPPROTO_PIM
+    IPPROTO_COMP = 108,	   /* Compression Header Protocol.  */
+// #define IPPROTO_COMP		IPPROTO_COMP
+    IPPROTO_SCTP = 132,	   /* Stream Control Transmission Protocol.  */
+// #define IPPROTO_SCTP		IPPROTO_SCTP
+    IPPROTO_UDPLITE = 136, /* UDP-Lite protocol.  */
+// #define IPPROTO_UDPLITE		IPPROTO_UDPLITE
+    IPPROTO_MPLS = 137,    /* MPLS in IP.  */
+// #define IPPROTO_MPLS		IPPROTO_MPLS
+    IPPROTO_RAW = 255,	   /* Raw IP packets.  */
+// #define IPPROTO_RAW		IPPROTO_RAW
+    IPPROTO_MAX = 256;
 
-// #define IN_CLASSB(i)            (((u_int32_t)(i) & 0xc0000000) == 0x80000000)
-public static final int IN_CLASSB_NET =           0xffff0000;
-public static final int IN_CLASSB_NSHIFT =        16;
-public static final int IN_CLASSB_HOST =          0x0000ffff;
-public static final int IN_CLASSB_MAX =           65536;
+/* If __USE_KERNEL_IPV6_DEFS is 1 then the user has included the kernel
+   network headers first and we should use those ABI-identical definitions
+   instead of our own, otherwise 0.  */
+// #if !__USE_KERNEL_IPV6_DEFS
+/** enum  */
+public static final int
+    IPPROTO_HOPOPTS = 0,   /* IPv6 Hop-by-Hop options.  */
+// #define IPPROTO_HOPOPTS		IPPROTO_HOPOPTS
+    IPPROTO_ROUTING = 43,  /* IPv6 routing header.  */
+// #define IPPROTO_ROUTING		IPPROTO_ROUTING
+    IPPROTO_FRAGMENT = 44, /* IPv6 fragmentation header.  */
+// #define IPPROTO_FRAGMENT	IPPROTO_FRAGMENT
+    IPPROTO_ICMPV6 = 58,   /* ICMPv6.  */
+// #define IPPROTO_ICMPV6		IPPROTO_ICMPV6
+    IPPROTO_NONE = 59,     /* IPv6 no next header.  */
+// #define IPPROTO_NONE		IPPROTO_NONE
+    IPPROTO_DSTOPTS = 60,  /* IPv6 destination options.  */
+// #define IPPROTO_DSTOPTS		IPPROTO_DSTOPTS
+    IPPROTO_MH = 135;       /* IPv6 mobility header.  */
+// #define IPPROTO_MH		IPPROTO_MH
+// #endif /* !__USE_KERNEL_IPV6_DEFS */
 
-// #define IN_CLASSC(i)            (((u_int32_t)(i) & 0xe0000000) == 0xc0000000)
-public static final int IN_CLASSC_NET =           0xffffff00;
-public static final int IN_CLASSC_NSHIFT =        8;
-public static final int IN_CLASSC_HOST =          0x000000ff;
+/* Type to represent a port.  */
 
-// #define IN_CLASSD(i)            (((u_int32_t)(i) & 0xf0000000) == 0xe0000000)
-public static final int IN_CLASSD_NET =           0xf0000000;      /* These ones aren't really */
-public static final int IN_CLASSD_NSHIFT =        28;              /* net and host fields, but */
-public static final int IN_CLASSD_HOST =          0x0fffffff;      /* routing needn't know.    */
-// #define IN_MULTICAST(i)         IN_CLASSD(i)
+/* Standard well-known ports.  */
+/** enum  */
+public static final int
+    IPPORT_ECHO = 7,		/* Echo service.  */
+    IPPORT_DISCARD = 9,		/* Discard transmissions service.  */
+    IPPORT_SYSTAT = 11,		/* System status service.  */
+    IPPORT_DAYTIME = 13,	/* Time of day service.  */
+    IPPORT_NETSTAT = 15,	/* Network status service.  */
+    IPPORT_FTP = 21,		/* File Transfer Protocol.  */
+    IPPORT_TELNET = 23,		/* Telnet protocol.  */
+    IPPORT_SMTP = 25,		/* Simple Mail Transfer Protocol.  */
+    IPPORT_TIMESERVER = 37,	/* Timeserver service.  */
+    IPPORT_NAMESERVER = 42,	/* Domain Name Service.  */
+    IPPORT_WHOIS = 43,		/* Internet Whois service.  */
+    IPPORT_MTP = 57,
 
-// #define IN_EXPERIMENTAL(i)      (((u_int32_t)(i) & 0xf0000000) == 0xf0000000)
-// #define IN_BADCLASS(i)          (((u_int32_t)(i) & 0xf0000000) == 0xf0000000)
-
-public static final int INADDR_LOOPBACK =         (int)0x7f000001;
-
-public static final int INADDR_NONE =             0xffffffff;              /* -1 return */
-
-public static final int INADDR_UNSPEC_GROUP =     (int)0xe0000000;   /* 224.0.0.0 */
-public static final int INADDR_ALLHOSTS_GROUP =   (int)0xe0000001;   /* 224.0.0.1 */
-public static final int INADDR_ALLRTRS_GROUP =    (int)0xe0000002;   /* 224.0.0.2 */
-public static final int INADDR_ALLRPTS_GROUP =    (int)0xe0000016;   /* 224.0.0.22, IGMPv3 */
-public static final int INADDR_CARP_GROUP =       (int)0xe0000012;   /* 224.0.0.18 */
-public static final int INADDR_PFSYNC_GROUP =     (int)0xe00000f0;   /* 224.0.0.240 */
-public static final int INADDR_ALLMDNS_GROUP =    (int)0xe00000fb;   /* 224.0.0.251 */
-public static final int INADDR_MAX_LOCAL_GROUP =  (int)0xe00000ff;   /* 224.0.0.255 */
-
-// #ifdef __APPLE__
-public static final int IN_LINKLOCALNETNUM =      (int)0xA9FE0000; /* 169.254.0.0 */
-// #define IN_LINKLOCAL(i)         (((u_int32_t)(i) & IN_CLASSB_NET) == IN_LINKLOCALNETNUM)
-// #define IN_LOOPBACK(i)          (((u_int32_t)(i) & 0xff000000) == 0x7f000000)
-// #define IN_ZERONET(i)           (((u_int32_t)(i) & 0xff000000) == 0)
-
-// #define IN_PRIVATE(i)   ((((u_int32_t)(i) & 0xff000000) == 0x0a000000) ||
-// 	                 (((u_int32_t)(i) & 0xfff00000) == 0xac100000) ||
-// 	                 (((u_int32_t)(i) & 0xffff0000) == 0xc0a80000))
+    IPPORT_TFTP = 69,		/* Trivial File Transfer Protocol.  */
+    IPPORT_RJE = 77,
+    IPPORT_FINGER = 79,		/* Finger service.  */
+    IPPORT_TTYLINK = 87,
+    IPPORT_SUPDUP = 95,		/* SUPDUP protocol.  */
 
 
-// #define IN_LOCAL_GROUP(i)       (((u_int32_t)(i) & 0xffffff00) == 0xe0000000)
+    IPPORT_EXECSERVER = 512,	/* execd service.  */
+    IPPORT_LOGINSERVER = 513,	/* rlogind service.  */
+    IPPORT_CMDSERVER = 514,
+    IPPORT_EFSSERVER = 520,
 
-// #define IN_ANY_LOCAL(i)         (IN_LINKLOCAL(i) || IN_LOCAL_GROUP(i))
-// #endif /* __APPLE__ */
+    /* UDP ports.  */
+    IPPORT_BIFFUDP = 512,
+    IPPORT_WHOSERVER = 513,
+    IPPORT_ROUTESERVER = 520,
 
-public static final int IN_LOOPBACKNET =          127;
+    /* Ports less than this value are reserved for privileged processes.  */
+    IPPORT_RESERVED = 1024,
+
+    /* Ports greater this value are reserved for (non-privileged) servers.  */
+    IPPORT_USERRESERVED = 5000;
+
+/* Definitions of the bits in an Internet address integer.
+
+   On subnets, host and network parts are found according to
+   the subnet mask, not these masks.  */
+
+// #define	IN_CLASSA(a)		((((in_addr_t)(a)) & 0x80000000) == 0)
+public static final int IN_CLASSA_NET =		0xff000000;
+public static final int IN_CLASSA_NSHIFT =	24;
+public static final int IN_CLASSA_HOST =		(0xffffffff & ~IN_CLASSA_NET);
+public static final int IN_CLASSA_MAX =		128;
+
+// #define	IN_CLASSB(a)		((((in_addr_t)(a)) & 0xc0000000) == 0x80000000)
+public static final int IN_CLASSB_NET =		0xffff0000;
+public static final int IN_CLASSB_NSHIFT =	16;
+public static final int IN_CLASSB_HOST =		(0xffffffff & ~IN_CLASSB_NET);
+public static final int IN_CLASSB_MAX =		65536;
+
+// #define	IN_CLASSC(a)		((((in_addr_t)(a)) & 0xe0000000) == 0xc0000000)
+public static final int IN_CLASSC_NET =		0xffffff00;
+public static final int IN_CLASSC_NSHIFT =	8;
+public static final int IN_CLASSC_HOST =		(0xffffffff & ~IN_CLASSC_NET);
+
+// #define	IN_CLASSD(a)		((((in_addr_t)(a)) & 0xf0000000) == 0xe0000000)
+// #define	IN_MULTICAST(a)		IN_CLASSD(a)
+
+// #define	IN_EXPERIMENTAL(a)	((((in_addr_t)(a)) & 0xe0000000) == 0xe0000000)
+// #define	IN_BADCLASS(a)		((((in_addr_t)(a)) & 0xf0000000) == 0xf0000000)
+
+/* Address to accept any incoming messages.  */
+public static final int INADDR_ANY =		((int) 0x00000000);
+/* Address to send to all hosts.  */
+public static final int INADDR_BROADCAST =	((int) 0xffffffff);
+/* Address indicating an error return.  */
+public static final int INADDR_NONE =		((int) 0xffffffff);
+
+/* Network number for local host loopback.  */
+public static final int IN_LOOPBACKNET =		127;
+/* Address to loopback in software to local host.  */
+// #ifndef INADDR_LOOPBACK
+public static final int INADDR_LOOPBACK =	((int) 0x7f000001); /* Inet 127.0.0.1.  */
+// #endif
+
+/* Defines for Multicast INADDR.  */
+public static final int INADDR_UNSPEC_GROUP =	((int) 0xe0000000); /* 224.0.0.0 */
+public static final int INADDR_ALLHOSTS_GROUP =	((int) 0xe0000001); /* 224.0.0.1 */
+public static final int INADDR_ALLRTRS_GROUP =    ((int) 0xe0000002); /* 224.0.0.2 */
+public static final int INADDR_ALLSNOOPERS_GROUP = ((int) 0xe000006a); /* 224.0.0.106 */
+public static final int INADDR_MAX_LOCAL_GROUP =  ((int) 0xe00000ff);
+// Targeting ../feeder/in6_addr.java
+
+
+// #endif /* !__USE_KERNEL_IPV6_DEFS */
+
+@MemberGetter public static native @Const @ByRef in6_addr in6addr_any();        /* :: */
+@MemberGetter public static native @Const @ByRef in6_addr in6addr_loopback();   /* ::1 */
+// #define IN6ADDR_ANY_INIT { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } } }
+// #define IN6ADDR_LOOPBACK_INIT { { { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 } } }
+
+public static final int INET_ADDRSTRLEN = 16;
+public static final int INET6_ADDRSTRLEN = 46;
 // Targeting ../feeder/sockaddr_in.java
 
 
-
-// #define IN_ARE_ADDR_EQUAL(a, b)
-//     (bcmp(&(a)->s_addr, &(b)->s_addr,
-// 	sizeof (struct in_addr)) == 0)
+// Targeting ../feeder/sockaddr_in6.java
 
 
-public static final int INET_ADDRSTRLEN =                 16;
-// Targeting ../feeder/ip_opts.java
+// Targeting ../feeder/ipv6_mreq.java
 
 
+// #endif /* !__USE_KERNEL_IPV6_DEFS */
 
-/*
- * Options for use with [gs]etsockopt at the IP level.
- * First word of comment is data type; bool is stored in int.
- */
-public static final int IP_OPTIONS =              1;    /* buf/ip_opts; set/get IP options */
-public static final int IP_HDRINCL =              2;    /* int; header is included with data */
-public static final int IP_TOS =                  3;    /* int; IP type of service and preced. */
-public static final int IP_TTL =                  4;    /* int; IP time to live */
-public static final int IP_RECVOPTS =             5;    /* bool; receive all IP opts w/dgram */
-public static final int IP_RECVRETOPTS =          6;    /* bool; receive IP opts for response */
-public static final int IP_RECVDSTADDR =          7;    /* bool; receive IP dst addr w/dgram */
-public static final int IP_RETOPTS =              8;    /* ip_opts; set/get IP options */
-public static final int IP_MULTICAST_IF =         9;    /* u_char; set/get IP multicast i/f  */
-public static final int IP_MULTICAST_TTL =        10;   /* u_char; set/get IP multicast ttl */
-public static final int IP_MULTICAST_LOOP =       11;   /* u_char; set/get IP multicast loopback */
-public static final int IP_ADD_MEMBERSHIP =       12;   /* ip_mreq; add an IP group membership */
-public static final int IP_DROP_MEMBERSHIP =      13;   /* ip_mreq; drop an IP group membership */
-public static final int IP_MULTICAST_VIF =        14;   /* set/get IP mcast virt. iface */
-public static final int IP_RSVP_ON =              15;   /* enable RSVP in kernel */
-public static final int IP_RSVP_OFF =             16;   /* disable RSVP in kernel */
-public static final int IP_RSVP_VIF_ON =          17;   /* set RSVP per-vif socket */
-public static final int IP_RSVP_VIF_OFF =         18;   /* unset RSVP per-vif socket */
-public static final int IP_PORTRANGE =            19;   /* int; range to choose for unspec port */
-public static final int IP_RECVIF =               20;   /* bool; receive reception if w/dgram */
-/* for IPSEC */
-public static final int IP_IPSEC_POLICY =         21;   /* int; set/get security policy */
-public static final int IP_FAITH =                22;   /* deprecated */
-// #ifdef __APPLE__
-public static final int IP_STRIPHDR =             23;   /* bool: drop receive of raw IP header */
+// #ifdef __USE_MISC
 // #endif
-public static final int IP_RECVTTL =              24;   /* bool; receive reception TTL w/dgram */
-public static final int IP_BOUND_IF =             25;   /* int; set/get bound interface */
-public static final int IP_PKTINFO =              26;   /* get pktinfo on recv socket, set src on sent dgram  */
-public static final int IP_RECVPKTINFO =          IP_PKTINFO;      /* receive pktinfo w/dgram */
-public static final int IP_RECVTOS =              27;   /* bool; receive IP TOS w/dgram */
-public static final int IP_DONTFRAG =             28;   /* don't fragment packet */
 
-public static final int IP_FW_ADD =               40;   /* add a firewall rule to chain */
-public static final int IP_FW_DEL =               41;   /* delete a firewall rule from chain */
-public static final int IP_FW_FLUSH =             42;   /* flush firewall rule chain */
-public static final int IP_FW_ZERO =              43;   /* clear single/all firewall counter(s) */
-public static final int IP_FW_GET =               44;   /* get entire firewall rule chain */
-public static final int IP_FW_RESETLOG =          45;   /* reset logging counters */
+/* Functions to convert between host and network byte order.
 
-/* These older firewall socket option codes are maintained for backward compatibility. */
-public static final int IP_OLD_FW_ADD =           50;   /* add a firewall rule to chain */
-public static final int IP_OLD_FW_DEL =           51;   /* delete a firewall rule from chain */
-public static final int IP_OLD_FW_FLUSH =         52;   /* flush firewall rule chain */
-public static final int IP_OLD_FW_ZERO =          53;   /* clear single/all firewall counter(s) */
-public static final int IP_OLD_FW_GET =           54;   /* get entire firewall rule chain */
-public static final int IP_NAT__XXX =                     55;   /* set/get NAT opts XXX Deprecated, do not use */
-public static final int IP_OLD_FW_RESETLOG =      56;   /* reset logging counters */
+   Please note that these functions normally take `unsigned long int' or
+   `unsigned short int' values as arguments and also return them.  But
+   this was a short-sighted decision since on different systems the types
+   may have different representations but the values are always the same.  */
 
-public static final int IP_DUMMYNET_CONFIGURE =   60;   /* add/configure a dummynet pipe */
-public static final int IP_DUMMYNET_DEL =         61;   /* delete a dummynet pipe from chain */
-public static final int IP_DUMMYNET_FLUSH =       62;   /* flush dummynet */
-public static final int IP_DUMMYNET_GET =         64;   /* get entire dummynet pipes */
+public static native @Cast("uint32_t") int ntohl(@Cast("uint32_t") int __netlong);
+public static native @Cast("uint16_t") short ntohs(@Cast("uint16_t") short __netshort);
+public static native @Cast("uint32_t") int htonl(@Cast("uint32_t") int __hostlong);
+public static native @Cast("uint16_t") short htons(@Cast("uint16_t") short __hostshort);
 
-public static final int IP_TRAFFIC_MGT_BACKGROUND =       65;   /* int*; get background IO flags; set background IO */
-public static final int IP_MULTICAST_IFINDEX =    66;   /* int*; set/get IP multicast i/f index */
+// #include <endian.h>
 
-/* IPv4 Source Filter Multicast API [RFC3678] */
-public static final int IP_ADD_SOURCE_MEMBERSHIP =        70;   /* join a source-specific group */
-public static final int IP_DROP_SOURCE_MEMBERSHIP =       71;   /* drop a single source */
-public static final int IP_BLOCK_SOURCE =                 72;   /* block a source */
-public static final int IP_UNBLOCK_SOURCE =               73;   /* unblock a source */
+/* Get machine dependent optimized versions of byte swapping functions.  */
+// #include <bits/byteswap.h>
+// #include <bits/uintn-identity.h>
 
-/* The following option is private; do not use it from user applications. */
-public static final int IP_MSFILTER =                     74;   /* set/get filter list */
-
-/* Protocol Independent Multicast API [RFC3678] */
-public static final int MCAST_JOIN_GROUP =                80;   /* join an any-source group */
-public static final int MCAST_LEAVE_GROUP =               81;   /* leave all sources for group */
-public static final int MCAST_JOIN_SOURCE_GROUP =         82;   /* join a source-specific group */
-public static final int MCAST_LEAVE_SOURCE_GROUP =        83;   /* leave a single source */
-public static final int MCAST_BLOCK_SOURCE =              84;   /* block a source */
-public static final int MCAST_UNBLOCK_SOURCE =            85;   /* unblock a source */
-
-
-/*
- * Defaults and limits for options
- */
-public static final int IP_DEFAULT_MULTICAST_TTL =  1;     /* normally limit m'casts to 1 hop  */
-public static final int IP_DEFAULT_MULTICAST_LOOP = 1;     /* normally hear sends if a member  */
-
-/*
- * The imo_membership vector for each socket is now dynamically allocated at
- * run-time, bounded by USHRT_MAX, and is reallocated when needed, sized
- * according to a power-of-two increment.
- */
-public static final int IP_MIN_MEMBERSHIPS =      31;
-public static final int IP_MAX_MEMBERSHIPS =      4095;
-
-/*
- * Default resource limits for IPv4 multicast source filtering.
- * These may be modified by sysctl.
- */
-public static final int IP_MAX_GROUP_SRC_FILTER =         512;     /* sources per group */
-public static final int IP_MAX_SOCK_SRC_FILTER =          128;     /* sources per socket/group */
-public static final int IP_MAX_SOCK_MUTE_FILTER =         128;
-// Targeting ../feeder/ip_mreq.java
-
-
-// Targeting ../feeder/ip_mreqn.java
-
-
-
-// #pragma pack(4)
-// Targeting ../feeder/ip_mreq_source.java
-
-
-// Targeting ../feeder/group_req.java
-
-
-// Targeting ../feeder/group_source_req.java
-
-
-
-// #ifndef __MSFILTERREQ_DEFINED
-// #define __MSFILTERREQ_DEFINED
-// Targeting ../feeder/__msfilterreq.java
-
-
-
-// #endif /* __MSFILTERREQ_DEFINED */
-
-// #pragma pack()
-
-/*
- * Advanced (Full-state) APIs [RFC3678]
- * The RFC specifies uint_t for the 6th argument to [sg]etsourcefilter().
- * We use uint32_t here to be consistent.
- */
-public static native int setipv4sourcefilter(int arg0, @ByVal in_addr arg1, @ByVal in_addr arg2, @Cast("uint32_t") int arg3,
-    @Cast("uint32_t") int arg4, in_addr arg5);
-public static native int getipv4sourcefilter(int arg0, @ByVal in_addr arg1, @ByVal in_addr arg2, @Cast("uint32_t*") IntPointer arg3,
-    @Cast("uint32_t*") IntPointer arg4, in_addr arg5);
-public static native int getipv4sourcefilter(int arg0, @ByVal in_addr arg1, @ByVal in_addr arg2, @Cast("uint32_t*") IntBuffer arg3,
-    @Cast("uint32_t*") IntBuffer arg4, in_addr arg5);
-public static native int getipv4sourcefilter(int arg0, @ByVal in_addr arg1, @ByVal in_addr arg2, @Cast("uint32_t*") int[] arg3,
-    @Cast("uint32_t*") int[] arg4, in_addr arg5);
-public static native int setsourcefilter(int arg0, @Cast("uint32_t") int arg1, sockaddr arg2, @Cast("socklen_t") int arg3,
-    @Cast("uint32_t") int arg4, @Cast("uint32_t") int arg5, sockaddr_storage arg6);
-public static native int getsourcefilter(int arg0, @Cast("uint32_t") int arg1, sockaddr arg2, @Cast("socklen_t") int arg3,
-    @Cast("uint32_t*") IntPointer arg4, @Cast("uint32_t*") IntPointer arg5, sockaddr_storage arg6);
-public static native int getsourcefilter(int arg0, @Cast("uint32_t") int arg1, sockaddr arg2, @Cast("socklen_t") int arg3,
-    @Cast("uint32_t*") IntBuffer arg4, @Cast("uint32_t*") IntBuffer arg5, sockaddr_storage arg6);
-public static native int getsourcefilter(int arg0, @Cast("uint32_t") int arg1, sockaddr arg2, @Cast("socklen_t") int arg3,
-    @Cast("uint32_t*") int[] arg4, @Cast("uint32_t*") int[] arg5, sockaddr_storage arg6);
-
-/*
- * Filter modes; also used to represent per-socket filter mode internally.
- */
-public static final int MCAST_UNDEFINED = 0;       /* fmode: not yet defined */
-public static final int MCAST_INCLUDE =   1;       /* fmode: include these source(s) */
-public static final int MCAST_EXCLUDE =   2;       /* fmode: exclude these source(s) */
-
-/*
- * Argument for IP_PORTRANGE:
- * - which range to search when port is unspecified at bind() or connect()
- */
-public static final int IP_PORTRANGE_DEFAULT =    0;       /* default range */
-public static final int IP_PORTRANGE_HIGH =       1;       /* "high" - request firewall bypass */
-public static final int IP_PORTRANGE_LOW =        2;
-// Targeting ../feeder/in_pktinfo.java
-
-
-
-/*
- * Definitions for inet sysctl operations.
- *
- * Third level is protocol number.
- * Fourth level is desired variable within that protocol.
- */
-public static final int IPPROTO_MAXID =   (IPPROTO_AH + 1);        /* don't list to IPPROTO_MAX */
-
-
-/*
- * Names for IP sysctl objects
- */
-public static final int IPCTL_FORWARDING =        1;       /* act as router */
-public static final int IPCTL_SENDREDIRECTS =     2;       /* may send redirects when forwarding */
-public static final int IPCTL_DEFTTL =            3;       /* default TTL */
-// #ifdef notyet
-public static final int IPCTL_DEFMTU =            4;       /* default MTU */
+// #ifdef __OPTIMIZE__
+/* We can optimize calls to the conversion functions.  Either nothing has
+   to be done or we are using directly the byte-swapping functions which
+   often can be inlined.  */
+// # if __BYTE_ORDER == __BIG_ENDIAN
+/* The host byte order is the same as network byte order,
+   so these functions are all just identity.  */
+// # define ntohl(x)	__uint32_identity (x)
+// # define ntohs(x)	__uint16_identity (x)
+// # define htonl(x)	__uint32_identity (x)
+// # define htons(x)	__uint16_identity (x)
+// # else
+// #  if __BYTE_ORDER == __LITTLE_ENDIAN
+// #   define ntohl(x)	__bswap_32 (x)
+// #   define ntohs(x)	__bswap_16 (x)
+// #   define htonl(x)	__bswap_32 (x)
+// #   define htons(x)	__bswap_16 (x)
+// #  endif
+// # endif
 // #endif
-public static final int IPCTL_RTEXPIRE =          5;       /* cloned route expiration time */
-public static final int IPCTL_RTMINEXPIRE =       6;       /* min value for expiration time */
-public static final int IPCTL_RTMAXCACHE =        7;       /* trigger level for dynamic expire */
-public static final int IPCTL_SOURCEROUTE =       8;       /* may perform source routes */
-public static final int IPCTL_DIRECTEDBROADCAST = 9;       /* may re-broadcast received packets */
-public static final int IPCTL_INTRQMAXLEN =       10;      /* max length of netisr queue */
-public static final int IPCTL_INTRQDROPS =        11;      /* number of netisr q drops */
-public static final int IPCTL_STATS =             12;      /* ipstat structure */
-public static final int IPCTL_ACCEPTSOURCEROUTE = 13;      /* may accept source routed packets */
-public static final int IPCTL_FASTFORWARDING =    14;      /* use fast IP forwarding code */
-public static final int IPCTL_KEEPFAITH =         15;      /* deprecated */
-public static final int IPCTL_GIF_TTL =           16;      /* default TTL for gif encap packet */
-public static final int IPCTL_MAXID =             17;
 
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
+// #ifdef __GNUC__
+// # define IN6_IS_ADDR_UNSPECIFIED(a)
+//   (__extension__
+//    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);
+//       __a->__in6_u.__u6_addr32[0] == 0
+//       && __a->__in6_u.__u6_addr32[1] == 0
+//       && __a->__in6_u.__u6_addr32[2] == 0
+//       && __a->__in6_u.__u6_addr32[3] == 0; }))
 
-/* INET6 stuff */
-// #define __KAME_NETINET_IN_H_INCLUDED_
-// #include <netinet6/in6.h>
-// #undef __KAME_NETINET_IN_H_INCLUDED_
+// # define IN6_IS_ADDR_LOOPBACK(a)
+//   (__extension__
+//    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);
+//       __a->__in6_u.__u6_addr32[0] == 0
+//       && __a->__in6_u.__u6_addr32[1] == 0
+//       && __a->__in6_u.__u6_addr32[2] == 0
+//       && __a->__in6_u.__u6_addr32[3] == htonl (1); }))
 
+// # define IN6_IS_ADDR_LINKLOCAL(a)
+//   (__extension__
+//    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);
+//       (__a->__in6_u.__u6_addr32[0] & htonl (0xffc00000)) == htonl (0xfe800000); }))
 
+// # define IN6_IS_ADDR_SITELOCAL(a)
+//   (__extension__
+//    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);
+//       (__a->__in6_u.__u6_addr32[0] & htonl (0xffc00000)) == htonl (0xfec00000); }))
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-public static native int bindresvport(int arg0, sockaddr_in arg1);
-public static native int bindresvport_sa(int arg0, sockaddr arg1);
+// # define IN6_IS_ADDR_V4MAPPED(a)
+//   (__extension__
+//    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);
+//       __a->__in6_u.__u6_addr32[0] == 0
+//       && __a->__in6_u.__u6_addr32[1] == 0
+//       && __a->__in6_u.__u6_addr32[2] == htonl (0xffff); }))
+
+// # define IN6_IS_ADDR_V4COMPAT(a)
+//   (__extension__
+//    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);
+//       __a->__in6_u.__u6_addr32[0] == 0
+//       && __a->__in6_u.__u6_addr32[1] == 0
+//       && __a->__in6_u.__u6_addr32[2] == 0
+//       && ntohl (__a->__in6_u.__u6_addr32[3]) > 1; }))
+
+// # define IN6_ARE_ADDR_EQUAL(a,b)
+//   (__extension__
+//    ({ const struct in6_addr *__a = (const struct in6_addr *) (a);
+//       const struct in6_addr *__b = (const struct in6_addr *) (b);
+//       __a->__in6_u.__u6_addr32[0] == __b->__in6_u.__u6_addr32[0]
+//       && __a->__in6_u.__u6_addr32[1] == __b->__in6_u.__u6_addr32[1]
+//       && __a->__in6_u.__u6_addr32[2] == __b->__in6_u.__u6_addr32[2]
+//       && __a->__in6_u.__u6_addr32[3] == __b->__in6_u.__u6_addr32[3]; }))
+// #else
+// # define IN6_IS_ADDR_UNSPECIFIED(a)
+// 	(((const uint32_t *) (a))[0] == 0
+// 	 && ((const uint32_t *) (a))[1] == 0
+// 	 && ((const uint32_t *) (a))[2] == 0
+// 	 && ((const uint32_t *) (a))[3] == 0)
+
+// # define IN6_IS_ADDR_LOOPBACK(a)
+// 	(((const uint32_t *) (a))[0] == 0
+// 	 && ((const uint32_t *) (a))[1] == 0
+// 	 && ((const uint32_t *) (a))[2] == 0
+// 	 && ((const uint32_t *) (a))[3] == htonl (1))
+
+// # define IN6_IS_ADDR_LINKLOCAL(a)
+// 	((((const uint32_t *) (a))[0] & htonl (0xffc00000))
+// 	 == htonl (0xfe800000))
+
+// # define IN6_IS_ADDR_SITELOCAL(a)
+// 	((((const uint32_t *) (a))[0] & htonl (0xffc00000))
+// 	 == htonl (0xfec00000))
+
+// # define IN6_IS_ADDR_V4MAPPED(a)
+// 	((((const uint32_t *) (a))[0] == 0)
+// 	 && (((const uint32_t *) (a))[1] == 0)
+// 	 && (((const uint32_t *) (a))[2] == htonl (0xffff)))
+
+// # define IN6_IS_ADDR_V4COMPAT(a)
+// 	((((const uint32_t *) (a))[0] == 0)
+// 	 && (((const uint32_t *) (a))[1] == 0)
+// 	 && (((const uint32_t *) (a))[2] == 0)
+// 	 && (ntohl (((const uint32_t *) (a))[3]) > 1))
+
+// # define IN6_ARE_ADDR_EQUAL(a,b)
+// 	((((const uint32_t *) (a))[0] == ((const uint32_t *) (b))[0])
+// 	 && (((const uint32_t *) (a))[1] == ((const uint32_t *) (b))[1])
+// 	 && (((const uint32_t *) (a))[2] == ((const uint32_t *) (b))[2])
+// 	 && (((const uint32_t *) (a))[3] == ((const uint32_t *) (b))[3]))
 // #endif
-// #endif /* _NETINET_IN_H_ */
+
+// #define IN6_IS_ADDR_MULTICAST(a) (((const uint8_t *) (a))[0] == 0xff)
+
+// #ifdef __USE_MISC
+// #endif
+
+
+// #define IN6_IS_ADDR_MC_NODELOCAL(a)
+// 	(IN6_IS_ADDR_MULTICAST(a)
+// 	 && ((((const uint8_t *) (a))[1] & 0xf) == 0x1))
+
+// #define IN6_IS_ADDR_MC_LINKLOCAL(a)
+// 	(IN6_IS_ADDR_MULTICAST(a)
+// 	 && ((((const uint8_t *) (a))[1] & 0xf) == 0x2))
+
+// #define IN6_IS_ADDR_MC_SITELOCAL(a)
+// 	(IN6_IS_ADDR_MULTICAST(a)
+// 	 && ((((const uint8_t *) (a))[1] & 0xf) == 0x5))
+
+// #define IN6_IS_ADDR_MC_ORGLOCAL(a)
+// 	(IN6_IS_ADDR_MULTICAST(a)
+// 	 && ((((const uint8_t *) (a))[1] & 0xf) == 0x8))
+
+// #define IN6_IS_ADDR_MC_GLOBAL(a)
+// 	(IN6_IS_ADDR_MULTICAST(a)
+// 	 && ((((const uint8_t *) (a))[1] & 0xf) == 0xe))
+
+
+// #ifdef __USE_GNU
+// Targeting ../feeder/in6_pktinfo.java
+
+
+// Targeting ../feeder/ip6_mtuinfo.java
+
+
+// #endif /* !__USE_KERNEL_IPV6_DEFS */
+
+/* Obsolete hop-by-hop and Destination Options Processing (RFC 2292).  */
+public static native int inet6_option_space(int __nbytes);
+public static native int inet6_option_init(Pointer __bp, @Cast("cmsghdr**") PointerPointer __cmsgp,
+			      int __type);
+public static native int inet6_option_init(Pointer __bp, @ByPtrPtr cmsghdr __cmsgp,
+			      int __type);
+public static native int inet6_option_append(cmsghdr __cmsg,
+				@Cast("const uint8_t*") BytePointer __typep, int __multx,
+				int __plusy);
+public static native int inet6_option_append(cmsghdr __cmsg,
+				@Cast("const uint8_t*") ByteBuffer __typep, int __multx,
+				int __plusy);
+public static native int inet6_option_append(cmsghdr __cmsg,
+				@Cast("const uint8_t*") byte[] __typep, int __multx,
+				int __plusy);
+public static native @Cast("uint8_t*") BytePointer inet6_option_alloc(cmsghdr __cmsg, int __datalen,
+				    int __multx, int __plusy);
+public static native int inet6_option_next(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") PointerPointer __tptrp);
+public static native int inet6_option_next(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") @ByPtrPtr BytePointer __tptrp);
+public static native int inet6_option_next(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") @ByPtrPtr ByteBuffer __tptrp);
+public static native int inet6_option_next(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") @ByPtrPtr byte[] __tptrp);
+public static native int inet6_option_find(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") PointerPointer __tptrp, int __type);
+public static native int inet6_option_find(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") @ByPtrPtr BytePointer __tptrp, int __type);
+public static native int inet6_option_find(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") @ByPtrPtr ByteBuffer __tptrp, int __type);
+public static native int inet6_option_find(@Const cmsghdr __cmsg,
+			      @Cast("uint8_t**") @ByPtrPtr byte[] __tptrp, int __type);
+
+
+/* Hop-by-Hop and Destination Options Processing (RFC 3542).  */
+public static native int inet6_opt_init(Pointer __extbuf, @Cast("socklen_t") int __extlen);
+public static native int inet6_opt_append(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			     @Cast("uint8_t") byte __type, @Cast("socklen_t") int __len, @Cast("uint8_t") byte __align,
+			     @Cast("void**") PointerPointer __databufp);
+public static native int inet6_opt_append(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			     @Cast("uint8_t") byte __type, @Cast("socklen_t") int __len, @Cast("uint8_t") byte __align,
+			     @Cast("void**") @ByPtrPtr Pointer __databufp);
+public static native int inet6_opt_finish(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset);
+public static native int inet6_opt_set_val(Pointer __databuf, int __offset, Pointer __val,
+			      @Cast("socklen_t") int __vallen);
+public static native int inet6_opt_next(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t*") BytePointer __typep, @Cast("socklen_t*") IntPointer __lenp,
+			   @Cast("void**") PointerPointer __databufp);
+public static native int inet6_opt_next(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t*") BytePointer __typep, @Cast("socklen_t*") IntPointer __lenp,
+			   @Cast("void**") @ByPtrPtr Pointer __databufp);
+public static native int inet6_opt_next(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t*") ByteBuffer __typep, @Cast("socklen_t*") IntBuffer __lenp,
+			   @Cast("void**") @ByPtrPtr Pointer __databufp);
+public static native int inet6_opt_next(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t*") byte[] __typep, @Cast("socklen_t*") int[] __lenp,
+			   @Cast("void**") @ByPtrPtr Pointer __databufp);
+public static native int inet6_opt_find(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t") byte __type, @Cast("socklen_t*") IntPointer __lenp,
+			   @Cast("void**") PointerPointer __databufp);
+public static native int inet6_opt_find(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t") byte __type, @Cast("socklen_t*") IntPointer __lenp,
+			   @Cast("void**") @ByPtrPtr Pointer __databufp);
+public static native int inet6_opt_find(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t") byte __type, @Cast("socklen_t*") IntBuffer __lenp,
+			   @Cast("void**") @ByPtrPtr Pointer __databufp);
+public static native int inet6_opt_find(Pointer __extbuf, @Cast("socklen_t") int __extlen, int __offset,
+			   @Cast("uint8_t") byte __type, @Cast("socklen_t*") int[] __lenp,
+			   @Cast("void**") @ByPtrPtr Pointer __databufp);
+public static native int inet6_opt_get_val(Pointer __databuf, int __offset, Pointer __val,
+			      @Cast("socklen_t") int __vallen);
+
+
+/* Routing Header Option (RFC 3542).  */
+public static native @Cast("socklen_t") int inet6_rth_space(int __type, int __segments);
+public static native Pointer inet6_rth_init(Pointer __bp, @Cast("socklen_t") int __bp_len, int __type,
+			     int __segments);
+public static native int inet6_rth_add(Pointer __bp, @Const in6_addr __addr);
+public static native int inet6_rth_reverse(@Const Pointer __in, Pointer __out);
+public static native int inet6_rth_segments(@Const Pointer __bp);
+public static native in6_addr inet6_rth_getaddr(@Const Pointer __bp, int __index);
+
+
+/* Multicast source filter support.  */
+
+/* Get IPv4 source filter.  */
+public static native int getipv4sourcefilter(int __s, @ByVal in_addr __interface_addr,
+				@ByVal in_addr __group, @Cast("uint32_t*") IntPointer __fmode,
+				@Cast("uint32_t*") IntPointer __numsrc, in_addr __slist);
+public static native int getipv4sourcefilter(int __s, @ByVal in_addr __interface_addr,
+				@ByVal in_addr __group, @Cast("uint32_t*") IntBuffer __fmode,
+				@Cast("uint32_t*") IntBuffer __numsrc, in_addr __slist);
+public static native int getipv4sourcefilter(int __s, @ByVal in_addr __interface_addr,
+				@ByVal in_addr __group, @Cast("uint32_t*") int[] __fmode,
+				@Cast("uint32_t*") int[] __numsrc, in_addr __slist);
+
+/* Set IPv4 source filter.  */
+public static native int setipv4sourcefilter(int __s, @ByVal in_addr __interface_addr,
+				@ByVal in_addr __group, @Cast("uint32_t") int __fmode,
+				@Cast("uint32_t") int __numsrc,
+				@Const in_addr __slist);
+
+
+/* Get source filter.  */
+public static native int getsourcefilter(int __s, @Cast("uint32_t") int __interface_addr,
+			    @Const sockaddr __group,
+			    @Cast("socklen_t") int __grouplen, @Cast("uint32_t*") IntPointer __fmode,
+			    @Cast("uint32_t*") IntPointer __numsrc,
+			    sockaddr_storage __slist);
+public static native int getsourcefilter(int __s, @Cast("uint32_t") int __interface_addr,
+			    @Const sockaddr __group,
+			    @Cast("socklen_t") int __grouplen, @Cast("uint32_t*") IntBuffer __fmode,
+			    @Cast("uint32_t*") IntBuffer __numsrc,
+			    sockaddr_storage __slist);
+public static native int getsourcefilter(int __s, @Cast("uint32_t") int __interface_addr,
+			    @Const sockaddr __group,
+			    @Cast("socklen_t") int __grouplen, @Cast("uint32_t*") int[] __fmode,
+			    @Cast("uint32_t*") int[] __numsrc,
+			    sockaddr_storage __slist);
+
+/* Set source filter.  */
+public static native int setsourcefilter(int __s, @Cast("uint32_t") int __interface_addr,
+			    @Const sockaddr __group,
+			    @Cast("socklen_t") int __grouplen, @Cast("uint32_t") int __fmode,
+			    @Cast("uint32_t") int __numsrc,
+			    @Const sockaddr_storage __slist);
+// #endif	/* use GNU */
+
+// #endif	/* netinet/in.h */
 
 
 // Parsed from zixi_definitions.h

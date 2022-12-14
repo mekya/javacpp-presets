@@ -11,10 +11,9 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 import static org.bytedeco.zixi.global.feeder.*;
 
 
-/*
- * [XSI] Message header for recvmsg and sendmsg calls.
- * Used value-result for recvmsg, value only for sendmsg.
- */
+
+/* Structure describing messages sent by
+   `sendmsg' and received by `recvmsg'.  */
 @Properties(inherit = org.bytedeco.zixi.presets.zixiFeeder.class)
 public class msghdr extends Pointer {
     static { Loader.load(); }
@@ -33,11 +32,17 @@ public class msghdr extends Pointer {
         return new msghdr((Pointer)this).position(position + i);
     }
 
-	public native Pointer msg_name(); public native msghdr msg_name(Pointer setter);      /* [XSI] optional address */
-	public native @Cast("socklen_t") int msg_namelen(); public native msghdr msg_namelen(int setter);    /* [XSI] size of address */
-	public native iovec msg_iov(); public native msghdr msg_iov(iovec setter); /* [XSI] scatter/gather array */
-	public native int msg_iovlen(); public native msghdr msg_iovlen(int setter);     /* [XSI] # elements in msg_iov */
-	public native Pointer msg_control(); public native msghdr msg_control(Pointer setter);   /* [XSI] ancillary data, see below */
-	public native @Cast("socklen_t") int msg_controllen(); public native msghdr msg_controllen(int setter); /* [XSI] ancillary data buffer len */
-	public native int msg_flags(); public native msghdr msg_flags(int setter);      /* [XSI] flags on received message */
-}
+    public native Pointer msg_name(); public native msghdr msg_name(Pointer setter);		/* Address to send to/receive from.  */
+    public native @Cast("socklen_t") int msg_namelen(); public native msghdr msg_namelen(int setter);	/* Length of address data.  */
+
+    public native iovec msg_iov(); public native msghdr msg_iov(iovec setter);	/* Vector of data to send/receive into.  */
+    public native @Cast("size_t") long msg_iovlen(); public native msghdr msg_iovlen(long setter);		/* Number of elements in the vector.  */
+
+    public native Pointer msg_control(); public native msghdr msg_control(Pointer setter);		/* Ancillary data (eg BSD filedesc passing). */
+    public native @Cast("size_t") long msg_controllen(); public native msghdr msg_controllen(long setter);	/* Ancillary data buffer length.
+				   !! The type should be socklen_t but the
+				   definition of the kernel is incompatible
+				   with this.  */
+
+    public native int msg_flags(); public native msghdr msg_flags(int setter);		/* Flags on received message.  */
+  }

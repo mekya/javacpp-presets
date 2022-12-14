@@ -12,7 +12,7 @@
 
   <groupId>org.bytedeco</groupId>
   <artifactId>zixi-platform</artifactId>
-  <version>1.4.4-${project.parent.version}</version>
+  <version>14.13.44304-${project.parent.version}</version>
   <name>JavaCPP Presets Platform for zixi</name>
 
   <properties>
@@ -64,26 +64,28 @@
       <classifier>${javacpp.platform.linux-armhf}</classifier>
     </dependency>
 -->
+<!--
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
       <version>${project.version}</version>
       <classifier>${javacpp.platform.linux-arm64}</classifier>
     </dependency>
-
+-->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
       <version>${project.version}</version>
       <classifier>${javacpp.platform.linux-x86_64}</classifier>
     </dependency>
-    
+   <!--  
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
       <version>${project.version}</version>
       <classifier>${javacpp.platform.macosx-x86_64}</classifier>
     </dependency>
+    -->
     <!--
     <dependency>
       <groupId>${project.groupId}</groupId>

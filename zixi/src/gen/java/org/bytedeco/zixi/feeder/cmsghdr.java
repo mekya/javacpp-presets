@@ -9,18 +9,9 @@ import org.bytedeco.javacpp.annotation.*;
 import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.zixi.global.feeder.*;
-         /* do not generate SIGPIPE on EOF */
-// #endif /* __DARWIN_C_LEVEL */
 
-// #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
 
-/*
- * Header for ancillary data objects in msg_control buffer.
- * Used for additional information with/about a datagram
- * not expressible by flags.  The format is a sequence
- * of message elements headed by cmsghdr structures.
- */
+/* Structure used for storage of ancillary data object information.  */
 @Properties(inherit = org.bytedeco.zixi.presets.zixiFeeder.class)
 public class cmsghdr extends Pointer {
     static { Loader.load(); }
@@ -39,8 +30,14 @@ public class cmsghdr extends Pointer {
         return new cmsghdr((Pointer)this).position(position + i);
     }
 
-	public native @Cast("socklen_t") int cmsg_len(); public native cmsghdr cmsg_len(int setter);       /* [XSI] data byte count, including hdr */
-	public native int cmsg_level(); public native cmsghdr cmsg_level(int setter);     /* [XSI] originating protocol */
-	public native int cmsg_type(); public native cmsghdr cmsg_type(int setter);      /* [XSI] protocol-specific type */
-/* followed by	unsigned char  cmsg_data[]; */
-}
+    public native @Cast("size_t") long cmsg_len(); public native cmsghdr cmsg_len(long setter);		/* Length of data in cmsg_data plus length
+				   of cmsghdr structure.
+				   !! The type should be socklen_t but the
+				   definition of the kernel is incompatible
+				   with this.  */
+    public native int cmsg_level(); public native cmsghdr cmsg_level(int setter);		/* Originating protocol.  */
+    public native int cmsg_type(); public native cmsghdr cmsg_type(int setter);		/* Protocol specific type.  */
+// #if __glibc_c99_flexarr_available
+     /* Ancillary data.  */
+// #endif
+  }

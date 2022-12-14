@@ -9,12 +9,10 @@ import org.bytedeco.javacpp.annotation.*;
 import static org.bytedeco.javacpp.presets.javacpp.*;
 
 import static org.bytedeco.zixi.global.feeder.*;
-                     /* official! */
-// #endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
 
-/*
- * Socket address, internet style.
- */
+
+
+/* Structure describing an Internet socket address.  */
 @Properties(inherit = org.bytedeco.zixi.presets.zixiFeeder.class)
 public class sockaddr_in extends Pointer {
     static { Loader.load(); }
@@ -33,10 +31,11 @@ public class sockaddr_in extends Pointer {
         return new sockaddr_in((Pointer)this).position(position + i);
     }
 
-	public native @Cast("__uint8_t") byte sin_len(); public native sockaddr_in sin_len(byte setter);
-	public native @Cast("sa_family_t") byte sin_family(); public native sockaddr_in sin_family(byte setter);
-	public native @Cast("in_port_t") short sin_port(); public native sockaddr_in sin_port(short setter);
-	public native @ByRef in_addr sin_addr(); public native sockaddr_in sin_addr(in_addr setter);
-	public native @Cast("char") byte sin_zero(int i); public native sockaddr_in sin_zero(int i, byte setter);
-	@MemberGetter public native @Cast("char*") BytePointer sin_zero();
-}
+    public native @Cast("sa_family_t") byte sin_family(); public native sockaddr_in sin_family(byte setter);
+    public native @Cast("in_port_t") short sin_port(); public native sockaddr_in sin_port(short setter);			/* Port number.  */
+    public native @ByRef in_addr sin_addr(); public native sockaddr_in sin_addr(in_addr setter);		/* Internet address.  */
+
+    /* Pad to size of `struct sockaddr'.  */
+    public native @Cast("unsigned char") byte sin_zero(int i); public native sockaddr_in sin_zero(int i, byte setter);
+    @MemberGetter public native @Cast("unsigned char*") BytePointer sin_zero();
+  }

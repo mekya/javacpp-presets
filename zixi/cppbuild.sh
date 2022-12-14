@@ -10,11 +10,11 @@ fi
 #SRT_VERSION=1.4.4
 COMPRESSED_FILE_NAME=zixi_sdks-antmedia-linux64-14.13.44304.tar.xz
 FOLDER_NAME=zixi_sdks-antmedia-linux64-14.13.44304
-FILE=/Users/mekya/Downloads/zixi_sdks-antmedia-linux64-14.13.44304.tar.xz
+FILE=~/Downloads/zixi_sdks-antmedia-linux64-14.13.44304.tar.xz
 cp $FILE $TOP_PATH/downloads
 #download https://github.com/Haivision/srt/archive/refs/tags/v${SRT_VERSION}.zip zixi_sdks-antmedia-linux64-14.13.44304.tar.xz
 cp $FILE .
-tar -xzvf $COMPRESSED_FILE_NAME
+tar -xvf $COMPRESSED_FILE_NAME
 
 if [ ! -d "$PLATFORM" ]; then
   mkdir -p $PLATFORM
@@ -58,9 +58,9 @@ case $PLATFORM in
         ;;
     linux-x86_64)
 #        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
-       ./configure --prefix=..
-        make -j $MAKEJ
-        make install
+#       ./configure --prefix=..
+#        make -j $MAKEJ
+#        make install
         ;;
     linux-arm64)
 #        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
@@ -79,7 +79,11 @@ case $PLATFORM in
         ;;
     windows-x86_64)
         nmake -f win32/Makefile.msc zlib.lib
-        mkdir -p ../include ../lib
+ 
+
+
+
+       mkdir -p ../include ../lib
         cp zconf.h zlib.h ../include/
         cp zlib.lib ../lib/
         ;;
