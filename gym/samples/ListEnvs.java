@@ -9,8 +9,7 @@ public class ListEnvs {
         /* try to use MKL when available */
         System.setProperty("org.bytedeco.openblas.load", "mkl");
 
-        Py_AddPath(org.bytedeco.gym.presets.gym.cachePackages());
-        Py_Initialize();
+        Py_Initialize(org.bytedeco.gym.presets.gym.cachePackages());
         if (_import_array() < 0) {
             System.err.println("numpy.core.multiarray failed to import");
             PyErr_Print();
@@ -19,7 +18,7 @@ public class ListEnvs {
         PyObject globals = PyModule_GetDict(PyImport_AddModule("__main__"));
 
         PyRun_StringFlags("from gym import envs\n"
-                + "envids = [spec.id for spec in envs.registry.all()]\n"
+                + "envids = [spec.id for spec in envs.registry.values()]\n"
                 + "for envid in sorted(envids):\n"
                 + "    print(envid)\n", Py_file_input, globals, globals, null);
 

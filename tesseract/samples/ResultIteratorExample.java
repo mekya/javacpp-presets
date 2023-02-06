@@ -3,7 +3,7 @@ import java.net.URL;
 import org.bytedeco.javacpp.*;
 import org.bytedeco.leptonica.*;
 import org.bytedeco.tesseract.*;
-import static org.bytedeco.leptonica.global.lept.*;
+import static org.bytedeco.leptonica.global.leptonica.*;
 import static org.bytedeco.tesseract.global.tesseract.*;
 
 /**
@@ -22,7 +22,7 @@ public class ResultIteratorExample {
         BytePointer outText;
 
         TessBaseAPI api = new TessBaseAPI();
-        // Initialize tesseract-ocr with English, intializing tessdata path with the standard ENV variable
+        // Initialize tesseract-ocr with English, initializing tessdata path with the standard ENV variable
         if (api.Init(System.getenv("TESSDATA_PREFIX") + "/tessdata", "eng") != 0) {
             System.err.println("Could not initialize tesseract.");
             System.exit(1);

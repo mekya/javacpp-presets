@@ -37,9 +37,9 @@ import org.bytedeco.javacpp.tools.InfoMapper;
     value = {
         @Platform(include = {"<opencv2/dnn.hpp>", "<opencv2/dnn/version.hpp>", "<opencv2/dnn/dict.hpp>","<opencv2/dnn/all_layers.hpp>",
             "<opencv2/dnn/dnn.hpp>", "<opencv2/dnn/layer.hpp>", "<opencv2/dnn/shape_utils.hpp>"},
-            link = "opencv_dnn@.4.5"),
+            link = "opencv_dnn@.406"),
         @Platform(value = "ios", preload = "libopencv_dnn"),
-        @Platform(value = "windows", link = "opencv_dnn451")},
+        @Platform(value = "windows", link = "opencv_dnn460")},
     target = "org.bytedeco.opencv.opencv_dnn",
     global = "org.bytedeco.opencv.global.opencv_dnn"
 )
@@ -62,7 +62,7 @@ public class opencv_dnn implements InfoMapper {
                              "cv::dnn::FlattenLayer", "cv::dnn::ConcatLayer", "cv::dnn::SplitLayer", "cv::dnn::SliceLayer",
                              "cv::dnn::PermuteLayer", "cv::dnn::PaddingLayer", "cv::dnn::ActivationLayer", "cv::dnn::ReLULayer",
                              "cv::dnn::ChannelsPReLULayer", "cv::dnn::ELULayer", "cv::dnn::TanHLayer", "cv::dnn::SigmoidLayer",
-                             "cv::dnn::BNLLLayer", "cv::dnn::AbsLayer", "cv::dnn::PowerLayer", "cv::dnn::CropLayer", "cv::dnn::EltwiseLayer",
+                             "cv::dnn::BNLLLayer", "cv::dnn::AbsLayer", "cv::dnn::PowerLayer", "cv::dnn::CropLayer", "cv::dnn::ExpLayer", "cv::dnn::EltwiseLayer",
                              "cv::dnn::BatchNormLayer", "cv::dnn::MaxUnpoolLayer", "cv::dnn::ScaleLayer", "cv::dnn::ShiftLayer",
                              "cv::dnn::PriorBoxLayer", "cv::dnn::DetectionOutputLayer", "cv::dnn::NormalizeBBoxLayer", "cv::dnn::ProposalLayer",
                              "cv::dnn::ReLU6Layer", "cv::dnn::ReorgLayer", "cv::dnn::RegionLayer", "cv::dnn::ResizeNearestNeighborLayer",
@@ -74,6 +74,14 @@ public class opencv_dnn implements InfoMapper {
                              "cv::dnn::Net::forwardOpt(cv::dnn::Net::LayerId*)",
                              "std::map<cv::String,cv::dnn::DictValue>::const_iterator").skip())
                .put(new Info("std::vector<cv::Mat*>").pointerTypes("MatPointerVector").define())
-               .put(new Info("cv::dnn::Layer* (*)(cv::dnn::LayerParams&)").annotations("@Convention(value=\"\", extern=\"C++\")"));
+               .put(new Info("cv::dnn::Layer* (*)(cv::dnn::LayerParams&)").javaText(
+                       "@Convention(value=\"\", extern=\"C++\") public static class Constructor extends FunctionPointer {\n"
+                     + "    static { Loader.load(); }\n"
+                     + "    /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */\n"
+                     + "    public    Constructor(Pointer p) { super(p); }\n"
+                     + "    protected Constructor() { allocate(); }\n"
+                     + "    private native void allocate();\n"
+                     + "    public native @Cast({\"\", \"cv::Ptr<cv::dnn::Layer>\"}) @Ptr Layer call(@ByRef LayerParams params);\n"
+                     + "}\n"));
     }
 }

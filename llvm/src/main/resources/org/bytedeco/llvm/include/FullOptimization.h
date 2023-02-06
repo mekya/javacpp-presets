@@ -30,13 +30,14 @@
 #include "llvm/IR/Verifier.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
-#include "llvm/Support/TargetRegistry.h"
+#include "llvm/MC/TargetRegistry.h"
 #include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/TargetTransformInfo.h"
 #include "llvm/MC/SubtargetFeature.h"
 #include "llvm/Pass.h"
 #include "llvm-c/Transforms/PassManagerBuilder.h"
 #include "llvm-c/Types.h"
+#include "llvm-c/Error.h"
 
 using namespace llvm;
 
@@ -45,7 +46,7 @@ using namespace llvm;
  * This function is based on main() of llvm/tools/opt/opt.cpp.
  * Use LLVMGetHostCPUName() for the cpu argument.
  */
-void optimizeModule(
+LLVMErrorRef optimizeModule(
     LLVMModuleRef moduleRef,
     const char* cpu,
     unsigned optLevel,
@@ -60,7 +61,7 @@ void optimizeModule(
         .setErrorStr(&error)
         .selectTarget());
     if (!machine) {
-        throw std::runtime_error(error);
+        return wrap(make_error<StringError>(error, inconvertibleErrorCode()));
     }
 
     module->setTargetTriple(machine->getTargetTriple().str());
@@ -88,7 +89,7 @@ void optimizeModule(
     PassManagerBuilder builder2;
     builder2.VerifyInput = true;
     builder2.Inliner = createFunctionInliningPass();
-    builder2.populateLTOPassManager(passes);
+//    builder2.populateLTOPassManager(passes);
 
     fnPasses.doInitialization();
     for (Function &func : *module) {
@@ -98,13 +99,14 @@ void optimizeModule(
 
     passes.add(createVerifierPass());
     passes.run(*module);
+    return LLVMErrorSuccess;
 }
 
 /**
  * This function is similar to LLVMCreateJITCompilerForModule() but does CPU specific optimization.
  * Use LLVMGetHostCPUName() for the cpu argument.
  */
-void createOptimizedJITCompilerForModule(
+LLVMErrorRef createOptimizedJITCompilerForModule(
     LLVMExecutionEngineRef *outJIT,
     LLVMModuleRef moduleRef,
     const char* cpu,
@@ -119,10 +121,11 @@ void createOptimizedJITCompilerForModule(
         .setErrorStr(&error)
         .create();
     if (ee == nullptr) {
-        throw std::runtime_error(error);
+        return wrap(make_error<StringError>(error, inconvertibleErrorCode()));
     }
     ee->finalizeObject();
     *outJIT = wrap(ee);
+    return LLVMErrorSuccess;
 }
 
 #endif

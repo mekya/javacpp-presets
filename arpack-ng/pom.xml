@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.bytedeco</groupId>
     <artifactId>javacpp-presets</artifactId>
-    <version>1.5.5</version>
+    <version>1.5.8</version>
   </parent>
 
   <groupId>org.bytedeco</groupId>
@@ -16,16 +16,13 @@
 
   <properties>
     <javacpp.packageName>arpackng</javacpp.packageName>
-    <javacpp.nativeRequires>
-      requires org.bytedeco.openblas.${javacpp.platform.module};
-    </javacpp.nativeRequires>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.bytedeco</groupId>
       <artifactId>openblas</artifactId>
-      <version>0.3.13-${project.parent.version}</version>
+      <version>0.3.21-${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>org.bytedeco</groupId>
@@ -48,12 +45,12 @@
           <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>openblas</artifactId>
-            <version>0.3.13-${project.parent.version}</version>
+            <version>0.3.21-${project.parent.version}</version>
           </dependency>
           <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>openblas</artifactId>
-            <version>0.3.13-${project.parent.version}</version>
+            <version>0.3.21-${project.parent.version}</version>
             <classifier>${javacpp.platform}</classifier>
           </dependency>
         </dependencies>
@@ -106,6 +103,21 @@
             <id>javacpp-compiler</id>
             <configuration>
               <classOrPackageName>org.bytedeco.arpackng.**</classOrPackageName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>javacpp-postbuild</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <skip>${javacpp.compiler.skip}</skip>
+              <buildCommand>
+                <program>bash</program>
+                <argument>postbuild.sh</argument>
+              </buildCommand>
+              <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
           </execution>
         </executions>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2020 Samuel Audet, Alexander Merritt
+ * Copyright (C) 2019-2021 Samuel Audet, Alexander Merritt
  *
  * Licensed either under the Apache License, Version 2.0, or (at your option)
  * under the terms of the GNU General Public License as published by
@@ -47,15 +47,30 @@ import org.bytedeco.dnnl.presets.*;
             include = {
                 "onnxruntime/core/session/onnxruntime_c_api.h",
                 "onnxruntime/core/session/onnxruntime_cxx_api.h",
-                "onnxruntime/core/providers/cuda/cuda_provider_factory.h",
-                "onnxruntime/core/providers/dnnl/dnnl_provider_factory.h"
+                "onnxruntime/core/providers/cpu/cpu_provider_factory.h",
+//                "onnxruntime/core/providers/cuda/cuda_provider_factory.h",
+                "onnxruntime/core/providers/dnnl/dnnl_provider_factory.h",
+//                "onnxruntime/core/providers/nnapi/nnapi_provider_factory.h",
+//                "onnxruntime/core/providers/nuphar/nuphar_provider_factory.h",
+//                "onnxruntime/core/providers/openvino/openvino_provider_factory.h",
+//                "onnxruntime/core/providers/tensorrt/tensorrt_provider_factory.h",
+//                "onnxruntime/core/providers/migraphx/migraphx_provider_factory.h",
+//                "onnxruntime/core/providers/acl/acl_provider_factory.h",
+//                "onnxruntime/core/providers/armnn/armnn_provider_factory.h",
+//                "onnxruntime/core/providers/coreml/coreml_provider_factory.h",
+//                "onnxruntime/core/providers/rocm/rocm_provider_factory.h",
+//                "onnxruntime/core/providers/dml/dml_provider_factory.h",
             },
-            link = "onnxruntime@.1.7.0",
-            preload = {"onnxruntime_providers_shared", "onnxruntime_providers_dnnl", "onnxruntime_providers_cuda"}
+            link = {"onnxruntime_providers_shared", "onnxruntime@.1.13.1"}
         ),
         @Platform(
-            value = {"linux", "macosx", "windows"},
-            extension = "-gpu"
+            value = {"linux-x86_64", "macosx-x86_64", "windows-x86_64"},
+            link = {"onnxruntime_providers_shared", "onnxruntime@.1.13.1", "onnxruntime_providers_dnnl"}
+        ),
+        @Platform(
+            value = {"linux-x86_64", "macosx-x86_64", "windows-x86_64"},
+            extension = "-gpu",
+            link = {"onnxruntime_providers_shared", "onnxruntime@.1.13.1", "onnxruntime_providers_dnnl", "onnxruntime_providers_cuda"}
         ),
     },
     target = "org.bytedeco.onnxruntime",
@@ -75,6 +90,9 @@ public class onnxruntime implements LoadEnabled, InfoMapper {
             return;
         }
         int i = 0;
+        if (platform.startsWith("windows")) {
+            preloads.add(i++, "zlibwapi");
+        }
         String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cudnn",
                          "cudnn_ops_infer", "cudnn_ops_train", "cudnn_adv_infer",
                          "cudnn_adv_train", "cudnn_cnn_infer", "cudnn_cnn_train"};
@@ -99,10 +117,13 @@ public class onnxruntime implements LoadEnabled, InfoMapper {
         infoMap.put(new Info("ORTCHAR_T").cppText("").cppTypes().cast().pointerTypes("Pointer"))
                .put(new Info("ORT_EXPORT", "ORT_API_CALL", "NO_EXCEPTION", "ORT_ALL_ARGS_NONNULL", "OrtCustomOpApi").cppTypes().annotations())
                .put(new Info("ORT_API_MANUAL_INIT").define(false))
-               .put(new Info("Ort::stub_api", "Ort::Global<T>::api_", "std::nullptr_t", "Ort::Env::s_api").skip())
+               .put(new Info("USE_CUDA", "USE_DNNL").define(true))
+               .put(new Info("Ort::stub_api", "Ort::Global<T>::api_", "std::nullptr_t", "Ort::Env::s_api", "std::vector<Ort::AllocatedStringPtr>").skip())
+               .put(new Info("Ort::AllocatedStringPtr").valueTypes("@UniquePtr(\"char, Ort::detail::AllocatedFree\") @Cast(\"char*\") BytePointer"))
                .put(new Info("std::string").annotations("@Cast({\"char*\", \"std::string&&\"}) @StdString").valueTypes("BytePointer", "String").pointerTypes("BytePointer"))
                .put(new Info("std::vector<std::string>").pointerTypes("StringVector").define())
                .put(new Info("std::vector<Ort::Value>").valueTypes("@StdMove ValueVector").pointerTypes("ValueVector").define())
+               .put(new Info("std::unordered_map<std::string,std::string>").pointerTypes("StringStringMap").define())
                .put(new Info("Ort::Value").valueTypes("@StdMove Value").pointerTypes("Value"))
                .put(new Info("Ort::Value::CreateTensor<float>").javaNames("CreateTensorFloat"))
                .put(new Info("Ort::Value::CreateTensor<double>").javaNames("CreateTensorDouble"))
@@ -126,10 +147,11 @@ public class onnxruntime implements LoadEnabled, InfoMapper {
                .put(new Info("Ort::Value::GetTensorMutableData<uint32_t>").javaNames("GetTensorMutableDataUInt"))
                .put(new Info("Ort::Value::GetTensorMutableData<uint64_t>").javaNames("GetTensorMutableDataULong"))
                .put(new Info("Ort::Value::GetTensorMutableData<bool>").javaNames("GetTensorMutableDataBool"))
+               .put(new Info("Ort::Unowned<const Ort::MemoryInfo>").pointerTypes("UnownedMemoryInfo").purify())
                .put(new Info("Ort::Unowned<Ort::TensorTypeAndShapeInfo>").pointerTypes("UnownedTensorTypeAndShapeInfo").purify())
                .put(new Info("Ort::Unowned<Ort::SequenceTypeInfo>").pointerTypes("UnownedSequenceTypeInfo").purify())
                .put(new Info("Ort::Unowned<Ort::MapTypeInfo>").pointerTypes("UnownedMapTypeInfo").purify())
-               .put(new Info("Ort::MemoryAllocation").purify())
+               .put(new Info("Ort::MemoryAllocation", "OrtApi").purify())
                .put(new Info("Ort::MemoryAllocation::operator =").skip())
                .put(new Info("Ort::RunOptions::GetRunLogSeverityLevel").skip())
                .put(new Info("Ort::Exception").pointerTypes("OrtException"))
@@ -149,6 +171,7 @@ public class onnxruntime implements LoadEnabled, InfoMapper {
                .put(new Info("Ort::Base<OrtMapTypeInfo>").pointerTypes("BaseMapTypeInfo"))
                .put(new Info("Ort::Base<OrtTypeInfo>").pointerTypes("BaseTypeInfo"))
                .put(new Info("Ort::Base<OrtValue>").pointerTypes("BaseValue"))
+               .put(new Info("OrtSessionOptionsAppendExecutionProvider_MIGraphX").skip())
                .put(new Info("OrtSessionOptionsAppendExecutionProvider_CUDA").annotations("@Platform(extension=\"-gpu\")").javaNames("OrtSessionOptionsAppendExecutionProvider_CUDA"));
     }
 }

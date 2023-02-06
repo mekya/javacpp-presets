@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Samuel Audet, Alexander Merritt
+ * Copyright (C) 2018-2021 Samuel Audet, Alexander Merritt
  *
  * Licensed either under the Apache License, Version 2.0, or (at your option)
  * under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ import org.bytedeco.opencl.presets.*;
     inherit = OpenCL.class,
     value = {
         @Platform(
-            value = {"linux-x86_64", "macosx-x86_64", "windows-x86_64"},
+            value = {"linux-arm64", "linux-ppc64le", "linux-x86_64", "macosx-x86_64", "windows-x86_64"},
             compiler = "cpp11",
             define = {"GENERIC_EXCEPTION_CLASS dnnl::error", "GENERIC_EXCEPTION_TOSTRING toStdString().c_str()"},
             include = {"oneapi/dnnl/dnnl_types.h", "oneapi/dnnl/dnnl_config.h", /*"oneapi/dnnl/dnnl_debug.h",*/ "oneapi/dnnl/dnnl_version.h", "oneapi/dnnl/dnnl.h", "oneapi/dnnl/dnnl.hpp"},
@@ -108,7 +108,8 @@ public class dnnl implements InfoMapper {
                .put(new Info("dnnl::handle_traits", "dnnl::primitive_attr(dnnl_primitive_attr_t)",
                              "dnnl::reorder::primitive_desc(dnnl_primitive_desc_t)",
                              "dnnl::concat::primitive_desc(dnnl_primitive_desc_t)",
-                             "dnnl::sum::primitive_desc(dnnl_primitive_desc_t)").skip())
+                             "dnnl::sum::primitive_desc(dnnl_primitive_desc_t)",
+                             "dnnl::post_ops(dnnl_post_ops_t)").skip())
                .put(new Info("dnnl::handle<dnnl_engine_t>", "dnnl::handle<dnnl_engine_t,traits>").pointerTypes("dnnl_engine_handle"))
                .put(new Info("dnnl::handle<dnnl_memory_t>", "dnnl::handle<dnnl_memory_t,traits>").pointerTypes("dnnl_memory_handle"))
                .put(new Info("dnnl::handle<dnnl_primitive_desc_t>", "dnnl::handle<dnnl_primitive_desc_t,traits>").pointerTypes("dnnl_primitive_desc_handle"))
@@ -123,7 +124,7 @@ public class dnnl implements InfoMapper {
                .put(new Info("dnnl::eltwise_forward::desc<float>",
                              "dnnl::eltwise_backward::desc<float>",
                              "dnnl::batch_normalization_forward::desc<float>",
-                             "dnnl::batch_normalization_backward::desc<float>").javaNames("desc").skipDefaults())
+                             "dnnl::batch_normalization_backward::desc<float>").javaNames("desc"))
 
                .put(new Info("dnnl::rnn_cell::desc::operator const dnnl_rnn_cell_desc_t*()").javaText(
                          "public native @Name(\"operator const dnnl_rnn_cell_desc_t*\") @Const dnnl_rnn_cell_desc_t as_dnnl_rnn_cell_desc_t();\n"))

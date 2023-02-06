@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 Samuel Audet
+ * Copyright (C) 2013-2022 Samuel Audet
  *
  * Licensed either under the Apache License, Version 2.0, or (at your option)
  * under the terms of the GNU General Public License as published by
@@ -23,8 +23,11 @@
 package org.bytedeco.ffmpeg.presets;
 
 import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.annotation.Cast;
 import org.bytedeco.javacpp.annotation.MemberGetter;
 import org.bytedeco.javacpp.annotation.Name;
+import org.bytedeco.javacpp.annotation.NoException;
 import org.bytedeco.javacpp.annotation.Platform;
 import org.bytedeco.javacpp.annotation.Properties;
 import org.bytedeco.javacpp.presets.javacpp;
@@ -42,7 +45,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
     global = "org.bytedeco.ffmpeg.global.avutil",
     value = {
         @Platform(define = {"__STDC_CONSTANT_MACROS", "__STDC_FORMAT_MACROS"},
-            cinclude = {"<libavutil/avutil.h>", "<libavutil/error.h>", "<libavutil/mem.h>", "<libavutil/time.h>",
+            cinclude = {"<libavutil/avutil.h>", /*"<libavutil/attributes.h>",*/ "<libavutil/error.h>", "<libavutil/mem.h>", "<libavutil/time.h>",
             "<libavutil/mathematics.h>", "<libavutil/rational.h>", "<libavutil/log.h>", "<libavutil/buffer.h>", "<libavutil/pixfmt.h>",
             "<libavutil/frame.h>", "<libavutil/samplefmt.h>", "<libavutil/channel_layout.h>", "<libavutil/cpu.h>", "<libavutil/dict.h>",
             "<libavutil/opt.h>", "<libavutil/pixdesc.h>", "<libavutil/imgutils.h>", "<libavutil/downmix_info.h>", "<libavutil/stereo3d.h>",
@@ -57,10 +60,12 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "<libavutil/hdr_dynamic_metadata.h>", "<libavutil/intfloat.h>", "<libavutil/intreadwrite.h>", "<libavutil/mastering_display_metadata.h>",
             "<libavutil/murmur3.h>", "<libavutil/parseutils.h>", "<libavutil/pixelutils.h>", "<libavutil/random_seed.h>", "<libavutil/replaygain.h>",
             "<libavutil/spherical.h>", "<libavutil/threadmessage.h>", "<libavutil/timecode.h>", "<libavutil/timestamp.h>", "<libavutil/tree.h>",
-            "<libavutil/tx.h>", "log_callback.h"},
+            "<libavutil/tx.h>", "<libavutil/version.h>", "<libavutil/macros.h>", "log_callback.h"},
             includepath = {"/usr/local/include/ffmpeg/", "/opt/local/include/ffmpeg/", "/usr/include/ffmpeg/"},
-            link = "avutil@.56", compiler = {"default", "nodeprecated"}),
-        @Platform(value = "windows", includepath = {"C:/MinGW/local/include/ffmpeg/", "C:/MinGW/include/ffmpeg/"}, preload = "avutil-56"),
+            link = "avutil@.57", compiler = {"default", "nodeprecated"}),
+        @Platform(value = "linux-x86", preload = {"va@.1", "drm@.2", "va-drm@.1"}, preloadpath = {"/usr/lib32/", "/usr/lib/"}),
+        @Platform(value = "linux-x86_64", preloadpath = {"/usr/lib64/", "/usr/lib/"}),
+        @Platform(value = "windows", includepath = {"C:/MinGW/local/include/ffmpeg/", "C:/MinGW/include/ffmpeg/"}, preload = "avutil-57"),
         @Platform(extension = "-gpl")
     }
 )
@@ -68,13 +73,17 @@ public class avutil implements InfoMapper {
     static { Loader.checkVersion("org.bytedeco", "ffmpeg"); }
 
     public void map(InfoMap infoMap) {
-        infoMap.put(new Info("AV_NOPTS_VALUE").cppTypes("int64_t").translate(false))
+        infoMap.put(new Info("channel_layout.h").linePatterns("#define AV_CHANNEL_LAYOUT_MASK.*", "struct AVBPrint;").skip())
+               .put(new Info("AV_NOPTS_VALUE").cppTypes("int64_t").translate(false))
                .put(new Info("NAN", "INFINITY").cppTypes("double"))
                .put(new Info("AV_TIME_BASE_Q", "PixelFormat", "CodecID", "AVCOL_SPC_YCGCO", "AVCOL_SPC_YCOCG", "FF_CEIL_RSHIFT",
                              "av_ceil_log2", "av_clip", "av_clip64", "av_clip_uint8", "av_clip_int8", "av_clip_uint16", "av_clip_int16",
                              "av_clipl_int32", "av_clip_intp2", "av_clip_uintp2", "av_mod_uintp2", "av_sat_add32", "av_sat_dadd32",
                              "av_sat_sub32", "av_sat_dsub32", "av_clipf", "av_clipd", "av_popcount", "av_popcount64", "av_parity",
-                             "av_sat_add64", "av_sat_sub64").cppTypes().translate())
+                             "av_sat_add64", "av_sat_sub64", "LIBAVUTIL_VERSION").cppTypes().translate())
+               .put(new Info("LIBAVUTIL_VERSION_INT", "LIBAVUTIL_IDENT").translate(false))
+               .put(new Info("FF_API_D2STR", "FF_API_DECLARE_ALIGNED", "FF_API_COLORSPACE_NAME", "FF_API_AV_MALLOCZ_ARRAY", "FF_API_FIFO_PEEK2",
+                             "FF_API_FIFO_OLD_API", "FF_API_XVMC", "FF_API_OLD_CHANNEL_LAYOUT", "FF_API_AV_FOPEN_UTF8").define().translate().cppTypes("bool"))
                .put(new Info("av_const").annotations("@Const"))
                .put(new Info("FF_CONST_AVUTIL55").annotations())
                .put(new Info("av_malloc_attrib", "av_alloc_size", "av_always_inline", "av_warn_unused_result", "av_alias").cppTypes().annotations())
@@ -87,6 +96,7 @@ public class avutil implements InfoMapper {
                .put(new Info("FF_API_VAAPI").define())
                .put(new Info("AV_PIX_FMT_ABI_GIT_MASTER", "AV_HAVE_INCOMPATIBLE_LIBAV_ABI", "!FF_API_XVMC",
                              "FF_API_GET_BITS_PER_SAMPLE_FMT", "FF_API_FIND_OPT").define(false))
+               .put(new Info("FF_API_BUFFER_SIZE_T", "FF_API_CRYPTO_SIZE_T").define(true))
                .put(new Info("ff_check_pixfmt_descriptors").skip())
                .put(new Info("AV_CH_FRONT_LEFT",
                              "AV_CH_FRONT_RIGHT",
@@ -170,4 +180,7 @@ public class avutil implements InfoMapper {
     public static native @MemberGetter @Name("AVERROR(ERANGE)") int AVERROR_ERANGE();
     public static native @MemberGetter @Name("AVERROR(ESPIPE)") int AVERROR_ESPIPE();
     public static native @MemberGetter @Name("AVERROR(EXDEV)") int AVERROR_EXDEV();
+
+    public static native @MemberGetter @Cast("void (*)(void*, int, const char*, va_list)") Pointer av_log_default_callback();
+    @NoException public static native void av_log_set_callback(@Cast("void (*)(void*, int, const char*, va_list)") Pointer callback);
 }

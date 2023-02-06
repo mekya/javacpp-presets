@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bytedeco</groupId>
   <artifactId>javacpp-presets</artifactId>
-  <version>1.5.5</version>
+  <version>1.5.8</version>
   <packaging>pom</packaging>
 
   <name>JavaCPP Presets</name>
@@ -61,7 +61,6 @@
     <javacpp.parser.skip>false</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
     <javacpp.compiler.skip>false</javacpp.compiler.skip> <!-- To skip native compilation phase: -Djavacpp.compiler.skip=true -->
     <javacpp.moduleId>${project.artifactId}</javacpp.moduleId>
-    <javacpp.nativeRequires/>
     <javacpp.packageName>${project.artifactId}</javacpp.packageName>
     <javacpp.platform.nativeOutputPath>org/bytedeco/${javacpp.packageName}/${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.nativeOutputPath>
     <javacpp.platform.root></javacpp.platform.root>
@@ -81,6 +80,7 @@
     <javacpp.platform.linux-ppc64le>linux-ppc64le${javacpp.platform.extension}</javacpp.platform.linux-ppc64le>
     <javacpp.platform.linux-x86>linux-x86${javacpp.platform.extension}</javacpp.platform.linux-x86>
     <javacpp.platform.linux-x86_64>linux-x86_64${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
+    <javacpp.platform.macosx-arm64>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
     <javacpp.platform.macosx-x86_64>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
     <javacpp.platform.windows-x86>windows-x86${javacpp.platform.extension}</javacpp.platform.windows-x86>
     <javacpp.platform.windows-x86_64>windows-x86_64${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
@@ -142,7 +142,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.8.1</version>
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
@@ -245,7 +245,7 @@
               <skip>${javacpp.cppbuild.skip}</skip>
               <buildCommand>
                 <program>bash</program>
-                <argument>${project.basedir}/../cppbuild.sh</argument>
+                <argument>cppbuild.sh</argument>
                 <argument>install</argument>
                 <argument>${javacpp.moduleId}</argument>
                 <argument>-platform=${javacpp.platform}</argument>
@@ -267,7 +267,7 @@
               <skip>${javacpp.cppbuild.skip}</skip>
               <buildCommand>
                 <program>bash</program>
-                <argument>${project.basedir}/../cppbuild.sh</argument>
+                <argument>cppbuild.sh</argument>
                 <argument>clean</argument>
                 <argument>${javacpp.moduleId}</argument>
               </buildCommand>
@@ -305,7 +305,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>default-jar</id>
@@ -347,7 +347,7 @@
             <configuration>
               <classifier>${javacpp.platform}${javacpp.platform.extension}</classifier>
               <skipIfEmpty>true</skipIfEmpty>
-              <includes> 
+              <includes>
                 <!-- In case of successive builds for multiple platforms
                      without cleaning, ensures we only include files for
                      this platform. -->
@@ -372,7 +372,7 @@
       <plugin>
         <groupId>org.moditect</groupId>
         <artifactId>moditect-maven-plugin</artifactId>
-        <version>1.0.0.RC1</version>
+        <version>1.0.0.RC2</version>
         <configuration>
           <jvmVersion>9</jvmVersion>
           <overwriteExistingFiles>true</overwriteExistingFiles>
@@ -396,8 +396,6 @@
                   <moduleInfoSource>
                     open module org.bytedeco.${javacpp.packageName}.${javacpp.platform.module} {
                       requires transitive org.bytedeco.${javacpp.packageName};
-                      requires org.bytedeco.javacpp.${javacpp.platform.module};
-                      ${javacpp.nativeRequires}
                     }
                   </moduleInfoSource>
                 </module>
@@ -408,14 +406,14 @@
       </plugin>
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
-        <version>2.5.2</version>
+        <version>3.0.0-M1</version>
         <configuration>
           <createChecksum>true</createChecksum>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -431,7 +429,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -440,7 +438,7 @@
             </goals>
             <configuration>
               <minmemory>256m</minmemory>
-              <maxmemory>2048m</maxmemory>
+              <maxmemory>4096m</maxmemory>
               <links>
                 <link>http://bytedeco.org/javacpp/apidocs</link>
               </links>
@@ -455,7 +453,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -500,6 +498,7 @@
             <configuration>
               <doclint>none</doclint>
               <failOnError>false</failOnError>
+              <source>8</source>
             </configuration>
           </plugin>
         </plugins>
@@ -551,7 +550,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -594,6 +593,7 @@
         <module>arrow</module>
         <module>hdf5</module>
         <module>hyperscan</module>
+        <module>lz4</module>
         <module>mkl</module>
         <module>mkl-dnn</module>
         <module>dnnl</module>
@@ -607,25 +607,33 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>caffe</module>
         <module>openpose</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>tensorrt</module>
+        <module>tritonserver</module>
         <module>ale</module>
+        <module>depthai</module>
         <module>onnx</module>
         <module>ngraph</module>
         <module>onnxruntime</module>
         <module>tvm</module>
+        <module>bullet</module>
         <module>liquidfun</module>
         <module>qt</module>
         <module>skia</module>
         <module>cpu_features</module>
+        <module>modsecurity</module>
         <module>systems</module>
         <module>srt</module>
         <module>zixi</module>
@@ -656,6 +664,7 @@
         <javacpp.platform.linux-ppc64le>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
@@ -684,6 +693,7 @@
         <javacpp.platform.linux-ppc64le>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
@@ -712,6 +722,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -740,6 +751,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -764,17 +776,20 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
+        <module>bullet</module>
         <module>cpu_features</module>
       </modules>
       <properties>
         <javacpp.platform.nativeOutputPath>${javacpp.platform.library.path}</javacpp.platform.nativeOutputPath>
         <javacpp.platform>android-arm</javacpp.platform>
         <javacpp.platform.root>${user.home}/Android/android-ndk/</javacpp.platform.root>
-        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/clang++</javacpp.platform.compiler>
-        <javacpp.platform.properties>${javacpp.platform}-clang</javacpp.platform.properties>
+        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/armv7a-linux-androideabi24-clang++</javacpp.platform.compiler>
+        <javacpp.platform.properties>${javacpp.platform}</javacpp.platform.properties>
         <javacpp.platform.android-arm>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.android-arm>
         <javacpp.platform.android-arm64></javacpp.platform.android-arm64>
         <javacpp.platform.android-x86></javacpp.platform.android-x86>
@@ -788,6 +803,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -811,17 +827,20 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
+        <module>bullet</module>
         <module>cpu_features</module>
       </modules>
       <properties>
         <javacpp.platform.nativeOutputPath>${javacpp.platform.library.path}</javacpp.platform.nativeOutputPath>
         <javacpp.platform>android-arm64</javacpp.platform>
         <javacpp.platform.root>${user.home}/Android/android-ndk/</javacpp.platform.root>
-        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/clang++</javacpp.platform.compiler>
-        <javacpp.platform.properties>${javacpp.platform}-clang</javacpp.platform.properties>
+        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/aarch64-linux-android24-clang++</javacpp.platform.compiler>
+        <javacpp.platform.properties>${javacpp.platform}</javacpp.platform.properties>
         <javacpp.platform.android-arm></javacpp.platform.android-arm>
         <javacpp.platform.android-arm64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.android-arm64>
         <javacpp.platform.android-x86></javacpp.platform.android-x86>
@@ -835,6 +854,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -858,17 +878,20 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
+        <module>bullet</module>
         <module>cpu_features</module>
       </modules>
       <properties>
         <javacpp.platform.nativeOutputPath>${javacpp.platform.library.path}</javacpp.platform.nativeOutputPath>
         <javacpp.platform>android-x86</javacpp.platform>
         <javacpp.platform.root>${user.home}/Android/android-ndk/</javacpp.platform.root>
-        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/clang++</javacpp.platform.compiler>
-        <javacpp.platform.properties>${javacpp.platform}-clang</javacpp.platform.properties>
+        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/i686-linux-android24-clang++</javacpp.platform.compiler>
+        <javacpp.platform.properties>${javacpp.platform}</javacpp.platform.properties>
         <javacpp.platform.android-arm></javacpp.platform.android-arm>
         <javacpp.platform.android-arm64></javacpp.platform.android-arm64>
         <javacpp.platform.android-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.android-x86>
@@ -882,6 +905,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -905,17 +929,20 @@
         <module>openblas</module>
         <module>fftw</module>
         <module>gsl</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
+        <module>bullet</module>
         <module>cpu_features</module>
       </modules>
       <properties>
         <javacpp.platform.nativeOutputPath>${javacpp.platform.library.path}</javacpp.platform.nativeOutputPath>
         <javacpp.platform>android-x86_64</javacpp.platform>
         <javacpp.platform.root>${user.home}/Android/android-ndk/</javacpp.platform.root>
-        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/clang++</javacpp.platform.compiler>
-        <javacpp.platform.properties>${javacpp.platform}-clang</javacpp.platform.properties>
+        <javacpp.platform.compiler>toolchains/llvm/prebuilt/${os.kernel}-${os.arch}/bin/x86_64-linux-android24-clang++</javacpp.platform.compiler>
+        <javacpp.platform.properties>${javacpp.platform}</javacpp.platform.properties>
         <javacpp.platform.android-arm></javacpp.platform.android-arm>
         <javacpp.platform.android-arm64></javacpp.platform.android-arm64>
         <javacpp.platform.android-x86></javacpp.platform.android-x86>
@@ -929,6 +956,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -962,6 +990,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -995,6 +1024,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1028,6 +1058,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1061,6 +1092,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1098,8 +1130,10 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
+        <module>depthai</module>
         <module>cpu_features</module>
         <module>systems</module>
       </modules>
@@ -1117,6 +1151,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1144,6 +1179,7 @@
         <module>flandmark</module>
         <module>arrow</module>
         <module>hdf5</module>
+        <module>dnnl</module>
         <module>openblas</module>
         <module>arpack-ng</module>
         <module>cminpack</module>
@@ -1154,9 +1190,17 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
+        <module>libpostal</module>
         <module>tesseract</module>
         <module>cuda</module>
+        <module>nvcodec</module>
+        <module>opencl</module>
+        <module>tensorflow-lite</module>
+        <module>tensorrt</module>
+        <module>depthai</module>
+        <module>onnxruntime</module>
         <module>cpu_features</module>
         <module>systems</module>
         <module>srt</module>
@@ -1176,6 +1220,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1210,9 +1255,11 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>cpu_features</module>
         <module>systems</module>
       </modules>
@@ -1230,6 +1277,7 @@
         <javacpp.platform.linux-ppc64le>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1258,6 +1306,7 @@
         <module>flandmark</module>
         <module>arrow</module>
         <module>hdf5</module>
+        <module>lz4</module>
         <module>mkl</module>
         <module>openblas</module>
         <module>arpack-ng</module>
@@ -1269,12 +1318,15 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>caffe</module>
         <module>mxnet</module>
         <module>tensorflow</module>
         <module>ale</module>
+        <module>depthai</module>
+        <module>bullet</module>
         <module>liquidfun</module>
         <module>skia</module>
         <module>cpu_features</module>
@@ -1294,6 +1346,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1324,6 +1377,7 @@
         <module>arrow</module>
         <module>hdf5</module>
         <module>hyperscan</module>
+        <module>lz4</module>
         <module>mkl</module>
         <module>mkl-dnn</module>
         <module>dnnl</module>
@@ -1337,25 +1391,33 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>caffe</module>
         <module>openpose</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>tensorrt</module>
+        <module>tritonserver</module>
         <module>ale</module>
+        <module>depthai</module>
         <module>onnx</module>
         <module>ngraph</module>
         <module>onnxruntime</module>
         <module>tvm</module>
+        <module>bullet</module>
         <module>liquidfun</module>
         <module>qt</module>
         <module>skia</module>
         <module>cpu_features</module>
+        <module>modsecurity</module>
         <module>systems</module>
       </modules>
       <properties>
@@ -1372,6 +1434,47 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
+        <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
+        <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>javacpp-platform-macosx-arm64</id>
+      <activation>
+        <property>
+          <name>javacpp.platform</name>
+          <value>macosx-arm64</value>
+        </property>
+      </activation>
+      <modules>
+        <module>opencv</module>
+        <module>ffmpeg</module>
+        <module>lz4</module>
+        <module>openblas</module>
+        <module>llvm</module>
+        <module>libffi</module>
+        <module>libpostal</module>
+        <module>leptonica</module>
+        <module>tesseract</module>
+      </modules>
+      <properties>
+        <javacpp.platform.android-arm></javacpp.platform.android-arm>
+        <javacpp.platform.android-arm64></javacpp.platform.android-arm64>
+        <javacpp.platform.android-x86></javacpp.platform.android-x86>
+        <javacpp.platform.android-x86_64></javacpp.platform.android-x86_64>
+        <javacpp.platform.ios-arm></javacpp.platform.ios-arm>
+        <javacpp.platform.ios-arm64></javacpp.platform.ios-arm64>
+        <javacpp.platform.ios-x86></javacpp.platform.ios-x86>
+        <javacpp.platform.ios-x86_64></javacpp.platform.ios-x86_64>
+        <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
+        <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
+        <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
+        <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
+        <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1400,6 +1503,7 @@
         <module>arrow</module>
         <module>hdf5</module>
         <module>hyperscan</module>
+        <module>lz4</module>
         <module>mkl</module>
         <module>mkl-dnn</module>
         <module>dnnl</module>
@@ -1413,6 +1517,7 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
@@ -1421,16 +1526,21 @@
 <!--        <module>cuda</module>-->
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>ale</module>
+        <module>depthai</module>
         <module>onnx</module>
         <module>ngraph</module>
         <module>onnxruntime</module>
         <module>tvm</module>
+        <module>bullet</module>
         <module>liquidfun</module>
         <module>qt</module>
         <module>skia</module>
         <module>cpu_features</module>
+        <module>modsecurity</module>
         <module>systems</module>
         <module>srt</module>
         <module>zixi</module>
@@ -1449,6 +1559,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1478,6 +1589,7 @@
         <module>flandmark</module>
         <module>arrow</module>
         <module>hdf5</module>
+        <module>lz4</module>
         <module>mkl</module>
         <module>openblas</module>
         <module>arpack-ng</module>
@@ -1489,9 +1601,11 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>ale</module>
+        <module>bullet</module>
         <module>liquidfun</module>
         <module>cpu_features</module>
         <module>systems</module>
@@ -1510,6 +1624,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
@@ -1541,6 +1656,7 @@
         <module>arrow</module>
         <module>hdf5</module>
         <module>hyperscan</module>
+        <module>lz4</module>
         <module>mkl</module>
         <module>mkl-dnn</module>
         <module>dnnl</module>
@@ -1554,17 +1670,23 @@
         <module>scipy</module>
         <module>gym</module>
         <module>llvm</module>
+        <module>libffi</module>
         <module>libpostal</module>
         <module>leptonica</module>
         <module>tesseract</module>
         <module>cuda</module>
+        <module>nvcodec</module>
         <module>opencl</module>
         <module>mxnet</module>
+        <module>pytorch</module>
         <module>tensorflow</module>
+        <module>tensorflow-lite</module>
         <module>tensorrt</module>
         <module>ale</module>
+        <module>onnx</module>
         <module>onnxruntime</module>
         <module>tvm</module>
+        <module>bullet</module>
         <module>liquidfun</module>
         <module>qt</module>
         <module>cpu_features</module>
@@ -1584,6 +1706,7 @@
         <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
@@ -1749,6 +1872,18 @@
     </profile>
 
     <profile>
+      <id>javacpp.platform.macosx-arm64-true</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.macosx-arm64</name>
+        </property>
+      </activation>
+      <properties>
+        <javacpp.platform.macosx-arm64>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
+      </properties>
+    </profile>
+
+    <profile>
       <id>javacpp.platform.macosx-x86_64-true</id>
       <activation>
         <property>
@@ -1898,6 +2033,45 @@
       </activation>
       <properties>
         <javacpp.platform.linux-x86_64>linux-x86_64${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>javacpp.platform.custom-macosx-aarch64</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.host</name>
+        </property>
+        <os><name>mac os x</name><arch>aarch64</arch></os>
+      </activation>
+      <properties>
+        <javacpp.platform.macosx-arm64>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>javacpp.platform.custom-macosx-armv8</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.host</name>
+        </property>
+        <os><name>mac os x</name><arch>armv8</arch></os>
+      </activation>
+      <properties>
+        <javacpp.platform.macosx-arm64>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>javacpp.platform.custom-macosx-arm64</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.host</name>
+        </property>
+        <os><name>mac os x</name><arch>arm64</arch></os>
+      </activation>
+      <properties>
+        <javacpp.platform.macosx-arm64>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
       </properties>
     </profile>
 

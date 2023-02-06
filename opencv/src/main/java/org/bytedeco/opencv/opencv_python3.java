@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Samuel Audet
+ * Copyright (C) 2019-2021 Samuel Audet
  *
  * Licensed either under the Apache License, Version 2.0, or (at your option)
  * under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ import org.bytedeco.opencv.presets.*;
 /**
  * This is only a placeholder to facilitate loading the {@code opencv_python3} module with JavaCPP.
  * <p>
- * Call {@code Py_AddPath(opencv_python3.cachePackages())} before calling {@code Py_Initialize()}.
+ * Call {@code PySys_SetPath(opencv_python3.cachePackages())} after calling {@code Py_Initialize()}.
  *
  * @author Samuel Audet
  */
@@ -61,30 +61,37 @@ import org.bytedeco.opencv.presets.*;
         opencv_intensity_transform.class,
         opencv_mcc.class,
         opencv_rapid.class,
+        opencv_barcode.class,
+        opencv_wechat_qrcode.class,
     },
     value = {
-        @Platform(preload = {"opencv_cuda@.4.5", "opencv_cudaarithm@.4.5", "opencv_cudafilters@.4.5", "opencv_cudaimgproc@.4.5",
-                             "opencv_cudacodec@.4.5", "opencv_cudaobjdetect@.4.5", "opencv_cudabgsegm@.4.5", "opencv_cudastereo@.4.5",
-                             "opencv_cudaoptflow@.4.5", "opencv_cudawarping@.4.5", "opencv_cudalegacy@.4.5"}),
-        @Platform(value = "windows", preload = {"opencv_cuda451", "opencv_cudaarithm451", "opencv_cudafilters451", "opencv_cudaimgproc451",
-                             "opencv_cudacodec451", "opencv_cudaobjdetect451", "opencv_cudabgsegm451", "opencv_cudastereo451",
-                             "opencv_cudaoptflow451", "opencv_cudawarping451", "opencv_cudalegacy451"}),
+        @Platform(preload = {"opencv_cuda@.406", "opencv_cudaarithm@.406", "opencv_cudafilters@.406", "opencv_cudaimgproc@.406",
+                             "opencv_cudacodec@.406", "opencv_cudaobjdetect@.406", "opencv_cudabgsegm@.406", "opencv_cudastereo@.406",
+                             "opencv_cudaoptflow@.406", "opencv_cudawarping@.406", "opencv_cudalegacy@.406"}),
+        @Platform(value = "windows", preload = {"opencv_cuda460", "opencv_cudaarithm460", "opencv_cudafilters460", "opencv_cudaimgproc460",
+                             "opencv_cudacodec460", "opencv_cudaobjdetect460", "opencv_cudabgsegm460", "opencv_cudastereo460",
+                             "opencv_cudaoptflow460", "opencv_cudawarping460", "opencv_cudalegacy460"}),
     }
 )
 public class opencv_python3 {
     static { Loader.load(); }
 
+    private static File packageFile = null;
+
     /** Returns {@code Loader.cacheResource("/org/bytedeco/opencv/" + Loader.getPlatform() + extension + "/python/")}. */
-    public static File cachePackage() throws IOException {
+    public static synchronized File cachePackage() throws IOException {
+        if (packageFile != null) {
+            return packageFile;
+        }
         Loader.load(org.bytedeco.cpython.global.python.class);
         String path = Loader.load(opencv_core.class);
         if (path != null) {
             path = path.replace(File.separatorChar, '/');
             int i = path.indexOf("/org/bytedeco/opencv/" + Loader.getPlatform());
             int j = path.lastIndexOf("/");
-            return Loader.cacheResource(path.substring(i, j) + "/python/");
+            packageFile = Loader.cacheResource(path.substring(i, j) + "/python/");
         }
-        return null;
+        return packageFile;
     }
 
     /** Returns {@code {numpy.cachePackages(), opencv.cachePackage()}}. */

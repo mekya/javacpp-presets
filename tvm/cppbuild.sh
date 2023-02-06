@@ -12,8 +12,7 @@ if [[ "$EXTENSION" == *gpu ]]; then
     GPU_FLAGS="-DUSE_CUDA=ON -DUSE_CUDNN=ON -DUSE_CUBLAS=ON"
 fi
 
-TVM_VERSION=0.7.0
-download https://dist.apache.org/repos/dist/release/tvm/tvm-v$TVM_VERSION/apache-tvm-src-v$TVM_VERSION-incubating.tar.gz apache-tvm-src-v$TVM_VERSION-incubating.tar.gz
+TVM_VERSION=0.10.0
 
 mkdir -p "$PLATFORM$EXTENSION"
 cd "$PLATFORM$EXTENSION"
@@ -62,18 +61,45 @@ MKL_PATH="${MKL_PATH//\\//}"
 MKLDNN_PATH="${MKLDNN_PATH//\\//}"
 OPENCL_PATH="${OPENCL_PATH//\\//}"
 
-echo "Decompressing archives..."
-tar --totals -xzf ../apache-tvm-src-v$TVM_VERSION-incubating.tar.gz
+if [[ ! -d tvm ]]; then
+    git clone https://github.com/apache/tvm
+fi
+cd tvm
+git reset --hard
+git checkout v$TVM_VERSION
+git submodule update --init --recursive
+git submodule foreach --recursive 'git reset --hard'
 
-cd apache-tvm-src-v$TVM_VERSION.rc0-incubating
 export TVM_LIBRARY_PATH=`pwd`
+
+# prevent setuptools from trying to build NumPy or SciPy
+sedinplace '/numpy/d' python/gen_requirements.py
+sedinplace '/scipy/d' python/gen_requirements.py
+sedinplace '/                "tornado",/a\
+                "typing-extensions",\
+' python/gen_requirements.py
 
 # Fix compiler errors
 sedinplace 's/uint32_t _type_child_slots_can_overflow/bool _type_child_slots_can_overflow/g' include/tvm/runtime/ndarray.h
+sedinplace 's/bias\[OC\]/bias\[256\]/g' src/runtime/contrib/dnnl/dnnl_json_runtime.cc
 sedinplace 's/-Werror//g' src/runtime/crt/Makefile
+sedinplace '/numpy/d' python/setup.py
+sedinplace '/scipy/d' python/setup.py
+sedinplace '/candidate_path/d' python/setup.py
+sedinplace '/find_library/a\
+include_directories(SYSTEM ${USE_DNNL}/include)\
+' cmake/modules/contrib/DNNL.cmake
 
+# https://github.com/apache/tvm/pull/6717
+# https://github.com/apache/tvm/pull/9138
+# https://github.com/apache/tvm/pull/8682
+#sedinplace 's/(lanes, \/\*Scalable=\*\/false)/::getFixed(lanes)/g' src/target/llvm/codegen_llvm.cc
+#sedinplace 's/llvm::Intrinsic::getName(id, {})/llvm::Intrinsic::getBaseName(id).str()/g' src/target/llvm/codegen_llvm.cc
+#sedinplace 's/::F_None/::OF_None/g' src/target/llvm/llvm_module.cc
+
+# https://github.com/apache/tvm/pull/6738
 # https://github.com/apache/tvm/pull/6752
-patch -Np1 < ../../../tvm.patch
+#patch -Np1 < ../../../tvm.patch
 
 # Work around issues with llvm-config
 f=($LLVM_PATH/llvm-config*)
@@ -83,19 +109,21 @@ if [[ -f $f ]]; then
     chmod +x $LLVM_PATH/bin/llvm-config*
 fi
 if [[ -f "$LLVM_PATH/lib/libLLVM.dylib" ]]; then
-    ln -sf libLLVM.dylib $LLVM_PATH/lib/libLLVM-11.dylib
+    ln -sf libLLVM.dylib $LLVM_PATH/lib/libLLVM-15.dylib
 fi
 if [[ -f "$LLVM_PATH/lib/LTO.lib" ]]; then
     ln -sf LTO.lib $LLVM_PATH/lib/LLVM.lib
 fi
 
-if [[ -f "$CPYTHON_PATH/include/python3.9/Python.h" ]]; then
+if [[ -f "$CPYTHON_PATH/include/python3.10/Python.h" ]]; then
     # setup.py won't pick up the right libgfortran.so without this
     export LD_LIBRARY_PATH="$OPENBLAS_PATH/lib/:$CPYTHON_PATH/lib/:$NUMPY_PATH/lib/:$SCIPY_PATH/lib/"
-    export PYTHON_BIN_PATH="$CPYTHON_PATH/bin/python3.9"
-    export PYTHON_INCLUDE_PATH="$CPYTHON_PATH/include/python3.9/"
-    export PYTHON_LIB_PATH="$CPYTHON_PATH/lib/python3.9/"
-    export PYTHON_INSTALL_PATH="$INSTALL_PATH/lib/python3.9/site-packages/"
+    export PATH="$CPYTHON_PATH/lib/python3.10/bin/:$PATH"
+    export PYTHON_BIN_PATH="$CPYTHON_PATH/bin/python3.10"
+    export PYTHON_INCLUDE_PATH="$CPYTHON_PATH/include/python3.10/"
+    export PYTHON_LIB_PATH="$CPYTHON_PATH/lib/python3.10/"
+    export PYTHON_INSTALL_PATH="$INSTALL_PATH/lib/python3.10/site-packages/"
+    export SSL_CERT_FILE="$CPYTHON_PATH/lib/python3.10/site-packages/pip/_vendor/certifi/cacert.pem"
     chmod +x "$PYTHON_BIN_PATH"
 elif [[ -f "$CPYTHON_PATH/include/Python.h" ]]; then
     CPYTHON_PATH=$(cygpath $CPYTHON_PATH)
@@ -107,17 +135,18 @@ elif [[ -f "$CPYTHON_PATH/include/Python.h" ]]; then
     export PYTHON_INCLUDE_PATH="$CPYTHON_PATH/include/"
     export PYTHON_LIB_PATH="$CPYTHON_PATH/lib/"
     export PYTHON_INSTALL_PATH="$INSTALL_PATH/lib/site-packages/"
+    export SSL_CERT_FILE="$CPYTHON_PATH/lib/pip/_vendor/certifi/cacert.pem"
 fi
 export PYTHONPATH="$PYTHON_INSTALL_PATH:$NUMPY_PATH/python/:$SCIPY_PATH/python/"
 mkdir -p "$PYTHON_INSTALL_PATH"
 
 export CFLAGS="-I$CPYTHON_PATH/include/ -I$PYTHON_LIB_PATH/include/python/ -L$CPYTHON_PATH/lib/ -L$CPYTHON_PATH/libs/"
 export PYTHONNOUSERSITE=1
-$PYTHON_BIN_PATH -m pip install --target=$PYTHON_LIB_PATH setuptools
+$PYTHON_BIN_PATH -m pip install --target=$PYTHON_LIB_PATH setuptools==59.1.0
 
 case $PLATFORM in
     linux-x86_64)
-        $CMAKE -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" -DCMAKE_BUILD_TYPE=Release -DUSE_MKL=$MKL_PATH -DUSE_LLVM=$LLVM_PATH/bin/llvm-config -DUSE_MKLDNN=$MKLDNN_PATH -DUSE_MICRO=ON $GPU_FLAGS -DUSE_OPENCL=$OPENCL_PATH -DUSE_OPENMP=intel -DOMP_LIBRARY=$MKL_PATH/lib/libiomp5.so -DCMAKE_C_FLAGS='-Wl,-rpath,$ORIGIN/,-rpath,$ORIGIN/../../' -DCMAKE_CXX_FLAGS='-Wl,-rpath,$ORIGIN/,-rpath,$ORIGIN/../../' .
+        $CMAKE -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" -DCMAKE_BUILD_TYPE=Release -DUSE_MKL=$MKL_PATH -DUSE_LLVM=$LLVM_PATH/bin/llvm-config -DUSE_MKLDNN=$MKLDNN_PATH -DCMAKE_LIBRARY_PATH=$MKLDNN_PATH/lib -DUSE_DNNL_CODEGEN=ON -DUSE_DNNL=$MKLDNN_PATH -DUSE_MICRO=ON $GPU_FLAGS -DUSE_OPENCL=$OPENCL_PATH -DUSE_OPENMP=intel -DOMP_LIBRARY=$MKL_PATH/lib/libiomp5.so -DCMAKE_C_FLAGS='-Wl,-rpath,$ORIGIN/,-rpath,$ORIGIN/../../' -DCMAKE_CXX_FLAGS='-Wl,-rpath,$ORIGIN/,-rpath,$ORIGIN/../../' .
         make -j $MAKEJ
         make install/strip
         cd python
@@ -130,7 +159,7 @@ case $PLATFORM in
         cp /usr/local/lib/libomp.dylib ../lib/libiomp5.dylib
         chmod +w ../lib/libiomp5.dylib
         install_name_tool -id @rpath/libiomp5.dylib ../lib/libiomp5.dylib
-        $CMAKE -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" -DCMAKE_BUILD_TYPE=Release -DUSE_MKL=$MKL_PATH -DUSE_LLVM=$LLVM_PATH/bin/llvm-config -DUSE_MKLDNN=$MKLDNN_PATH -DUSE_MICRO=ON $GPU_FLAGS -DUSE_OPENCL=$OPENCL_PATH -DUSE_OPENMP=intel -DOpenMP_C_FLAGS="-Xclang -fopenmp" -DOpenMP_CXX_FLAGS="-Xclang -fopenmp" -DCMAKE_C_FLAGS="-I/usr/local/include -L$INSTALL_PATH/lib -liomp5" -DCMAKE_CXX_FLAGS="-I/usr/local/include -L$INSTALL_PATH/lib -liomp5" .
+        $CMAKE -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" -DCMAKE_BUILD_TYPE=Release -DUSE_MKL=$MKL_PATH -DUSE_LLVM=$LLVM_PATH/bin/llvm-config -DUSE_MKLDNN=$MKLDNN_PATH -DCMAKE_LIBRARY_PATH=$MKLDNN_PATH/lib -DUSE_DNNL_CODEGEN=ON -DUSE_DNNL=$MKLDNN_PATH -DUSE_MICRO=ON $GPU_FLAGS -DUSE_OPENCL=$OPENCL_PATH -DUSE_OPENMP=intel -DOpenMP_C_FLAGS="-Xclang -fopenmp" -DOpenMP_CXX_FLAGS="-Xclang -fopenmp" -DCMAKE_C_FLAGS="-I/usr/local/include -L$INSTALL_PATH/lib -liomp5" -DCMAKE_CXX_FLAGS="-I/usr/local/include -L$INSTALL_PATH/lib -liomp5" .
         make -j $MAKEJ
         make install/strip
         cd python
@@ -142,7 +171,7 @@ case $PLATFORM in
     windows-x86_64)
         export CC="cl.exe"
         export CXX="cl.exe"
-        $CMAKE -G "Ninja" -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" -DCMAKE_BUILD_TYPE=Release -DUSE_MKL=$MKL_PATH -DUSE_LLVM=$LLVM_PATH/bin/llvm-config -DUSE_MKLDNN=$MKLDNN_PATH $GPU_FLAGS -DUSE_OPENCL=$OPENCL_PATH -DUSE_OPENMP=intel -DOMP_LIBRARY= .
+        $CMAKE -G "Ninja" -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" -DCMAKE_BUILD_TYPE=Release -DUSE_MKL=$MKL_PATH -DUSE_LLVM=$LLVM_PATH/bin/llvm-config -DUSE_MKLDNN=$MKLDNN_PATH -DCMAKE_LIBRARY_PATH=$MKLDNN_PATH/lib -DUSE_DNNL_CODEGEN=ON -DUSE_DNNL=$MKLDNN_PATH $GPU_FLAGS -DUSE_OPENCL=$OPENCL_PATH -DUSE_OPENMP=intel -DOMP_LIBRARY= .
         ninja -j $MAKEJ
         ninja install
         cd python
@@ -161,7 +190,7 @@ cp -a 3rdparty/dlpack/include/dlpack 3rdparty/dmlc-core/include/dmlc ../include
 
 # Adjust the directory structure a bit to facilitate packaging in JAR file
 mkdir -p ../python
-export MODULES=(attr decorator psutil typed_ast tvm)
+export MODULES=(attr cloudpickle decorator psutil synr typed_ast tornado typing_extensions tvm)
 for MODULE in ${MODULES[@]}; do
     mkdir -p ../python/$MODULE.egg-info
     cp -r $PYTHON_INSTALL_PATH/$MODULE*/$MODULE* ../python/ || true
