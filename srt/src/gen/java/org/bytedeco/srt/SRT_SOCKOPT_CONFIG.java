@@ -11,10 +11,10 @@ import static org.bytedeco.javacpp.presets.javacpp.*;
 import static org.bytedeco.srt.global.srt.*;
 
 
-@Namespace("srt_logging") @Opaque @Properties(inherit = org.bytedeco.srt.presets.srt.class)
-public class Logger extends Pointer {
+@Opaque @Properties(inherit = org.bytedeco.srt.presets.srt.class)
+public class SRT_SOCKOPT_CONFIG extends Pointer {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */
-    public Logger() { super((Pointer)null); }
+    public SRT_SOCKOPT_CONFIG() { super((Pointer)null); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
-    public Logger(Pointer p) { super(p); }
+    public SRT_SOCKOPT_CONFIG(Pointer p) { super(p); }
 }

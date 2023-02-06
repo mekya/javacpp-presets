@@ -7,7 +7,7 @@ if [[ -z "$PLATFORM" ]]; then
     exit
 fi
 
-SRT_VERSION=1.4.4
+SRT_VERSION=1.5.1
 download https://github.com/Haivision/srt/archive/refs/tags/v${SRT_VERSION}.zip srt-v${SRT_VERSION}.zip
 mkdir -p $PLATFORM
 cd $PLATFORM
@@ -56,6 +56,7 @@ case $PLATFORM in
         make install
         ;;
     macosx-x86_64)
+        export OPENSSL_ROOT_DIR=/usr/local/opt/openssl/
         ./configure --prefix=.. 
         make -j $MAKEJ
         make install
