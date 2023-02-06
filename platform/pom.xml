@@ -73,6 +73,8 @@
     <module>../cpu_features/platform</module>
     <module>../modsecurity/platform</module>
     <module>../systems/platform</module>
+    <module>../srt/platform</module>
+    <module>../zixi/platform</module>
   </modules>
 
   <dependencies>
@@ -91,6 +93,11 @@
       <groupId>org.bytedeco</groupId>
       <artifactId>ffmpeg-platform</artifactId>
       <version>5.1.2-${project.version}</version>
+    </dependency>
+     <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>srt-platform</artifactId>
+      <version>1.4.4-${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.bytedeco</groupId>
