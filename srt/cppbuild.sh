@@ -12,6 +12,7 @@ download https://github.com/Haivision/srt/archive/refs/tags/v${SRT_VERSION}.zip 
 mkdir -p $PLATFORM
 cd $PLATFORM
 #tar -xzvf ../srt-v$SRT_VERSION.zip
+rm -rf srt-$SRT_VERSION
 unzip ../srt-v$SRT_VERSION.zip 
 cd srt-$SRT_VERSION
 
@@ -45,19 +46,19 @@ case $PLATFORM in
         ;;
     linux-x86_64)
 #        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
-       ./configure --prefix=..
+       ./configure --prefix=.. --openssl-use-static-libs
         make -j $MAKEJ
         make install
         ;;
     linux-arm64)
 #        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
-       ./configure --prefix=..
+       ./configure --prefix=.. --openssl-use-static-libs
         make -j $MAKEJ
         make install
         ;;
     macosx-x86_64)
-        export OPENSSL_ROOT_DIR=/usr/local/opt/openssl/
-        ./configure --prefix=.. 
+        export OPENSSL_ROOT_DIR=/usr/local/opt/openssl/ 
+        ./configure --prefix=.. --openssl-use-static-libs
         make -j $MAKEJ
         make install
         ;;
