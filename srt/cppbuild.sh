@@ -7,72 +7,59 @@ if [[ -z "$PLATFORM" ]]; then
     exit
 fi
 
-SRT_VERSION=1.5.1
-download https://github.com/Haivision/srt/archive/refs/tags/v${SRT_VERSION}.zip srt-v${SRT_VERSION}.zip
+SRT_CONFIG="-DENABLE_APPS:BOOL=OFF -DENABLE_ENCRYPTION:BOOL=ON -DENABLE_SHARED:BOOL=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
+
+LIBSRT_VERSION=1.5.1
+OPENSSL=openssl-3.0.5
+
+download https://github.com/Haivision/srt/archive/refs/tags/v$LIBSRT_VERSION.tar.gz srt-$LIBSRT_VERSION.tar.gz
+download https://www.openssl.org/source/$OPENSSL.tar.gz $OPENSSL.tar.gz
+
 mkdir -p $PLATFORM
 cd $PLATFORM
-#tar -xzvf ../srt-v$SRT_VERSION.zip
-rm -rf srt-$SRT_VERSION
-unzip ../srt-v$SRT_VERSION.zip 
-cd srt-$SRT_VERSION
+INSTALL_PATH=`pwd`
+
+tar --totals -xzf ../srt-$LIBSRT_VERSION.tar.gz
+tar --totals -xzf ../$OPENSSL.tar.gz
+
+cd srt-$LIBSRT_VERSION
 
 
 
 case $PLATFORM in
-    android-arm)
-        CC="$ANDROID_CC" CFLAGS="$ANDROID_FLAGS" ./configure --prefix=.. --static
-        make -j $MAKEJ
-        make install
-        ;;
-    android-arm64)
-        CC="$ANDROID_CC" CFLAGS="$ANDROID_FLAGS" ./configure --prefix=.. --static
-        make -j $MAKEJ
-        make install
-        ;;
-    android-x86)
-        CC="$ANDROID_CC" CFLAGS="$ANDROID_FLAGS" ./configure --prefix=.. --static
-        make -j $MAKEJ
-        make install
-        ;;
-    android-x86_64)
-        CC="$ANDROID_CC" CFLAGS="$ANDROID_FLAGS" ./configure --prefix=.. --static
-        make -j $MAKEJ
-        make install
-        ;;
-    linux-x86)
-        CC="gcc -m32 -fPIC" ./configure --prefix=.. --static
-        make -j $MAKEJ
-        make install
-        ;;
+
     linux-x86_64)
-#        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
-       ./configure --prefix=.. --openssl-use-static-libs
+        cd ../$OPENSSL
+        ./Configure linux-x86_64 -fPIC no-shared --prefix=$INSTALL_PATH --libdir=lib
+        make -s -j $MAKEJ
+        make install_sw
+
+        cd ../srt-$LIBSRT_VERSION
+       ./configure --prefix=$INSTALL_PATH --openssl-include-dir=$INSTALL_PATH/include --openssl-ssl-library=$INSTALL_PATH/lib/libssl.a --openssl-crypto-library=$INSTALL_PATH/lib/libcrypto.a --enable-apps=OFF
         make -j $MAKEJ
         make install
         ;;
     linux-arm64)
-#        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
-       ./configure --prefix=.. --openssl-use-static-libs
+        cd ../$OPENSSL
+        ./Configure linux-aarch64 -fPIC no-shared --prefix=$INSTALL_PATH --libdir=lib 
+        make -s -j $MAKEJ
+        make install_sw
+
+        cd ../srt-$LIBSRT_VERSION
+        ./configure --prefix=$INSTALL_PATH --openssl-include-dir=$INSTALL_PATH/include --openssl-ssl-library=$INSTALL_PATH/lib/libssl.a --openssl-crypto-library=$INSTALL_PATH/lib/libcrypto.a --enable-apps=OFF
         make -j $MAKEJ
         make install
         ;;
     macosx-x86_64)
-        export OPENSSL_ROOT_DIR=/usr/local/opt/openssl/ 
-        ./configure --prefix=.. --openssl-use-static-libs
+        cd ../$OPENSSL
+        ./Configure darwin64-x86_64-cc -fPIC no-shared --prefix=$INSTALL_PATH --libdir=lib
+        make -j $MAKEJ
+        make install_sw
+
+        cd ../srt-$LIBSRT_VERSION
+        ./configure  --prefix=$INSTALL_PATH --openssl-include-dir=$INSTALL_PATH/include --openssl-ssl-library=$INSTALL_PATH/lib/libssl.a --openssl-crypto-library=$INSTALL_PATH/lib/libcrypto.a --enable-apps=OFF
         make -j $MAKEJ
         make install
-        ;;
-    windows-x86)
-        nmake -f win32/Makefile.msc zlib.lib
-        mkdir -p ../include ../lib
-        cp zconf.h zlib.h ../include/
-        cp zlib.lib ../lib/
-        ;;
-    windows-x86_64)
-        nmake -f win32/Makefile.msc zlib.lib
-        mkdir -p ../include ../lib
-        cp zconf.h zlib.h ../include/
-        cp zlib.lib ../lib/
         ;;
     *)
         echo "Error: Platform \"$PLATFORM\" is not supported"

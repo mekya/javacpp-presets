@@ -27,7 +27,7 @@ import org.bytedeco.javacpp.tools.Logger;
                 "srt/logging_api.h",
         		"srt/srt.h"
         		}
-          , link = "srt@.1.4.4"
+          , link = "srt@.1.5.1"
       
     ),
     @Platform(value = "linux-x86_64", 
@@ -42,7 +42,7 @@ import org.bytedeco.javacpp.tools.Logger;
                         "sys/syslog.h",
                         "srt/logging_api.h", 
                         "srt/srt.h"},
-              link = "srt@.1.4.4"
+              link = "srt@.1.5.1"
     ),
     @Platform(value = "linux-arm64", 
               includepath = {"/usr/include", "/usr/include/aarch64-linux-gnu"},
@@ -56,7 +56,7 @@ import org.bytedeco.javacpp.tools.Logger;
                         "sys/syslog.h",
                         "srt/logging_api.h", 
                         "srt/srt.h"},
-              link = "srt@.1.4.4"
+              link = "srt@.1.5.1"
     )
     },
     target = "org.bytedeco.srt",
