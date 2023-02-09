@@ -33,21 +33,22 @@ case $PLATFORM in
         ./Configure linux-x86_64 -fPIC no-shared --prefix=$INSTALL_PATH --libdir=lib
         make -s -j $MAKEJ
         make install_sw
-
         cd ../srt-$LIBSRT_VERSION
-       ./configure --prefix=$INSTALL_PATH --openssl-include-dir=$INSTALL_PATH/include --openssl-ssl-library=$INSTALL_PATH/lib/libssl.a --openssl-crypto-library=$INSTALL_PATH/lib/libcrypto.a --enable-apps=OFF
-        make -j $MAKEJ
+        CC="gcc -m64" CXX="g++ -m64" CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $SRT_CONFIG .
+        make -j $MAKEJ V=0
         make install
         ;;
     linux-arm64)
+        export CFLAGS="-march=armv8-a+crypto -mcpu=cortex-a57+crypto -I$INSTALL_PATH/include -L$INSTALL_PATH/lib"
+        export CXXFLAGS="$CFLAGS"
+        export CPPFLAGS="$CFLAGS"
         cd ../$OPENSSL
-        ./Configure linux-aarch64 -fPIC no-shared --prefix=$INSTALL_PATH --libdir=lib 
+        ./Configure linux-aarch64 -fPIC --prefix=$INSTALL_PATH --libdir=lib --cross-compile-prefix=aarch64-linux-gnu- "$CFLAGS" no-shared
         make -s -j $MAKEJ
         make install_sw
-
         cd ../srt-$LIBSRT_VERSION
-        ./configure --prefix=$INSTALL_PATH --openssl-include-dir=$INSTALL_PATH/include --openssl-ssl-library=$INSTALL_PATH/lib/libssl.a --openssl-crypto-library=$INSTALL_PATH/lib/libcrypto.a --enable-apps=OFF
-        make -j $MAKEJ
+        CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $SRT_CONFIG -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_VERSION=1 -DCMAKE_SYSTEM_PROCESSOR=armv8 -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ .
+        make -j $MAKEJ V=0
         make install
         ;;
     macosx-x86_64)
@@ -57,9 +58,11 @@ case $PLATFORM in
         make install_sw
 
         cd ../srt-$LIBSRT_VERSION
-        ./configure  --prefix=$INSTALL_PATH --openssl-include-dir=$INSTALL_PATH/include --openssl-ssl-library=$INSTALL_PATH/lib/libssl.a --openssl-crypto-library=$INSTALL_PATH/lib/libcrypto.a --enable-apps=OFF
-        make -j $MAKEJ
+        CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $SRT_CONFIG .
+        make -j $MAKEJ V=0
         make install
+       
+
         ;;
     *)
         echo "Error: Platform \"$PLATFORM\" is not supported"
