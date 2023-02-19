@@ -7,18 +7,32 @@ if [[ -z "$PLATFORM" ]]; then
     exit
 fi
 
-#SRT_VERSION=1.4.4
-COMPRESSED_FILE_NAME=zixi_sdks-antmedia-linux64-14.13.44304.tar.xz
-FOLDER_NAME=zixi_sdks-antmedia-linux64-14.13.44304
-FILE=~/Downloads/zixi_sdks-antmedia-linux64-14.13.44304.tar.xz
+COMPRESSED_FILE_NAME=zixi_sdks-antmedia-16.4.44489.tar.gz
+FOLDER_NAME=zixi_sdks-antmedia-16.4.44489
+FILE=~/Downloads/zixi_sdks-antmedia-16.4.44489.tar.gz
 cp $FILE $TOP_PATH/downloads
-#download https://github.com/Haivision/srt/archive/refs/tags/v${SRT_VERSION}.zip zixi_sdks-antmedia-linux64-14.13.44304.tar.xz
 cp $FILE .
 tar -xvf $COMPRESSED_FILE_NAME
 
+cd $FOLDER_NAME
+tar -xvf zixi_sdks-antmedia-mac-16.4.44489.tar.xz
+tar -xvf zixi_sdks-antmedia-linux64-16.4.44489.tar.xz
+cd ..
+
 if [ ! -d "$PLATFORM" ]; then
   mkdir -p $PLATFORM
-  mv $FOLDER_NAME/* $PLATFORM/
+  case $PLATFORM in
+     linux-x86_64)
+        mv $FOLDER_NAME/zixi_sdks-antmedia-linux64-16.4.44489/* $PLATFORM/
+     ;;
+     macosx-x86_64)
+        mv $FOLDER_NAME/zixi_sdks-antmedia-mac-16.4.44489/* $PLATFORM/
+     ;;
+    *)
+    echo "Error: Platform \"$PLATFORM\" is not supported"
+    ;;
+  esac
+
   #rename folder name for compatibility
   mv $PLATFORM/interface $PLATFORM/include
 fi
@@ -64,9 +78,9 @@ case $PLATFORM in
         ;;
     linux-arm64)
 #        CC="gcc -m64 -fPIC" ./configure --prefix=.. --static
-       ./configure --prefix=..
-        make -j $MAKEJ
-        make install
+#       ./configure --prefix=..
+#        make -j $MAKEJ
+#        make install
         ;;
     macosx-x86_64)
     

@@ -11,7 +11,7 @@
 
   <groupId>org.bytedeco</groupId>
   <artifactId>zixi</artifactId>
-  <version>14.13.44304-${project.parent.version}</version>
+  <version>16.4.44489-${project.parent.version}</version>
   <name>JavaCPP Presets for zixi</name>
 
   <dependencies>
