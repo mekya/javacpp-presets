@@ -1241,8 +1241,8 @@ public static final boolean FF_API_LINK_PUBLIC =     (LIBAVFILTER_VERSION_MAJOR 
 
 // #include "version_major.h"
 
-public static final int LIBAVFILTER_VERSION_MINOR =   1;
-public static final int LIBAVFILTER_VERSION_MICRO = 100;
+public static final int LIBAVFILTER_VERSION_MINOR =   2;
+public static final int LIBAVFILTER_VERSION_MICRO = 102;
 
 
 public static native @MemberGetter int LIBAVFILTER_VERSION_INT();

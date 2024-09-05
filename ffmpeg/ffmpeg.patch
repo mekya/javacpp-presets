@@ -5,7 +5,7 @@ diff -ruN ffmpeg-7.0/configure ffmpeg-7.0-patch/configure
  enabled jni               && { [ $target_os = "android" ] && check_headers jni.h && enabled pthreads || die "ERROR: jni not found"; }
  enabled ladspa            && require_headers "ladspa.h dlfcn.h"
  enabled lcms2             && require_pkg_config lcms2 "lcms2 >= 2.13" lcms2.h cmsCreateContext
--enabled libaom            && require_pkg_config libaom "aom >= 1.0.0" aom/aom_codec.h aom_codec_version
+-enabled libaom            && require_pkg_config libaom "aom >= 2.0.0" aom/aom_codec.h aom_codec_version
 +enabled libaom            && require libaom aom/aom_codec.h aom_codec_version -laom
  enabled libaribb24        && { check_pkg_config libaribb24 "aribb24 > 1.0.3" "aribb24/aribb24.h" arib_instance_new ||
                                 { enabled gpl && require_pkg_config libaribb24 aribb24 "aribb24/aribb24.h" arib_instance_new; } ||
@@ -103,7 +103,7 @@ diff -ruN ffmpeg-7.0/configure ffmpeg-7.0-patch/configure
 +    enabled libwebp_encoder      && require libwebp webp/encode.h WebPGetEncoderVersion -lwebp -lsharpyuv
 +    enabled libwebp_anim_encoder && require libwebp_anim_encoder webp/mux.h WebPAnimEncoderOptionsInit -lwebpmux -lwebp -lsharpyuv; }
 +enabled libx264           && require libx264 "stdint.h x264.h" x264_encoder_encode -lx264 $pthreads_extralibs &&
-                              require_cpp_condition libx264 x264.h "X264_BUILD >= 122" && {
+                              require_cpp_condition libx264 x264.h "X264_BUILD >= 155" && {
                               [ "$toolchain" != "msvc" ] ||
                               require_cpp_condition libx264 x264.h "X264_BUILD >= 158"; } &&
                               check_cpp_condition libx264_hdr10 x264.h "X264_BUILD >= 163" &&
@@ -114,7 +114,7 @@ diff -ruN ffmpeg-7.0/configure ffmpeg-7.0-patch/configure
  enabled libxavs           && require libxavs "stdint.h xavs.h" xavs_encoder_encode "-lxavs $pthreads_extralibs $libm_extralibs"
  enabled libxavs2          && require_pkg_config libxavs2 "xavs2 >= 1.3.0" "stdint.h xavs2.h" xavs2_api_get
  enabled libxevd           && require_pkg_config libxevd "xevd >= 0.4.1" "xevd.h" xevd_decode
- enabled libxeve           && require_pkg_config libxeve "xeve >= 0.4.3" "xeve.h" xeve_encode
+ enabled libxeve           && require_pkg_config libxeve "xeve >= 0.5.1" "xeve.h" xeve_encode
  enabled libxvid           && require libxvid xvid.h xvid_global -lxvidcore
 -enabled libzimg           && require_pkg_config libzimg "zimg >= 2.7.0" zimg.h zimg_get_api_version
 +enabled libzimg           && require libzimg zimg.h zimg_get_api_version -lzimg

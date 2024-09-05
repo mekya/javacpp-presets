@@ -572,6 +572,7 @@ public static final int
     AV_CODEC_ID_AC4 = 0x15000 + 103,
     AV_CODEC_ID_OSQ = 0x15000 + 104,
     AV_CODEC_ID_QOA = 0x15000 + 105,
+    AV_CODEC_ID_LC3 = 0x15000 + 106,
 
     /* subtitle codecs */
     /** A dummy ID pointing at the start of subtitle codecs. */
@@ -894,6 +895,7 @@ public static final int AV_PROFILE_AAC_HE =           4;
 public static final int AV_PROFILE_AAC_HE_V2 =       28;
 public static final int AV_PROFILE_AAC_LD =          22;
 public static final int AV_PROFILE_AAC_ELD =         38;
+public static final int AV_PROFILE_AAC_USAC =        41;
 public static final int AV_PROFILE_MPEG2_AAC_LOW =  128;
 public static final int AV_PROFILE_MPEG2_AAC_HE =   131;
 
@@ -1237,10 +1239,6 @@ public static final int
      * An AV_PKT_DATA_PARAM_CHANGE side data packet is laid out as follows:
      * <pre>{@code
      * u32le param_flags
-     * if (param_flags & AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_COUNT)
-     *     s32le channel_count
-     * if (param_flags & AV_SIDE_DATA_PARAM_CHANGE_CHANNEL_LAYOUT)
-     *     u64le channel_layout
      * if (param_flags & AV_SIDE_DATA_PARAM_CHANGE_SAMPLE_RATE)
      *     s32le sample_rate
      * if (param_flags & AV_SIDE_DATA_PARAM_CHANGE_DIMENSIONS)
@@ -1509,6 +1507,19 @@ public static final int
     AV_PKT_DATA_AMBIENT_VIEWING_ENVIRONMENT = 35,
 
     /**
+     * The number of pixels to discard from the top/bottom/left/right border of the
+     * decoded frame to obtain the sub-rectangle intended for presentation.
+     *
+     * <pre>{@code
+     * u32le crop_top
+     * u32le crop_bottom
+     * u32le crop_left
+     * u32le crop_right
+     * }</pre>
+     */
+    AV_PKT_DATA_FRAME_CROPPING = 36,
+
+    /**
      * The number of side data types.
      * This is not part of the public API/ABI in the sense that it may
      * change when new side data types are added.
@@ -1516,8 +1527,9 @@ public static final int
      * If its value becomes huge, some code using it
      * needs to be updated as it assumes it to be smaller than other limits.
      */
-    AV_PKT_DATA_NB = 36;
+    AV_PKT_DATA_NB = 37;
 
+// #if FF_API_QUALITY_FACTOR
 public static final int AV_PKT_DATA_QUALITY_FACTOR = AV_PKT_DATA_QUALITY_STATS;
 // Targeting ../avcodec/AVPacketSideData.java
 
@@ -4031,6 +4043,7 @@ public static final boolean FF_API_FF_PROFILE_LEVEL =    (LIBAVCODEC_VERSION_MAJ
 public static final boolean FF_API_AVCODEC_CLOSE =       (LIBAVCODEC_VERSION_MAJOR < 62);
 public static final boolean FF_API_BUFFER_MIN_SIZE =     (LIBAVCODEC_VERSION_MAJOR < 62);
 public static final boolean FF_API_VDPAU_ALLOC_GET_SET = (LIBAVCODEC_VERSION_MAJOR < 62);
+public static final boolean FF_API_QUALITY_FACTOR =      (LIBAVCODEC_VERSION_MAJOR < 62);
 
 // #endif /* AVCODEC_VERSION_MAJOR_H */
 
@@ -4068,7 +4081,7 @@ public static final boolean FF_API_VDPAU_ALLOC_GET_SET = (LIBAVCODEC_VERSION_MAJ
 
 // #include "version_major.h"
 
-public static final int LIBAVCODEC_VERSION_MINOR =   3;
+public static final int LIBAVCODEC_VERSION_MINOR =  11;
 public static final int LIBAVCODEC_VERSION_MICRO = 100;
 
 public static native @MemberGetter int LIBAVCODEC_VERSION_INT();
