@@ -48,7 +48,8 @@ WEBP_VERSION=1.4.0
 AOMAV1_VERSION=3.9.1
 SVTAV1_VERSION=2.1.2
 ZIMG_VERSION=3.0.5
-FFMPEG_VERSION=7.0.2
+FFMPEG_VERSION=master
+
 download https://download.videolan.org/contrib/nasm/nasm-$NASM_VERSION.tar.gz nasm-$NASM_VERSION.tar.gz
 download http://zlib.net/$ZLIB.tar.gz $ZLIB.tar.gz
 download http://downloads.sourceforge.net/project/lame/lame/3.100/$LAME.tar.gz $LAME.tar.gz
@@ -71,7 +72,10 @@ download https://github.com/webmproject/libwebp/archive/refs/tags/v$WEBP_VERSION
 download https://storage.googleapis.com/aom-releases/libaom-$AOMAV1_VERSION.tar.gz aom-$AOMAV1_VERSION.tar.gz
 download https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v$SVTAV1_VERSION/SVT-AV1-v$SVTAV1_VERSION.tar.gz SVT-AV1-$SVTAV1_VERSION.tar.gz
 download https://github.com/sekrit-twc/zimg/archive/refs/tags/release-$ZIMG_VERSION.tar.gz zimg-release-$ZIMG_VERSION.tar.gz
-download http://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2 ffmpeg-$FFMPEG_VERSION.tar.bz2
+#download http://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2 ffmpeg-$FFMPEG_VERSION.tar.bz2
+
+download https://github.com/FFmpeg/FFmpeg/archive/refs/heads/master.zip ffmpeg-$FFMPEG_VERSION.zip
+
 
 mkdir -p $PLATFORM$EXTENSION
 cd $PLATFORM$EXTENSION
@@ -98,7 +102,13 @@ tar --totals -xzf ../libwebp-$WEBP_VERSION.tar.gz
 tar --totals -xzf ../aom-$AOMAV1_VERSION.tar.gz
 tar --totals -xzf ../SVT-AV1-$SVTAV1_VERSION.tar.gz
 tar --totals -xzf ../zimg-release-$ZIMG_VERSION.tar.gz
-tar --totals -xjf ../ffmpeg-$FFMPEG_VERSION.tar.bz2
+#tar --totals -xjf ../ffmpeg-$FFMPEG_VERSION.tar.bz2
+tar --totals -xjf ../ffmpeg-$FFMPEG_VERSION.zip
+
+#check if FFmpeg-$FFMPEG_VERSION folder exists
+if [ -d FFmpeg-$FFMPEG_VERSION ]; then
+    mv FFmpeg-$FFMPEG_VERSION ffmpeg-$FFMPEG_VERSION
+fi
 
 if [[ "${ACLOCAL_PATH:-}" == C:\\msys64\\* ]]; then
     export ACLOCAL_PATH=/mingw64/share/aclocal:/usr/share/aclocal
