@@ -52,10 +52,10 @@ case $PLATFORM in
         make install
         ;;
     macosx-x86_64)
-      #  cd ../$OPENSSL
-      #  ./Configure darwin64-x86_64-cc -fPIC no-shared --prefix=$INSTALL_PATH --libdir=lib
-      #  make -j $MAKEJ
-      #  make install_sw
+        cd ../$OPENSSL
+        ./Configure darwin64-x86_64-cc -fPIC no-shared --prefix=$INSTALL_PATH --libdir=lib
+        make -j $MAKEJ
+        make install_sw
 
         cd ../srt-$LIBSRT_VERSION
         CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $SRT_CONFIG .
