@@ -11,7 +11,8 @@ DISABLE="--disable-iconv --disable-opencl --disable-sdl2 --disable-bzlib --disab
 DISABLE="$DISABLE --disable-decoder=h264_crystalhd --disable-decoder=mpeg2_crystalhd --disable-decoder=vc1_crystalhd --disable-decoder=mpeg4_crystalhd --disable-decoder=msmpeg4_crystalhd --disable-decoder=msmpeg4_crystalhd --disable-decoder=wmv3_crystalhd"
 
 ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zlib --enable-libmp3lame --enable-libspeex --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-openssl --enable-libopenh264 --enable-libvpx --enable-libfreetype --enable-libopus --enable-libxml2 --enable-libsrt --enable-libwebp --enable-libaom --enable-libsvtav1 --enable-libzimg --enable-nonfree"
-ENABLE_VULKAN="--enable-vulkan --enable-hwaccel=h264_vulkan --enable-hwaccel=hevc_vulkan --enable-hwaccel=av1_vulkan"
+#ENABLE_VULKAN="--enable-vulkan --enable-hwaccel=h264_vulkan --enable-hwaccel=hevc_vulkan --enable-hwaccel=av1_vulkan"
+ENABLE_VULKAN=""
 
 if [[ "$EXTENSION" == *gpl ]]; then
     # Enable GPLv3 modules
@@ -35,23 +36,22 @@ SPEEX=speex-1.2.1
 OPUS=opus-1.3.1
 OPENCORE_AMR=opencore-amr-0.1.6
 VO_AMRWBENC=vo-amrwbenc-0.1.3
-OPENSSL=openssl-3.3.1
+OPENSSL=openssl-3.3.2
 OPENH264_VERSION=2.4.1
 X264=x264-stable
 X265=3.4
 VPX_VERSION=1.14.1
 ALSA_VERSION=1.2.12
-FREETYPE_VERSION=2.13.2
+FREETYPE_VERSION=2.13.3
 MFX_VERSION=1.35.1
 NVCODEC_VERSION=12.2.72.0
 XML2=libxml2-2.9.12
 LIBSRT_VERSION=1.5.3
 WEBP_VERSION=1.4.0
 AOMAV1_VERSION=3.9.1
-SVTAV1_VERSION=2.1.2
+SVTAV1_VERSION=2.2.1
 ZIMG_VERSION=3.0.5
-FFMPEG_VERSION=master
-
+FFMPEG_VERSION=7.1
 download https://download.videolan.org/contrib/nasm/nasm-$NASM_VERSION.tar.gz nasm-$NASM_VERSION.tar.gz
 download http://zlib.net/$ZLIB.tar.gz $ZLIB.tar.gz
 download http://downloads.sourceforge.net/project/lame/lame/3.100/$LAME.tar.gz $LAME.tar.gz
@@ -74,9 +74,7 @@ download https://github.com/webmproject/libwebp/archive/refs/tags/v$WEBP_VERSION
 download https://storage.googleapis.com/aom-releases/libaom-$AOMAV1_VERSION.tar.gz aom-$AOMAV1_VERSION.tar.gz
 download https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v$SVTAV1_VERSION/SVT-AV1-v$SVTAV1_VERSION.tar.gz SVT-AV1-$SVTAV1_VERSION.tar.gz
 download https://github.com/sekrit-twc/zimg/archive/refs/tags/release-$ZIMG_VERSION.tar.gz zimg-release-$ZIMG_VERSION.tar.gz
-#download http://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2 ffmpeg-$FFMPEG_VERSION.tar.bz2
-
-download https://github.com/FFmpeg/FFmpeg/archive/refs/heads/master.zip ffmpeg-$FFMPEG_VERSION.zip
+download http://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.bz2 ffmpeg-$FFMPEG_VERSION.tar.bz2
 
 
 mkdir -p $PLATFORM$EXTENSION
@@ -104,15 +102,7 @@ tar --totals -xzf ../libwebp-$WEBP_VERSION.tar.gz
 tar --totals -xzf ../aom-$AOMAV1_VERSION.tar.gz
 tar --totals -xzf ../SVT-AV1-$SVTAV1_VERSION.tar.gz
 tar --totals -xzf ../zimg-release-$ZIMG_VERSION.tar.gz
-#tar --totals -xjf ../ffmpeg-$FFMPEG_VERSION.tar.bz2
-
-echo "Extracting ffmpeg"
-unzip ../ffmpeg-$FFMPEG_VERSION.zip
-
-#check if FFmpeg-$FFMPEG_VERSION folder exists
-if [ -d FFmpeg-$FFMPEG_VERSION ]; then
-    mv FFmpeg-$FFMPEG_VERSION ffmpeg-$FFMPEG_VERSION
-fi
+tar --totals -xjf ../ffmpeg-$FFMPEG_VERSION.tar.bz2
 
 if [[ "${ACLOCAL_PATH:-}" == C:\\msys64\\* ]]; then
     export ACLOCAL_PATH=/mingw64/share/aclocal:/usr/share/aclocal

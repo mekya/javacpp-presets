@@ -1398,13 +1398,17 @@ public static final int AV_PTS_WRAP_SUB_OFFSET =  -1;
 // Targeting ../avformat/AVStreamGroupTileGrid.java
 
 
+// Targeting ../avformat/AVStreamGroupLCEVC.java
+
+
 
 /** enum AVStreamGroupParamsType */
 public static final int
     AV_STREAM_GROUP_PARAMS_NONE = 0,
     AV_STREAM_GROUP_PARAMS_IAMF_AUDIO_ELEMENT = 1,
     AV_STREAM_GROUP_PARAMS_IAMF_MIX_PRESENTATION = 2,
-    AV_STREAM_GROUP_PARAMS_TILE_GRID = 3;
+    AV_STREAM_GROUP_PARAMS_TILE_GRID = 3,
+    AV_STREAM_GROUP_PARAMS_LCEVC = 4;
 // Targeting ../avformat/AVIAMFAudioElement.java
 
 
@@ -2871,8 +2875,8 @@ public static final int FF_API_R_FRAME_RATE =            1;
 
 // #include "version_major.h"
 
-public static final int LIBAVFORMAT_VERSION_MINOR =   5;
-public static final int LIBAVFORMAT_VERSION_MICRO = 101;
+public static final int LIBAVFORMAT_VERSION_MINOR =   7;
+public static final int LIBAVFORMAT_VERSION_MICRO = 100;
 
 public static native @MemberGetter int LIBAVFORMAT_VERSION_INT();
 public static final int LIBAVFORMAT_VERSION_INT = LIBAVFORMAT_VERSION_INT();
