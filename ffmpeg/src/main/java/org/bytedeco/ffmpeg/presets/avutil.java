@@ -65,6 +65,9 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             link = "avutil@.59", compiler = {"default", "nodeprecated"}),
         @Platform(value = "linux-x86", preload = {"va@.1", "drm@.2", "va-drm@.1"}, preloadpath = {"/usr/lib32/", "/usr/lib/"}),
         @Platform(value = "linux-x86_64", preloadpath = {"/usr/lib64/", "/usr/lib/"}),
+        @Platform(value = "macosx", preload = {"atomic@.1"},
+                                    preloadpath = {"/usr/local/lib/gcc/13/", "/usr/local/lib/gcc/12/", "/usr/local/lib/gcc/11/", "/usr/local/lib/gcc/10/", "/usr/local/lib/gcc/9/",
+                                                   "/usr/local/lib/gcc/8/", "/usr/local/lib/gcc/7/", "/usr/local/lib/gcc/6/", "/usr/local/lib/gcc/5/"}),
         @Platform(value = "windows", includepath = {"C:/MinGW/local/include/ffmpeg/", "C:/MinGW/include/ffmpeg/"}, preload = "avutil-59"),
         @Platform(extension = "-gpl")
     }
@@ -78,8 +81,8 @@ public class avutil implements InfoMapper {
                .put(new Info("AV_TIME_BASE_Q", "PixelFormat", "CodecID", "AVCOL_SPC_YCGCO", "AVCOL_SPC_YCOCG", "FF_CEIL_RSHIFT",
                              "av_ceil_log2", "av_clip", "av_clip64", "av_clip_uint8", "av_clip_int8", "av_clip_uint16", "av_clip_int16",
                              "av_clipl_int32", "av_clip_intp2", "av_clip_uintp2", "av_mod_uintp2", "av_sat_add32", "av_sat_dadd32",
-                             "av_sat_sub32", "av_sat_dsub32", "av_clipf", "av_clipd", "av_zero_extend", "av_popcount", "av_popcount64", "av_parity",
-                             "av_sat_add64", "av_sat_sub64", "LIBAVUTIL_VERSION").cppTypes().translate())
+                             "av_sat_sub32", "av_sat_dsub32", "av_clipf", "av_clipd", "av_popcount", "av_popcount64", "av_parity",
+                             "av_sat_add64", "av_sat_sub64", "av_zero_extend", "LIBAVUTIL_VERSION").cppTypes().translate())
                .put(new Info("LIBAVUTIL_VERSION_INT", "LIBAVUTIL_IDENT").translate(false))
                .put(new Info("FF_API_D2STR", "FF_API_DECLARE_ALIGNED", "FF_API_COLORSPACE_NAME", "FF_API_AV_MALLOCZ_ARRAY", "FF_API_FIFO_PEEK2",
                              "FF_API_FIFO_OLD_API", "FF_API_XVMC", "FF_API_OLD_CHANNEL_LAYOUT", "FF_API_AV_FOPEN_UTF8", "FF_API_PKT_DURATION",
@@ -130,6 +133,10 @@ public class avutil implements InfoMapper {
                              "AV_CH_BOTTOM_FRONT_CENTER",
                              "AV_CH_BOTTOM_FRONT_LEFT",
                              "AV_CH_BOTTOM_FRONT_RIGHT",
+                             "AV_CH_SIDE_SURROUND_LEFT",
+                             "AV_CH_SIDE_SURROUND_RIGHT",
+                             "AV_CH_TOP_SURROUND_LEFT",
+                             "AV_CH_TOP_SURROUND_RIGHT",
                              "AV_CH_LAYOUT_NATIVE",
                              "AV_CH_LAYOUT_MONO",
                              "AV_CH_LAYOUT_STEREO",

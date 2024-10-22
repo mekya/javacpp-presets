@@ -587,7 +587,7 @@ public static final int LIBSWSCALE_VERSION_MAJOR =   8;
 
 // #include "version_major.h"
 
-public static final int LIBSWSCALE_VERSION_MINOR =   2;
+public static final int LIBSWSCALE_VERSION_MINOR =   3;
 public static final int LIBSWSCALE_VERSION_MICRO = 100;
 
 public static native @MemberGetter int LIBSWSCALE_VERSION_INT();
