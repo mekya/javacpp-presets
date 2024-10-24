@@ -14,7 +14,7 @@ ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zl
 #ENABLE_VULKAN="--enable-vulkan --enable-hwaccel=h264_vulkan --enable-hwaccel=hevc_vulkan --enable-hwaccel=av1_vulkan"
 ENABLE_VULKAN=""
 
-ENABLE="$ENABLE --enable-libnpp --enable-nonfree --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64"
+#ENABLE="$ENABLE --enable-libnpp --enable-nonfree --extra-cflags=-I/usr/local/cuda/include --extra-ldflags=-L/usr/local/cuda/lib64"
 
 if [[ "$EXTENSION" == *gpl ]]; then
     # Enable GPLv3 modules
