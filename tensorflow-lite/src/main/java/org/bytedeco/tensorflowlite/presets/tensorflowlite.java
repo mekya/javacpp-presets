@@ -53,6 +53,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
                 "tensorflow/compiler/mlir/lite/core/model_builder_base.h",
                 "tensorflow/compiler/mlir/lite/utils/control_edges.h",
                 "tensorflow/compiler/mlir/lite/experimental/remat/metadata_util.h",
+                "tensorflow/compiler/mlir/lite/core/c/tflite_types.h",
                 "tensorflow/lite/builtin_ops.h",
                 "tensorflow/lite/c/c_api_types.h",
                 "tensorflow/lite/core/c/c_api_types.h",
@@ -116,7 +117,7 @@ public class tensorflowlite implements InfoMapper {
 
     public void map(InfoMap infoMap) {
         infoMap.put(new Info("TFLITE_ATTRIBUTE_WEAK", "TFL_CAPI_EXPORT", "TFLITE_NOINLINE").cppTypes().annotations())
-               .put(new Info("DOYXGEN_SKIP").define(true))
+               .put(new Info("DOYXGEN_SKIP", "__cplusplus").define(true))
                .put(new Info("FLATBUFFERS_LITTLEENDIAN == 0").define(false))
                .put(new Info("TfLiteIntArray", "TfLiteFloatArray").purify())
                .put(new Info("tflite::ops::builtin::BuiltinOpResolver").pointerTypes("BuiltinOpResolver"))

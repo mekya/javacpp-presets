@@ -46,6 +46,7 @@ import org.bytedeco.pytorch.presets.torch.PointerInfo;
                 "ATen/cudnn/Types.h",
                 "ATen/cudnn/Descriptors.h",
                 "ATen/cuda/CUDAEvent.h",
+                "ATen/cuda/MemPool.h",
                 "torch/csrc/inductor/aoti_runner/model_container_runner_cuda.h",
 
                 // For inclusion in JNI only, not parsed
@@ -94,7 +95,10 @@ public class torch_cuda implements LoadEnabled, InfoMapper {
             ))
 
             .put(new Info(
-                "at::CUDAGeneratorImpl"
+                "at::cuda::EventPool",
+                "at::cuda::WorkspaceMapWithMutex",
+                "at::CUDAGeneratorImpl",
+                "torch::inductor::AOTIModelContainerRunnerCuda::run_impl"
             ).skip())
 
             //// std::unordered_map
@@ -114,7 +118,8 @@ public class torch_cuda implements LoadEnabled, InfoMapper {
             .put(new Info("const std::vector<c10::cuda::CUDACachingAllocator::TraceEntry>", "std::vector<c10::cuda::CUDACachingAllocator::TraceEntry>").pointerTypes("TraceEntryVector").define())
 
             //// std::array
-            .put(new Info("std::array<c10::cuda::CUDACachingAllocator::Stat,3>", "c10::cuda::CUDACachingAllocator::StatArray").cast().pointerTypes("Stat"))
+            .put(new Info("std::array<c10::cuda::CUDACachingAllocator::Stat,3>", "c10::cuda::CUDACachingAllocator::StatArray",
+                          "std::array<c10::Stat, static_cast<size_t>(StatType::NUM_TYPES)>", "c10::CachingAllocator::StatArray").cast().pointerTypes("Stat"))
             .put(new Info("std::array<void*,c10d::intra_node_comm::kMaxDevices>").cast().pointerTypes("PointerPointer<Pointer>"))
         ;
 
@@ -169,7 +174,7 @@ public class torch_cuda implements LoadEnabled, InfoMapper {
             .put(new Info("c10d::Store", "c10d::ScatterOptions", "c10d::ReduceScatterOptions", "c10d::AllToAllOptions", "c10d::BarrierOptions", "c10d::AllreduceCoalescedOptions"))
             .put(new Info("c10d::BroadcastOptions", "c10d::ReduceOptions", "c10d::AllreduceOptions", "c10d::AllgatherOptions", "c10d::GatherOptions"))
             .put(new Info("CUDAContextLight.h").linePatterns("struct Allocator;").skip()) // Prevent regeneration of Allocator class in cuda package
-            .put(new Info("c10d::Backend::Options").pointerTypes("DistributedBackend.Options"))
+            .put(new Info("c10d::Backend::Options").pointerTypes("Backend.Options"))
 
             .put(new Info("c10::DeviceIndex", "at::DeviceIndex").valueTypes("byte").pointerTypes("BytePointer", "ByteBuffer", "byte[]"))
             .put(new Info("c10::StreamId").valueTypes("long"))
@@ -230,8 +235,8 @@ public class torch_cuda implements LoadEnabled, InfoMapper {
             "c10::cuda::OptionalCUDAStreamGuard",
             "c10::cuda::impl::CUDAGuardImpl",
             "c10::FreeMemoryCallback", // in API, but useless as long as we don't map FreeCudaMemoryCallbacksRegistry,
-            "AT_DISALLOW_COPY_AND_ASSIGN",
-            "c10d::NCCLComm", "std::shared_ptr<c10d::NCCLComm>" // See getNcclErrorDetailStr below
+            "AT_DISALLOW_COPY_AND_ASSIGN"
+            //"c10d::NCCLComm", "std::shared_ptr<c10d::NCCLComm>" // See getNcclErrorDetailStr below
         ).skip())
         ;
 

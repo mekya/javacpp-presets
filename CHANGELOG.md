@@ -1,4 +1,36 @@
 
+### February 22, 2026 version 1.5.13
+ * Ensure ONNX Runtime libraries get linked with `-z noexecstack` on Linux ([issue #1715](https://github.com/bytedeco/javacpp-presets/issues/1715))
+ * Add setter methods for `GELUOptions.approximate()` in presets for PyTorch ([pull #1733](https://github.com/bytedeco/javacpp-presets/pull/1733))
+ * Build FFmpeg with HarfBuzz to reenable the `drawtext` filter ([pull #1731](https://github.com/bytedeco/javacpp-presets/pull/1731))
+ * Enable training APIs and include `onnxruntime_training_c_api.h` header file in presets for ONNX Runtime ([pull #1728](https://github.com/bytedeco/javacpp-presets/pull/1728))
+ * Fix memory leak in `Tensor` factory methods `create()`, `createBuffer()`, and `createIndexer()` for PyTorch ([pull #1722](https://github.com/bytedeco/javacpp-presets/pull/1722))
+ * Rename `gloo` and `nccl` modules of PyTorch to `torch_gloo` and `torch_nccl` to avoid conflicts
+ * Upgrade to NDK r29 for Android builds on GitHub Actions ([issue #1670](https://github.com/bytedeco/javacpp-presets/issues/1670))
+ * Enable distributed package using NCCL in presets for PyTorch ([issue #1402](https://github.com/bytedeco/javacpp-presets/issues/1402))
+ * Fix adapter for `c10::intrusive_ptr` in presets for PyTorch ([issue #1678](https://github.com/bytedeco/javacpp-presets/issues/1678))
+ * Include `autocast_mode.h`, `FileStore.hpp`, `TCPStore.hpp`, and `gloo/transport/tcp/device.h` header files in presets for PyTorch ([discussion #1712](https://github.com/bytedeco/javacpp-presets/discussions/1712))
+ * Introduce `linux-arm64` builds for ONNX ([pull #1697](https://github.com/bytedeco/javacpp-presets/pull/1697))
+ * Include CUDA GPU compute capabilities 10.0 and 12.0 in builds for PyTorch ([issue #1696](https://github.com/bytedeco/javacpp-presets/issues/1696))
+ * Enable DNNL and CoreML in `linux-arm64` and `macosx-arm64` builds for ONNX Runtime ([pull #1689](https://github.com/bytedeco/javacpp-presets/pull/1689))
+ * Refactor the `redist` artifacts for CUDA into multiple smaller main artifacts ([issue #1638](https://github.com/bytedeco/javacpp-presets/issues/1638))
+ * Introduce `macosx-arm64` builds for DNNL, OpenCL ([issue #1681](https://github.com/bytedeco/javacpp-presets/issues/1681))
+ * Upgrade presets for system APIs on Ubuntu 22.04 LTS (Jammy), macOS 15, Windows SDK 10.0 ([pull #1659](https://github.com/bytedeco/javacpp-presets/pull/1659))
+ * Add `windows-arm64` builds for LLVM ([pull #1656](https://github.com/bytedeco/javacpp-presets/pull/1656))
+ * Introduce CUDA-enabled `linux-arm64-gpu` builds to presets for OpenCV ([pull #1651](https://github.com/bytedeco/javacpp-presets/pull/1651))
+ * Reenable again `linux-arm64` builds for CPython and NumPy ([pull #1652](https://github.com/bytedeco/javacpp-presets/pull/1652))
+ * Bundle libraries for VA-API 2.x with FFmpeg to avoid loading issues ([issue bytedeco/javacv#2340](https://github.com/bytedeco/javacv/issues/2340))
+ * Upgrade presets for OpenCV 4.13.0, FFmpeg 8.0.1, MKL 2025.3.1, DNNL 3.11, OpenBLAS 0.3.31, CUDA 13.1.1, cuDNN 9.19.0.56, NCCL 2.29.3, nvCOMP 5.1.0.21, NVIDIA Video Codec SDK 13.0.37, CPython 3.14.3, NumPy 2.4.2, SciPy 1.17.0, LLVM 21.1.8, libffi 3.5.2, Leptonica 1.87.0, Tesseract 5.5.2, PyTorch 2.10.0, SentencePiece 0.2.1, TensorFlow Lite 2.20.0, TensorRT 10.15.1.29, Triton Inference Server 2.65.0, ONNX 1.20.1, ONNX Runtime 1.24.1, and their dependencies
+
+### June 30, 2025 version 1.5.12
+ * Add presets for the CUFILE module of CUDA
+ * Fix FFmpeg builds against VA-API libraries ([pull #1608](https://github.com/bytedeco/javacpp-presets/pull/1608))
+ * Add `openblas_full` class giving access to all of OpenBLAS ([pull #1572](https://github.com/bytedeco/javacpp-presets/pull/1572))
+ * Allow setting "org.bytedeco.openblas.load" system property to "none" ([issue #1203](https://github.com/bytedeco/javacpp-presets/issues/1203))
+ * Fix presets for the CUPTI module of CUDA on Windows ([pull #1576](https://github.com/bytedeco/javacpp-presets/pull/1576))
+ * Introduce `macosx-arm64` builds for ARPACK-NG, CMINPACK, FFTW, GSL, TensorFlow Lite, ONNX, ONNX Runtime ([issue #1069](https://github.com/bytedeco/javacpp-presets/issues/1069))
+ * Upgrade presets for OpenCV 4.11.0, FFmpeg 7.1.1, MKL 2025.2, DNNL 3.8.1 ([pull #1633](https://github.com/bytedeco/javacpp-presets/pull/1633)), OpenBLAS 0.3.30, CPython 3.13.5, NumPy 2.3.1, SciPy 1.15.3, LLVM 20.1.7, libffi 3.5.1, Tesseract 5.5.1, CUDA 12.9.1, cuDNN 9.10.2, NCCL 2.27.5, nvCOMP 4.2.0.11, NVIDIA Video Codec SDK 13.0.19, PyTorch 2.7.1, TensorFlow Lite 2.19.0, TensorRT 10.12.0.36, Triton Inference Server 2.59.0, ONNX 1.18.0, ONNX Runtime 1.22.0, and their dependencies
+
 ### November 16, 2024 version 1.5.11
  * Enable distributed package using Gloo in presets for PyTorch ([pull #1510](https://github.com/bytedeco/javacpp-presets/pull/1510))
  * Add presets for the CUPTI module of CUDA ([pull #1531](https://github.com/bytedeco/javacpp-presets/pull/1531))

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bytedeco</groupId>
   <artifactId>javacpp-presets</artifactId>
-  <version>1.5.12-SNAPSHOT</version>
+  <version>1.5.14-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JavaCPP Presets</name>
@@ -42,19 +42,6 @@
     <developerConnection>scm:git:ssh://git@github.com/bytedeco/javacpp-presets.git</developerConnection>
   </scm>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </snapshotRepository>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <name>Sonatype Nexus Staging</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javacpp.cppbuild.skip>false</javacpp.cppbuild.skip> <!-- To skip execution of cppbuild.sh: -Djavacpp.cppbuild.skip=true -->
@@ -82,6 +69,7 @@
     <javacpp.platform.linux-x86_64>linux-x86_64${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
     <javacpp.platform.macosx-arm64>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
     <javacpp.platform.macosx-x86_64>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
+    <javacpp.platform.windows-arm64>windows-arm64${javacpp.platform.extension}</javacpp.platform.windows-arm64>
     <javacpp.platform.windows-x86>windows-x86${javacpp.platform.extension}</javacpp.platform.windows-x86>
     <javacpp.platform.windows-x86_64>windows-x86_64${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
   </properties>
@@ -98,9 +86,9 @@
 
   <repositories>
     <repository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <id>central-portal-snapshots</id>
+      <name>Central Portal Snapshots</name>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -111,9 +99,9 @@
   </repositories>
   <pluginRepositories>
     <pluginRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <id>central-portal-snapshots</id>
+      <name>Central Portal Snapshots</name>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -144,8 +132,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.12.1</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
         <executions>
           <execution>
@@ -230,7 +218,7 @@
             </goals>
             <configuration>
               <targetDirectories>
-                <targetDirectory>${project.basedir}/src/gen/java</targetDirectory>
+                <targetDirectory>${project.build.sourceDirectory}/../../gen/java</targetDirectory>
                 <targetDirectory>${project.basedir}/cppbuild/${javacpp.platform}${javacpp.platform.extension}/java/</targetDirectory>
               </targetDirectories>
             </configuration>
@@ -282,7 +270,7 @@
             </goals>
             <configuration>
               <skip>${javacpp.parser.skip}</skip>
-              <outputDirectory>${project.basedir}/src/gen/java</outputDirectory>
+              <outputDirectory>${project.build.sourceDirectory}/../../gen/java</outputDirectory>
               <classOrPackageName>org.bytedeco.${javacpp.packageName}.presets.*</classOrPackageName>
             </configuration>
           </execution>
@@ -389,7 +377,7 @@
               <modules>
                 <module>
                   <file>${project.build.directory}/${project.artifactId}.jar</file>
-                  <moduleInfoFile>${project.basedir}/src/main/java9/module-info.java</moduleInfoFile>
+                  <moduleInfoFile>${project.build.sourceDirectory}/../java9/module-info.java</moduleInfoFile>
                 </module>
                 <module>
                   <file>${project.build.directory}/${project.artifactId}-${javacpp.platform}${javacpp.platform.extension}.jar</file>
@@ -463,24 +451,12 @@
             </goals>
             <configuration>
               <sources>
-                <source>${project.basedir}/src/gen/java</source>
+                <source>${project.build.sourceDirectory}/../../gen/java</source>
                 <source>${project.basedir}/cppbuild/${javacpp.platform}${javacpp.platform.extension}/java/</source>
               </sources>
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.13</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>sonatype-nexus-staging</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-<!--          <skipLocalStaging>true</skipLocalStaging> -->
-          <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
-        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -522,9 +498,9 @@
       </activation>
       <repositories>
         <repository>
-          <id>sonatype-nexus-staging</id>
-          <name>Sonatype Nexus Staging</name>
-          <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+          <id>central-portal-staging</id>
+          <name>Central Portal Staging</name>
+          <url>https://central.sonatype.com/api/v1/publisher/deployments/download/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -535,9 +511,9 @@
       </repositories>
       <pluginRepositories>
         <pluginRepository>
-          <id>sonatype-nexus-staging</id>
-          <name>Sonatype Nexus Staging</name>
-          <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+          <id>central-portal-staging</id>
+          <name>Central Portal Staging</name>
+          <url>https://central.sonatype.com/api/v1/publisher/deployments/download/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -563,6 +539,30 @@
             <configuration>
               <passphrase>${env.GPG_PASSPHRASE}</passphrase>
               <useAgent>false</useAgent>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>central-publishing</id>
+      <activation>
+        <property>
+          <name>!altDeploymentRepository</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.8.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>false</autoPublish>
+              <checksums>required</checksums>
             </configuration>
           </plugin>
         </plugins>
@@ -666,6 +666,7 @@
         <javacpp.platform.linux-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
       </properties>
@@ -695,6 +696,7 @@
         <javacpp.platform.linux-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
       </properties>
@@ -724,6 +726,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -753,6 +756,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -806,6 +810,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -858,6 +863,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -910,6 +916,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -962,6 +969,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -996,6 +1004,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1030,6 +1039,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1064,6 +1074,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1098,6 +1109,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1158,6 +1170,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1206,6 +1219,7 @@
         <module>tensorflow-lite</module>
         <module>tensorrt</module>
         <module>depthai</module>
+        <module>onnx</module>
         <module>onnxruntime</module>
         <module>cpu_features</module>
         <module>systems</module>
@@ -1226,6 +1240,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1283,6 +1298,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1353,6 +1369,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1443,6 +1460,7 @@
         <javacpp.platform.linux-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1460,7 +1478,12 @@
         <module>opencv</module>
         <module>ffmpeg</module>
         <module>lz4</module>
+        <module>dnnl</module>
         <module>openblas</module>
+        <module>arpack-ng</module>
+        <module>cminpack</module>
+        <module>fftw</module>
+        <module>gsl</module>
         <module>cpython</module>
         <module>numpy</module>
         <module>scipy</module>
@@ -1470,8 +1493,12 @@
         <module>libraw</module>
         <module>leptonica</module>
         <module>tesseract</module>
+        <module>opencl</module>
         <module>pytorch</module>
         <module>sentencepiece</module>
+        <module>tensorflow-lite</module>
+        <module>onnx</module>
+        <module>onnxruntime</module>
         <module>systems</module>
       </modules>
       <properties>
@@ -1490,6 +1517,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1575,6 +1603,41 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
+        <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
+        <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>javacpp-platform-windows-arm64</id>
+      <activation>
+        <property>
+          <name>javacpp.platform</name>
+          <value>windows-arm64</value>
+        </property>
+      </activation>
+      <modules>
+        <module>llvm</module>
+        <module>systems</module>
+      </modules>
+      <properties>
+        <javacpp.platform.android-arm></javacpp.platform.android-arm>
+        <javacpp.platform.android-arm64></javacpp.platform.android-arm64>
+        <javacpp.platform.android-x86></javacpp.platform.android-x86>
+        <javacpp.platform.android-x86_64></javacpp.platform.android-x86_64>
+        <javacpp.platform.ios-arm></javacpp.platform.ios-arm>
+        <javacpp.platform.ios-arm64></javacpp.platform.ios-arm64>
+        <javacpp.platform.ios-x86></javacpp.platform.ios-x86>
+        <javacpp.platform.ios-x86_64></javacpp.platform.ios-x86_64>
+        <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
+        <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
+        <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
+        <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
+        <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
+        <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1641,6 +1704,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
       </properties>
@@ -1726,6 +1790,7 @@
         <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-arm64></javacpp.platform.windows-arm64>
         <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64>
       </properties>
@@ -1910,6 +1975,18 @@
       </activation>
       <properties>
         <javacpp.platform.macosx-x86_64>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>javacpp.platform.windows-arm64-true</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.windows-arm64</name>
+        </property>
+      </activation>
+      <properties>
+        <javacpp.platform.windows-arm64>windows-arm64${javacpp.platform.extension}</javacpp.platform.windows-arm64>
       </properties>
     </profile>
 
@@ -2129,6 +2206,19 @@
       </activation>
       <properties>
         <javacpp.platform.macosx-x86_64>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>javacpp.platform.custom-windows-arm64</id>
+      <activation>
+        <property>
+          <name>javacpp.platform.host</name>
+        </property>
+        <os><family>windows</family><arch>arm64</arch></os>
+      </activation>
+      <properties>
+        <javacpp.platform.windows-arm64>windows-arm64${javacpp.platform.extension}</javacpp.platform.windows-arm64>
       </properties>
     </profile>
 
